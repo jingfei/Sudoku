@@ -1,0 +1,39 @@
+body{
+	background: #F1ECDF;
+	width:100%;
+}
+
+h1{
+	color: #F58723;
+}
+
+pre{
+	width:50%;
+	text-align:left;
+	padding:15px;
+}
+pre,textarea{
+	-moz-tab-size:    4;
+    -o-tab-size:      4;
+    -webkit-tab-size: 4;
+    -ms-tab-size:     4;
+    tab-size:         4;
+}
+
+#UploadTable th{
+	font-size:20px;
+	padding: 10px;
+	color: #F58723;
+}
+#UploadTable td{
+	padding: 10px;
+}
+
+#UploadTable tr th:first-child,
+#UploadTable tr td:first-child:not(:last-child){
+	border-right:1pt dashed #C7BA99;
+}
+
+#UploadTable tr:nth-child(2) td{
+	border-bottom:1pt dashed #C7BA99;
+}

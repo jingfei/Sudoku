@@ -1,0 +1,101 @@
+#step1 pre{
+	width:70%;
+	text-align:left;
+	padding:15px;
+}
+#step1 pre,textarea{
+	-moz-tab-size:    4;
+    -o-tab-size:      4;
+    -webkit-tab-size: 4;
+    -ms-tab-size:     4;
+    tab-size:         4;
+}
+#step1 table th{
+	font-size:20px;
+	padding: 10px;
+	color: #0060bf;
+}
+#step1 table td{
+	padding: 10px;
+}
+
+#step1 table tr th:first-child,
+#step1 table tr td:first-child:not(:last-child){
+	border-right:1pt dashed #C7BA99;
+}
+
+#step1 table tr:nth-child(2) td{
+	border-bottom:1pt dashed #C7BA99;
+}
+
+#information{
+	display: inline-block;
+	position: relative;
+	width: 35%;
+	height: 55%;
+	margin-left: 7%;
+}
+#information img{
+	position: absolute;
+	height: 100%;
+	width: 100%;
+}
+#information table{
+	position: absolute;
+	z-index: 100;
+	top: 23%;
+	left: 15%;
+	font-size: 25px;
+	width: 70%;
+	text-align: left;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+}
+#information table th{
+	color: #24c0e8;
+	padding: 10px;
+}
+#information table td{
+	color: #0060bf;
+	padding: 10px;
+}
+
+#regular{
+	display: inline-block;
+	position: relative;
+	text-align: right;
+	height: 55%;
+	width: 45%;
+	margin-left: 6%;
+	top:0;
+}
+#regular *{
+	height: 100%;
+	width: 100%;
+}
+
+.ButtonDiv{
+	text-align: center;
+	color: #0060bf;
+}
+.Button{
+	height: 60px;
+	display: inline-block;
+	vertical-align: top;
+	cursor: pointer;
+}
+
+#step1,#step2,#step3,#step4{
+	background-color: #f1ebeb;
+	position: relative;
+	width: 80%;
+	margin: 0 auto;
+	padding-bottom: 20px;
+}
+
+#step1 #cppfile,#hfile,textarea{
+	padding:3px;
+}
+
+#step4 * td{color: #0060bf;}
+#step4 * th{color: #363636;}
+

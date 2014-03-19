@@ -1,0 +1,6 @@
+CREATE EVENT e_hourly
+    ON SCHEDULE
+      EVERY 5 MINUTE
+    COMMENT 'Rechallenge.'
+    DO
+      UPDATE `Users` SET `challenge`=5, `challenge_id`=""

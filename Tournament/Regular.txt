@@ -1,0 +1,36 @@
+This tournament is related to Homework #2 - Sudoku:
+	Basic:
+	1. You need a header file and a code file named Sudoku.h and Sudoku.cpp
+	2. At least three member functions, GiveQuestion(), ReadIn() and Solve(), should be defined
+	3. We'll have two main programs, hw2_give_question.cpp and hw2_solve.cpp, to check your code
+	4. For more details about hw2, you can go to ncku moodle and download the ppt.
+	--------------------------------------------
+	Different from hw2:
+	1. In function GiveQuestion(), you can make questions with unsolvable or multiple solutions here
+	2. You have a time limit 10 seconds.
+	   It means that your Solve() function is able to solve the problem in 10 seconds.
+	3. You have 5 chances per day to challenge
+	--------------------------------------------
+	Format of GiveQuestion():
+	1. Output 9 lines with 9 digits in each line, totally 81 digits
+	2. The range of the digits are between 0 and 9
+	--------------------------------------------
+	Outputs of Solve():
+	1. Unsolvable: output a single character '0'
+	2. Exactly one solution: output a single character '1' in the first line. 
+	   And the following 9 lines are the solutions
+	3. Multiple solutions: output a single character '2'
+	--------------------------------------------
+	The kinds of statement:
+	1. Accepted
+	2. Compile Error
+	3. Time Limit Exceeded: if exceed 10 seconds
+	4. Wrong Answer
+	5. Presentation Error
+	6. Other unexpected error: please contact with TAs
+	--------------------------------------------
+	Goals:
+	1. Make sure your code is correct!
+	2. Trying to figure out how to beat all the opponents!! (as fast as possible)
+	--------------------------------------------
+

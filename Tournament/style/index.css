@@ -1,0 +1,183 @@
+body{
+	background-color:white;
+	height: 100%;
+	width: 100%;
+}
+
+textarea, pre { -moz-tab-size:4; -o-tab-size:4; tab-size:4; }
+
+#logo{
+	position: relative;
+	margin: 0 auto;
+	text-align: right;
+	height: 95%;
+	width: 80%;
+	-webkit-border-radius: 50px;
+	-moz-border-radius: 50px;
+	border-radius: 50px;
+	border: none;
+}
+
+#Regu{
+	width:100%;
+	height: 100%;
+	background: #f1ebeb;
+	color: #0060bf;
+	font-weight:bold;
+	font-size: 18px;
+	border:none;
+	overflow: auto;
+}
+
+#logo input[type=text],input[type=password]{
+    background-color: #cacaca;
+    border:solid 1px #cacaca;
+    color: black; 
+    height: 28px;
+    padding-left:10px;
+    width: 191px;
+    box-shadow: 2px 2px 0 #828181 inset;
+}
+
+#logo input[type=submit]{
+    background-color: #24c0eb;
+    color: white;
+    height: 24px;
+    width: 103px;
+    text-transform:uppercase;
+    box-shadow:-1px 2px #cacaca inset;
+	cursor: pointer;
+}
+
+#logo input[type=submit],input[type=password],input[type=text]{
+	border: 0;
+    border-radius:5px;
+    font-family: Sansation,Arial;
+}
+
+.topClick{
+	background-color: #24c0eb;
+	color: white;
+	cursor: pointer;
+}
+#top{border-spacing:5px 0px;}
+.top2{
+	display: table-cell;
+	padding: 7px 20px;
+	font-family: Helvetica,Arial,sans-serif;
+	text-align: center;
+	vertical-align: middle;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	border: none;
+	font-size: 1.8em;
+}
+.top2:not(.topClick){
+	color: #24c0eb;
+}
+.top2:hover{
+	background-color: #24c0eb;
+	color: white;
+	cursor: pointer;
+}
+
+#RemainTime table{
+	text-align: right;
+	font-size: 1.6em;
+	color: #0060bf;
+}
+
+.big{
+	width: 100%;
+	height: 100%;
+}
+
+.small{
+	z-index: 999;
+	width: 80%;
+	position: absolute;
+	bottom: 20px;
+	display: block;
+	right: 30px;
+	background: transparent;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	border: none;
+	/* Fallback for web browsers that don't support RGBa */
+    background-color: rgb(0, 0, 0);
+    /* RGBa with 0.6 opacity */
+    background-color: rgba(0, 0, 0, 0.2);
+    /* For IE 5.5 - 7*/
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+    /* For IE 8*/
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+
+}
+
+.main{
+	background-color: #f1ebeb;
+	position: relative;
+	width: 80%;
+	margin: 0 auto;
+	padding: 30px 0;
+}
+
+.title{
+	font-family: 'Vampiro One', cursive;
+	text-align: center;
+	color:#24c0eb;
+	font-size: 40px;
+}
+
+.rank{
+	width: 80%;
+	margin: 0 auto;
+	border-collapse: collapse;
+	text-align: center;
+	font-size: 20px;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+}
+.rank th{
+	border-bottom: solid #0060bf 2px;
+	padding: 10px;
+	color: #0060bf;
+}
+.rank td{
+	padding: 10px;
+}
+.rank tr{
+	border-bottom: solid #cacaca 1px;
+	color: #363636;
+	cursor: default;
+}
+.rank #self{
+	background:#24c0e8;
+	color: white;
+}
+.rank tr:hover{
+	color: #0060bf;
+}
+
+#foot{
+	width: 80%;
+	height: 15%;
+	margin: 0 auto;
+}
+#foot *{color: #24c0eb;}
+
+#foot,#logo h1{ color: #24c0eb; font-family: 'Sofadi One', cursive; }
+#foot,#logo a{ color: #24c0eb; text-decoration:none;}
+#foot,#logo a:visited {color:#24c0eb;}  /* visited link */
+#foot,#logo a:hover {color:#0060bf;}  /* mouse over link */
+#foot,#logo a:active {color:#24c0eb;}  /* selected link */
+
+.arrow{
+	float:right;
+	padding-right: 20px;
+	right: 20px;
+	height: 40px;
+	width: 300px;
+}
+
