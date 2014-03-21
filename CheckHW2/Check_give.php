@@ -20,7 +20,7 @@
 			$Wrong=true;
 			//wrongQuestion
 			echo "<div>";
-			echo "<h2 style='color:#0060bf'>1. You should have exactly 81 digits.<br/>2. They're in the range of 0 to 9.</h2>";
+			echo "<h2 style='color:#0060bf'>1. You should have exactly 81 digits.<br/>2. They're in the range of 0 to 9.<br/>3. Exactly one solution here.</h2>";
 			echo "<table style='font-size:30px;padding:5px;text-align:center;' align='center'><tr><th style='color:blue'>Your GiveQuestion() output</th></tr>";
 			$pePath="./tmpCode/".$ID."/".$Check;
 			$file = fopen($pePath,"r");
@@ -30,6 +30,10 @@
 					$peCode.=fgets($file);
 					$peCode.="</td></tr>";
 				}
+			else{
+				echo "GiveQuestion() outputs no file!!<br/>";
+				exit();	
+			}
 			fclose($file);
 			echo $peCode;
 			echo "</table></div>";

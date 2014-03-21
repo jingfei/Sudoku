@@ -98,8 +98,14 @@ function Check(){
 		data: {
 			hfile: hfile,
 			cppfile: cppfile
-		}
+		}//,
+//		error: function(xhr, textStatus, error){
+//			alert(xhr.statusText);
+//			alert(textStatus);
+//			alert(error);
+//		}
 	}).done(function(respond){
+//		alert(respond);
 		var Rand=Math.floor((Math.random()*5)+10);
 		if(!respond)  //compile success
 			CallCheck(5,1,Rand);

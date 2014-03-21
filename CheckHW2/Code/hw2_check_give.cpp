@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <cstdio>
+#include "CheckSudoku.h"
 using namespace std;
 
 bool Check(){
@@ -11,6 +12,13 @@ bool Check(){
 	}
 	if(i<81) return false;
 	return true;
+}
+
+bool Check2(){
+	CheckSudoku CS;
+	CS.ReadIn();
+	if(CS.Solve()==1) return true;
+	return false;
 }
 
 int main(int argc, char *argv[]){
@@ -27,6 +35,11 @@ int main(int argc, char *argv[]){
 		const char *temp=tmp;
 		freopen(temp,"r",stdin);
 		if(!Check()){
+			printf("question%02d\n",i);
+			break;
+		}
+		freopen(temp,"r",stdin);
+		if(!Check2()){
 			printf("question%02d\n",i);
 			break;
 		}

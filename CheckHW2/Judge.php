@@ -25,6 +25,6 @@
 	shell_exec('g++ -o ./tmpCode/'.$ID.'/hw2_check ./tmpCode/'.$ID.'/hw2_check.cpp ./tmpCode/'.$ID.'/Sudoku.o');
 	shell_exec('g++ ./tmpCode/'.$ID.'/hw2_solve.cpp ./tmpCode/'.$ID.'/Sudoku.o ./tmpCode/'.$ID.'/Clock.o -o ./tmpCode/'.$ID.'/hw2_solve');
 	shell_exec('g++ -o ./tmpCode/'.$ID.'/hw2_give_question ./tmpCode/'.$ID.'/Sudoku.o ./tmpCode/'.$ID.'/hw2_give_question.cpp');
-	shell_exec('g++ -o ./tmpCode/'.$ID.'/hw2_check_give ./tmpCode/'.$ID.'/hw2_check_give.cpp');
+	shell_exec('g++ -o ./tmpCode/'.$ID.'/hw2_check_give ./tmpCode/'.$ID.'/hw2_check_give.cpp ./tmpCode/'.$ID.'/CheckSudoku.o');
 	/*********************/
 ?>
