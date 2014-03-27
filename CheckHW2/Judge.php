@@ -11,6 +11,10 @@
 	/*compile*/
 	exec('g++ -c ./tmpCode/'.$ID.'/Sudoku.cpp -o ./tmpCode/'.$ID.'/Sudoku.o 2>&1',$ce);
 	if(!empty($ce)){
+		require_once("db_const.php");
+		$mysqli=new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
+		$sql="UPDATE `Users` SET correct=1 WHERE id='$ID'";
+		$mysqli->query($sql);
 		echo '<img src="StatusImg/ce.png" /><br/>';
 		echo '<hr style="border-top:dashed 1px;"/>';
 		echo '<p>';

@@ -1,6 +1,8 @@
 <?php
 /* change line 9 $timeout to modify timeout */
 	include 'Timeout.php';
+	require_once("db_const.php");
+	$mysqli=new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
 	session_start();
 	$ID=$_SESSION['user'];
 	$r=$_POST['Rand'];
@@ -10,6 +12,8 @@
 	/*check timelimit*/
 	if(exec_timeout($cmd, $timeout)){
 		echo '<img src="StatusImg/tle.png" />';
+		$sql="UPDATE `Users` SET correct=2 WHERE id='$ID'";
+		$mysqli->query($sql);
 		$Wrong=true;
 	}
 	/*****************/
@@ -18,6 +22,8 @@
 		$Wrong=true; 
 		$Mes='file not exist, please contact with TA';
 		echo '<img src="StatusImg/err.png" /><h1>'.$Mes.'</h1>';
+		$sql="UPDATE `Users` SET correct=4 WHERE id='$ID'";
+		$mysqli->query($sql);
 	}
 	else{
 		$AnsPath="./outputs/ans/ans".(string)$r;
@@ -25,6 +31,8 @@
 		$Check=exec('diff -w -B '.$AnsPath.' '.$CodePath);
 		if($Check){ 
 			echo '<img src="StatusImg/wa.png" /><br/>';
+			$sql="UPDATE `Users` SET correct=3 WHERE id='$ID'";
+			$mysqli->query($sql);
 			$Wrong=true;
 			//ansCode
 			$ansCode="<table style='font-size:30px;padding:5px;'><tr><th style='color:blue'>Answer</th></tr>";

@@ -1,6 +1,8 @@
 <?php
 /* change line 7 $timeout to modify timeout */
 	include "Timeout.php";
+	require_once("db_const.php");
+	$mysqli=new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
 	session_start();
 	$ID=$_SESSION['user'];
 	$cmd='./tmpCode/'.$ID.'/hw2_give_question '.$ID;
@@ -9,6 +11,8 @@
 	/*check timelimit*/
 	if(exec_timeout($cmd, $timeout)){
 		echo '<img src="StatusImg/tle.png" />';
+		$sql="UPDATE `Users` SET correct=2 WHERE id='$ID'";
+		$mysqli->query($sql);
 		$Wrong=true;
 	}
 	/*****************/
@@ -17,6 +21,8 @@
 		$Check=exec('./tmpCode/'.$ID.'/hw2_check_give '.$ID);
 		if($Check){ 
 			echo '<img src="StatusImg/pe.png" />';
+			$sql="UPDATE `Users` SET correct=5 WHERE id='$ID'";
+			$mysqli->query($sql);
 			$Wrong=true;
 			//wrongQuestion
 			echo "<div>";

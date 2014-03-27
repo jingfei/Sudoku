@@ -28,6 +28,7 @@ function CallCheck(j,i,Rand){
 		var tmp="<hr style='border-top:dashed 1px #c7ba99;'/>";
 		tmp+="<h1 style='color:#f58723;' align='left'>Result:</h1>";
 		document.getElementById('Result').innerHTML+=tmp;
+		$.ajax({url:"UpdateAccepted.php"});
 		document.getElementById('Result').innerHTML+='<img src="StatusImg/ac.png" /><br/>';
 		cl.hide();
 		$('#Finish1').show();
