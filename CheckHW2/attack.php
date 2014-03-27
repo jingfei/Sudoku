@@ -22,6 +22,14 @@
 			<h1 style="width:90%;text-align:center;color:#f58732;padding:3% 0;">Upload your code ~</h1>
 			<table id="UploadTable" width="90%" style="display:inline;">	
 			<tr>
+				<th align="center" colspan="2" >Hello 
+				<?php echo $_SESSION['user']; ?>
+				, Your Status is
+				<img id="StatusImg" style="vertical-align:middle" src="StatusImg/
+				<?php include_once("GetStatus.php"); ?>
+				.png" height="100px" /></th>
+			</tr>
+			<tr>
 				<th>main function to create sudoku</td>
 				<th>main function to solve sudoku</td>
 			</tr>

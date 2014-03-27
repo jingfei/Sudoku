@@ -4,9 +4,14 @@ $(document).ready(function(){
 });
 
 function ReturnStep1(){
+	var Src="StatusImg/";
 	$('#step2').html(Step2Text);
 	$('#step1').show();
 	$('#step2').hide();
+	$.ajax({url:"GetStatus.php"}).done(function(respond){
+		Src=Src+respond+".png";
+		$('#StatusImg').attr("src",Src);
+	});
 }
 
 var c1;

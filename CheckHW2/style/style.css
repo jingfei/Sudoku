@@ -29,11 +29,12 @@ pre,textarea{
 	padding: 10px;
 }
 
-#UploadTable tr th:first-child,
+#UploadTable tr:not(:first-child) th:first-child,
 #UploadTable tr td:first-child:not(:last-child){
 	border-right:1pt dashed #C7BA99;
 }
 
-#UploadTable tr:nth-child(2) td{
+#UploadTable tr:nth-child(3) td,
+#UploadTable tr:first-child th{
 	border-bottom:1pt dashed #C7BA99;
 }
