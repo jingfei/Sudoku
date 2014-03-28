@@ -9,8 +9,7 @@
 	$filecpp = fopen("./tmpCode/".$ID."/Sudoku.cpp","w");
 	fwrite($filecpp,$code); fclose($filecpp);
 	/*compile*/
-	exec('g++ -c ./tmpCode/'.$ID.'/Sudoku.cpp -o ./tmpCode/'.$ID.'/Sudoku.o 
-	2>&1',$ce);
+	exec('g++ -c ./tmpCode/'.$ID.'/Sudoku.cpp -o ./tmpCode/'.$ID.'/Sudoku.o 2>&1',$ce);
 	if(!empty($ce)) CompileError($ce);
 	/*********/
 	/*make execution file*/
