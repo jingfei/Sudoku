@@ -83,7 +83,7 @@
 				<th><label for="cppfile">paste Sudoku.cpp code here</label></th>
 			</tr> 
 			<tr>
-				<td align="center"><textarea rows="20" style="background-color:#baffba;width:80%" id="prehtext" onkeyup="changeH()">
+				<td align="center"><textarea rows="20" cols="500" style="background-color:#baffba;width:80%" id="prehtext" onkeyup="changeH()">
 <?php
 	$sql="SELECT * FROM `Users` WHERE id='$ID'";
 	$result=$mysqli->query($sql);
@@ -91,7 +91,7 @@
 	echo $row['header'];
 ?>
 				</textarea></td>
-				<td align="center"><textarea id="precpptext" rows="20" style="background-color:#c2ffff;width:80%" onkeyup="changeCpp()">
+				<td align="center"><textarea id="precpptext" rows="20" cols="500" style="background-color:#c2ffff;width:80%" onkeyup="changeCpp()">
 <?php
 	$sql="SELECT * FROM `Users` WHERE id='$ID'";
 	$result=$mysqli->query($sql);
