@@ -55,8 +55,8 @@
 				<th><label for="cppfile">paste Sudoku.cpp code here</label></th>
 			</tr> 
 			<tr>
-				<td align="center"><textarea rows="20" cols="200" style="background-color:#baffba;width:80%" id="prehtext" onkeyup="changeH()"></textarea></td>
-				<td align="center"><textarea id="precpptext" rows="20" cols="200" style="background-color:#c2ffff;width:80%" onkeyup="changeCpp()"></textarea></td>
+				<td align="center"><textarea rows="20" cols="500" style="background-color:#baffba;width:80%" id="prehtext" onkeyup="changeH()"></textarea></td>
+				<td align="center"><textarea id="precpptext" rows="20" cols="500" style="background-color:#c2ffff;width:80%" onkeyup="changeCpp()"></textarea></td>
 			</tr>
 			<tr>
 				<th>Sudoku.h file preview</th>
