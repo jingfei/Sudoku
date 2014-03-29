@@ -5,10 +5,11 @@
 using namespace std;
 
 bool Check(){
-	int n,i=0;
-	while(scanf("%d",&n)!=EOF){
+	int n,i=0,Count;
+	while( (Count = scanf("%d",&n) )!=EOF){
+		if(Count==0) return false;
 		++i;
-		if(n<0 || n>9) return false;
+		if(!(n>=0 && n<=9)) return false;
 	}
 	if(i<81) return false;
 	return true;
