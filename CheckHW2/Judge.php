@@ -27,7 +27,7 @@
 		require_once("db_const.php");
 		$ID=$_SESSION['user'];
 		$mysqli=new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
-		$sql="UPDATE `Users` SET correct=1 WHERE id='$ID'";
+		$sql="UPDATE `Users` SET correct_check=1 WHERE id='$ID'";
 		$mysqli->query($sql);
 		echo '<img src="StatusImg/ce.png" /><br/>';
 		echo '<hr style="border-top:dashed 1px;"/>';

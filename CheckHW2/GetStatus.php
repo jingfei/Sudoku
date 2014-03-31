@@ -6,7 +6,7 @@
 	$sql="SELECT * from `Users` WHERE id='$ID'";
 	$result=$mysqli->query($sql);
 	$row=$result->fetch_array();
-	switch($row['correct']){
+	switch($row['correct_check']){
 		case 0: echo 'ac'; break;
 		case 1: echo 'ce'; break;
 		case 2: echo 'tle'; break;

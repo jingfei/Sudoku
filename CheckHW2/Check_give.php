@@ -11,7 +11,7 @@
 	/*check timelimit*/
 	if(exec_timeout($cmd, $timeout)){
 		echo '<img src="StatusImg/tle.png" />';
-		$sql="UPDATE `Users` SET correct=2 WHERE id='$ID'";
+		$sql="UPDATE `Users` SET correct_check=2 WHERE id='$ID'";
 		$mysqli->query($sql);
 		$Wrong=true;
 	}
@@ -21,7 +21,7 @@
 		$Check=exec('./tmpCode/'.$ID.'/hw2_check_give '.$ID);
 		if($Check){ 
 			echo '<img src="StatusImg/pe.png" />';
-			$sql="UPDATE `Users` SET correct=5 WHERE id='$ID'";
+			$sql="UPDATE `Users` SET correct_check=5 WHERE id='$ID'";
 			$mysqli->query($sql);
 			$Wrong=true;
 			//wrongQuestion

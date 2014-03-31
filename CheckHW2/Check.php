@@ -12,7 +12,7 @@
 	/*check timelimit*/
 	if(exec_timeout($cmd, $timeout)){
 		echo '<img src="StatusImg/tle.png" />';
-		$sql="UPDATE `Users` SET correct=2 WHERE id='$ID'";
+		$sql="UPDATE `Users` SET correct_check=2 WHERE id='$ID'";
 		$mysqli->query($sql);
 		$Wrong=true;
 	}
@@ -22,7 +22,7 @@
 		$Wrong=true; 
 		$Mes='file not exist, please contact with TA';
 		echo '<img src="StatusImg/err.png" /><h1>'.$Mes.'</h1>';
-		$sql="UPDATE `Users` SET correct=4 WHERE id='$ID'";
+		$sql="UPDATE `Users` SET correct_check=4 WHERE id='$ID'";
 		$mysqli->query($sql);
 	}
 	else{
@@ -31,7 +31,7 @@
 		$Check=exec('diff -w -B '.$AnsPath.' '.$CodePath);
 		if($Check){ 
 			echo '<img src="StatusImg/wa.png" /><br/>';
-			$sql="UPDATE `Users` SET correct=3 WHERE id='$ID'";
+			$sql="UPDATE `Users` SET correct_check=3 WHERE id='$ID'";
 			$mysqli->query($sql);
 			$Wrong=true;
 			//ansCode
