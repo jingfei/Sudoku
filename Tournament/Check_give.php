@@ -9,9 +9,11 @@
 	/*check timelimit*/
 	if(exec_timeout($cmd, $timeout)){
 		echo '<img src="./image/tle.png" /><h1 style="color:red;">score -1</h1>';
-		UpdateScore(-1,2);
 		$Wrong=true;
-		Record($op,2,-2,'-1','0');
+		if($op!='test'){
+			UpdateScore(-1,2);
+			Record($op,2,-2,'-1','0');
+		}
 	}
 	/*****************/
 	/*check answer*/
@@ -19,8 +21,10 @@
 		$Check=exec('./tmpCode/'.$ID.'/hw2_check_give '.$ID);
 		if($Check){ 
 			echo '<img src="./image/pe.png" /><h1 style="color:red;">score -1</h1>';
-			UpdateScore(-1,5);
-			Record($op,5,-2,'-1','0');
+			if($op!='test'){
+				UpdateScore(-1,5);
+				Record($op,5,-2,'-1','0');
+			}
 			$Wrong=true;
 			//wrongQuestion
 			echo "<div>";

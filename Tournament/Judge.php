@@ -28,7 +28,7 @@
 	if(!empty($ce)) CompileError($ce,$ID,$score,$op);
 	/*********************/
 	function CompileError($ce,$ID,$score,$op){
-		compile_error($ce,$score); 
+		compile_error($ce,$score,$op); 
 		shell_exec("rm ./tmpCode/".$ID."/question*");
 		Record($op,1,-2,'-1','0');
 		exit(); 

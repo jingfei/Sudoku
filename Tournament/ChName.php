@@ -9,6 +9,12 @@
 	$Name=$_POST['name'];
 	$tmp=strpos($Name,'&');
 	while( $Name[0]=='&' || $tmp ){
+		$strtmp=substr($Name,$tmp,4);
+		if($strtmp=='&amp'){
+			$tmp=strpos($Name,'&',$tmp+1);
+			if($tmp) continue;
+			else break;
+		}
 		$Name=substr_replace($Name,"&amp",$tmp,1);
 		$tmp=strpos($Name,'&',$tmp+1);
 	}

@@ -18,40 +18,42 @@
 		exit();
 	}
 ##
-	/*fetch $ID row*/
-	$sql="SELECT * FROM `Users` WHERE id='$ID'";
-	$result=$mysqli->query($sql);
-	$row=$result->fetch_array();
-	/***************/
-	/*check challenge times*/
-	if($row['challenge']<=0){
-		$sql="UPDATE `Users` SET challenge=0 WHERE id='$ID'";
+	if($op!='test'){
+		/*fetch $ID row*/
+		$sql="SELECT * FROM `Users` WHERE id='$ID'";
 		$result=$mysqli->query($sql);
-		echo "<script>alert('you challenged too much!!');</script>";
-		echo "<script>location.replace('./index.php');</script>";
+		$row=$result->fetch_array();
+		/***************/
+		/*check challenge times*/
+		if($row['challenge']<=0){
+			$sql="UPDATE `Users` SET challenge=0 WHERE id='$ID'";
+			$result=$mysqli->query($sql);
+			echo "<script>alert('you challenged too much!!');</script>";
+			echo "<script>location.replace('./index.php');</script>";
+		}
+		/***********************/
+		/*find challenge list*/
+		$arr=array();
+		$arr=unserialize($row['challenge_id']);
+		if($arr)
+			foreach($arr as $item)
+				if($item==$op){
+					echo "<script>alert('you have challenged him today');</script>";
+					echo "<script>location.replace('/Tournament/');</script>";
+					exit();
+				}
+		/*********************/
+		/*minus challenge time*/
+		$sql="UPDATE `Users` SET challenge=".(string)($row['challenge']-1)." WHERE id='$ID'";
+		$result=$mysqli->query($sql);
+		/**********************/
+		/*save to challenge list*/
+		$arr[]=$op;
+		$ser=serialize($arr);
+		$sql="UPDATE `Users` SET challenge_id='$ser' WHERE id='$ID'";
+		$result=$mysqli->query($sql);
+		/************************/
 	}
-	/***********************/
-	/*find challenge list*/
-	$arr=array();
-	$arr=unserialize($row['challenge_id']);
-	if($arr)
-		foreach($arr as $item)
-			if($item==$op){
-				echo "<script>alert('you have challenged him today');</script>";
-				echo "<script>location.replace('/Tournament/');</script>";
-				exit();
-			}
-	/*********************/
-	/*minus challenge time*/
-	$sql="UPDATE `Users` SET challenge=".(string)($row['challenge']-1)." WHERE id='$ID'";
-	$result=$mysqli->query($sql);
-	/**********************/
-	/*save to challenge list*/
-	$arr[]=$op;
-	$ser=serialize($arr);
-	$sql="UPDATE `Users` SET challenge_id='$ser' WHERE id='$ID'";
-	$result=$mysqli->query($sql);
-	/************************/
 ?>
 <?php include_once('layout/header.php'); ?>
 		<div id="step1" class="main" style="text-align:center">
@@ -124,8 +126,7 @@
 			<div width="90%" id="Result" style="text-align:center;padding-left:5%;padding-right:5%;">
 			</div>
 			<div id="canvasloader-container" class="wrapper"></div>
-			<div class="ButtonDiv" id="BNext" style="display:none">
-				<img src="./image/button/next.png" class="Button" onclick="GO('<?php echo $op;?>','#step4')"/>
+			<div class="ButtonDiv" id="BNext">
 			</div>
 			<div class="ButtonDiv" id="Finish1" style="display:none">
 				<img src="./image/button/finish.png" class="Button" onclick="location.href='/Tournament/';"/>

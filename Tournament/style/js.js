@@ -93,7 +93,7 @@ function ChName(){
 			url: "./ChName.php",
 			data:{name:NewName}
 		}).done(function(response){
-			location.replace("http://judge.imslab.org/Tournament/");
+			location.replace("/Tournament/");
 		});
 	}
 	return false;
@@ -102,7 +102,7 @@ function ChName(){
 function Attack(){
 	var tmp=confirm("Are you sure to use a chance?");
 	if(tmp) location.replace('attack.php');
-	else location.href='index.php';
+	else location.href="/Tournament/";
 }
 
 var cl;
@@ -155,7 +155,9 @@ function CallCheck(j,i,hfile,cppfile,op,Rand){
 			document.getElementById('Result').innerHTML+=tmp;
 			document.getElementById('Result').innerHTML+='<img src="./image/ac.png" /><br/>';
 			cl.hide();
-			$('#BNext').show();
+			if(op!=='test')
+				$('#BNext').html('<img src="./image/button/next.png" class="Button" onclick="GO(\''+op+'\',\'#step4\')"/>');
+			else $('#Finish1').show();
 		});
 	else if(j==0)
 		$.ajax({
@@ -278,8 +280,20 @@ function CallRace(j,i,Status,op){
 		}).done(function(respond){
 			var tmp1="t"+i.toString();
 			var tmp=respond;
-			if(!tmp || tmp==='TLE'){
-				tmp='TLE';
+			if(!tmp){
+				alert("something wrong there, please try again");
+				$.ajax({ 
+					type: "POST", 
+					url: "Func.php", 
+					data: {
+						action: 'ChallengeAdd1',
+						num: 0
+					} 
+				}).done(function(respond){
+					location.href="/Tournament/";
+				});
+			}
+			else if(tmp==='TLE'){
 				tmp+="</td>";
 				T[i]=Number.MAX_VALUE;
 			}
@@ -287,8 +301,10 @@ function CallRace(j,i,Status,op){
 				tmp+=" seconds</td>";
 				T[i]=parseFloat(respond);
 			}
-			document.getElementById(tmp1).innerHTML=tmp;
-			CallRace(j-1,i+1,Status,op);
+			if(tmp){
+				document.getElementById(tmp1).innerHTML=tmp;
+				CallRace(j-1,i+1,Status,op);
+			}
 		});
 	}
 }

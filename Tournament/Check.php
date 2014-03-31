@@ -11,9 +11,11 @@
 	/*check timelimit*/
 	if(exec_timeout($cmd, $timeout)){
 		echo '<img src="./image/tle.png" /><h1 style="color:red;">score -1</h1>';
-		UpdateScore(-1,2);
 		$Wrong=true;
-		Record($op,2,-2,'-1','0');
+		if($op!='test'){
+			UpdateScore(-1,2);
+			Record($op,2,-2,'-1','0');
+		}
 	}
 	/*****************/
 	/*check answer*/
@@ -21,8 +23,10 @@
 		$Wrong=true; 
 		$Mes='file not exist, please contact with TA';
 		echo '<img src="./image/err.png" /><h1 style="color:red;">score -1</h1><h1>'.$Mes.'</h1>';
-		UpdateScore(0,4);
-		Record($op,3,-2,'0','0');
+		if($op!='test'){
+			UpdateScore(0,4);
+			Record($op,3,-2,'0','0');
+		}
 	}
 	else{
 		$AnsPath="./outputs/ans/ans".(string)$r;
@@ -30,8 +34,10 @@
 		$Check=exec('diff -w -B '.$AnsPath.' '.$CodePath);
 		if($Check){ 
 			echo '<img src="./image/wa.png" /><h1 style="color:red;">score -1</h1>';
-			UpdateScore(-1,3);
-			Record($op,3,-2,'-1','0');
+			if($op!='test'){
+				UpdateScore(-1,3);
+				Record($op,3,-2,'-1','0');
+			}
 			$Wrong=true;
 			//ansCode
 			$ansCode="<table style='font-size:30px;padding:5px;'><tr><th style='color:blue'>Answer</th></tr>";

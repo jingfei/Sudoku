@@ -10,6 +10,14 @@ if(isset($_POST['action'])){
 		call_user_func($_POST['action'],$_POST['a1'],$_POST['a2']);
 }
 
+function ChallengeAdd1(){
+	require_once("db_const.php");
+	$mysqli=new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
+	$ID=$_SESSION['id'];
+	$sql="UPDATE  `Users` SET  `challenge` =  `challenge` +1 WHERE  `id` = '$ID'";
+	$result=$mysqli->query($sql);
+}
+
 function getLog($check){
 	require_once("db_const.php");
 	$mysqli=new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
@@ -171,16 +179,16 @@ function UpdateCode($code,$header){
 	$result=$mysqli->query($sql);
 }
 
-function compile_error($ce,$score){
+function compile_error($ce,$score,$op){
 	$ID=$_SESSION['id'];
 	require_once("db_const.php");
 	$mysqli=new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
 	echo '<img src="./image/ce.png" /><br/>';
-	echo '<h1 style="color:red;">score -1</h1><hr style="border-top:dashed 1px;"/>';
+	if($op!='test') echo '<h1 style="color:red;">score -1</h1><hr style="border-top:dashed 1px;"/>';
 	echo '<p>';
 	foreach($ce as $item) echo $item.'<br/>';
 	echo '</p>';
-	if($score>0){
+	if($op!='test' && $score>0){
 		$sql="UPDATE `Users` SET score=".(string)($score-1)." WHERE id='$ID'";
 		$result2=$mysqli->query($sql);
 		reRank();
@@ -307,7 +315,7 @@ function exec_timeout($cmd, $timeout) {
 
 function Race($op,$Status){  //1:a solve, 2:b solve
 	$ID=$_SESSION['id'];
-	$timeout=90; //seconds
+	$timeout=120; //seconds
 	if($Status==1){
 		$cmd1='./tmpCode/'.$op.'/hw2_give_question '.$ID;
 		$cmd='./tmpCode/'.$ID.'/hw2_solve '.$ID;
@@ -322,6 +330,7 @@ function Race($op,$Status){  //1:a solve, 2:b solve
 			fclose($fileTime);
 			shell_exec('rm ./tmpCode/'.$ID.'/question*');
 			shell_exec('rm ./tmpCode/'.$ID.'/Time');
+			//something wrong challenge +1
 			echo $Time;
 		}
 	}
@@ -344,6 +353,7 @@ function Race($op,$Status){  //1:a solve, 2:b solve
 }
 
 function Record($op,$check,$Status,$add1,$add2){
+	if($op=='test') return;
 	$ID=$_SESSION['id'];
 	require_once("db_const.php");
 	$mysqli=new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);

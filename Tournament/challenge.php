@@ -19,26 +19,29 @@
 		exit();
 	}
 ##
-	$sql="SELECT * FROM `Users` WHERE id='$ID'";
-	$result=$mysqli->query($sql);
-	$row=$result->fetch_array();
-	if($row['challenge']<=0){
-		$sql="UPDATE `Users` SET challenge=0 WHERE id='$ID'";
+	if($op!='test'){
+		$sql="SELECT * FROM `Users` WHERE id='$ID'";
 		$result=$mysqli->query($sql);
-		echo "<script>alert('you challenged too much!!');</script>";
-		echo "<script>location.replace('./index.php');</script>";
+		$row=$result->fetch_array();
+		if($row['challenge']<=0){
+			$sql="UPDATE `Users` SET challenge=0 WHERE id='$ID'";
+			$result=$mysqli->query($sql);
+			echo "<script>alert('you challenged too much!!');</script>";
+			echo "<script>location.replace('./index.php');</script>";
+		}
+		/*find challenge list*/
+		$arr=array();
+		$arr=unserialize($row['challenge_id']);
+		if($arr)
+			foreach($arr as $item)
+				if($item==$op){
+					echo "<script>alert('you have challenged him today');</script>";
+					echo "<script>location.replace('./index.php');</script>";
+					exit();
+				}
+		/*********************/
 	}
-	/*find challenge list*/
-	$arr=array();
-	$arr=unserialize($row['challenge_id']);
-	if($arr)
-		foreach($arr as $item)
-			if($item==$op){
-				echo "<script>alert('you have challenged him today');</script>";
-				echo "<script>location.replace('./index.php');</script>";
-				exit();
-			}
-	/*********************/
+	else echo "<script>location.replace('attack.php');</script>";
 ?>
 <? include_once('layout/header.php'); ?>
 		<div class="main">

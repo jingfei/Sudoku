@@ -64,7 +64,9 @@
 			<td>'.$rows['name'].'</td>
 			<td>'.$rows['score'].'</td>';
 		if(isset($_SESSION['id'])){
-			if($rows['id']!=$_SESSION['id']){
+			if($rows['id']=='test')
+				echo '<td>+0 or -0</td>';
+			else if($rows['id']!=$_SESSION['id']){
 				$add=0;
 				if($rows['rank']>=$rank) $add=1;
 				else $add=(int)(($rank-$rows['rank'])/5)+2;
