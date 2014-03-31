@@ -154,20 +154,21 @@ function UpdateCode($code,$header){
 	$ID=$_SESSION['id'];
 	require_once("db_const.php");
 	$mysqli=new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
-	/*update*/
-	$sql="UPDATE `Users` SET header='$header' WHERE id='$ID'";
-	$result=$mysqli->query($sql);
-	$sql="UPDATE `Users` SET code='$code' WHERE id='$ID'";
-	$result=$mysqli->query($sql);
 	/*translate (avoid '\n' problem)*/
-	$header=str_replace("@n","\\n",$header);
-	$code=str_replace("@n","\\n",$code);
+//	$header=str_replace("@n","\\n",$header);
+//	$code=str_replace("@n","\\n",$code);
 	/*save*/
-//	shell_exec("rm ./tmpCode/".$ID."/Sudoku.*");
 	$fileh = fopen("./tmpCode/".$ID."/Sudoku.h","w");
 	fwrite($fileh,$header); fclose($fileh);
 	$filecpp = fopen("./tmpCode/".$ID."/Sudoku.cpp","w");
 	fwrite($filecpp,$code); fclose($filecpp);
+	/*update*/
+	$header = mysql_real_escape_string($header);
+	$code = mysql_real_escape_string($code);
+	$sql="UPDATE `Users` SET header='$header' WHERE id='$ID'";
+	$result=$mysqli->query($sql);
+	$sql="UPDATE `Users` SET code='$code' WHERE id='$ID'";
+	$result=$mysqli->query($sql);
 }
 
 function compile_error($ce,$score){
@@ -306,11 +307,13 @@ function exec_timeout($cmd, $timeout) {
 
 function Race($op,$Status){  //1:a solve, 2:b solve
 	$ID=$_SESSION['id'];
-	$timeout=600; //seconds
+	$timeout=90; //seconds
 	if($Status==1){
-		shell_exec('./tmpCode/'.$op.'/hw2_give_question '.$ID);
+		$cmd1='./tmpCode/'.$op.'/hw2_give_question '.$ID;
 		$cmd='./tmpCode/'.$ID.'/hw2_solve '.$ID;
-		if(exec_timeout($cmd,$timeout))
+		if(exec_timeout($cmd1,30))
+			echo '0';
+		else if(exec_timeout($cmd,$timeout))
 			echo 'TLE';
 		else{
 			$fileTime = fopen("./tmpCode/".$ID."/Time","r");
@@ -323,9 +326,11 @@ function Race($op,$Status){  //1:a solve, 2:b solve
 		}
 	}
 	else{
-		shell_exec('./tmpCode/'.$ID.'/hw2_give_question '.$ID);
+		$cmd1='./tmpCode/'.$ID.'/hw2_give_question '.$ID;
 		$cmd='./tmpCode/'.$op.'/hw2_solve '.$ID;
-		if(exec_timeout($cmd,$timeout))
+		if(exec_timeout($cmd1,30))
+			echo '0';
+		else if(exec_timeout($cmd,$timeout))
 			echo 'TLE';
 		else{
 			$fileTime = fopen("./tmpCode/".$ID."/Time","r");

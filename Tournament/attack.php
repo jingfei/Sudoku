@@ -85,18 +85,20 @@
 			<tr>
 				<td align="center"><textarea rows="20" cols="500" style="background-color:#baffba;width:80%" id="prehtext" onkeyup="changeH()">
 <?php
-	$sql="SELECT * FROM `Users` WHERE id='$ID'";
-	$result=$mysqli->query($sql);
-	$row=$result->fetch_array();
-	echo $row['header'];
+	$hfile=fopen("tmpCode/".$ID."/Sudoku.h","r");
+	if($hfile)
+		while(!feof($hfile))
+			echo fgets($hfile);
+	fclose($hfile);
 ?>
 				</textarea></td>
 				<td align="center"><textarea id="precpptext" rows="20" cols="500" style="background-color:#c2ffff;width:80%" onkeyup="changeCpp()">
 <?php
-	$sql="SELECT * FROM `Users` WHERE id='$ID'";
-	$result=$mysqli->query($sql);
-	$row=$result->fetch_array();
-	echo $row['code'];
+	$cppfile=fopen("tmpCode/".$ID."/Sudoku.cpp","r");
+	if($cppfile)
+		while(!feof($cppfile))
+			echo fgets($cppfile);
+	fclose($cppfile);
 ?>
 				</textarea></td>
 			</tr>
@@ -133,6 +135,16 @@
 			<h1 class="title">Attack -- step #3</h1>
 			<div id="canvasloader-container2" class="wrapper" style="display:none"></div>
 			<div width="90%" id="Time" style="padding-left:5%;padding-right:5%;">
+			</div>
+			<div width="90%" style="padding-left:5%; padding-right:5%;">
+				注意事項:
+				<ol>
+					<li>比賽進行中請勿按重新整理，有些人的程式會跑比較久，就請各位等一下囉</li>
+					<li>如果解題時間為0sec，有兩種可能：解題時間少於0.0001或是對方的GiveQuestion()有問題</li>
+					<li>如果ReadIn()或Solve()有問題，會拿到TLE(逾時)，該次判定為輸</li>
+					<li>目前給的時限是120sec，超過會拿到TLE(逾時)，該次認定為輸</li>
+					<li>如果有其他網站上的問題麻煩截圖，寄信給助教或到moodle留言，會盡快處理的~~ :)</li>
+				</ol>
 			</div>
 			<div class="ButtonDiv" id="Finish" style="display:none">
 				<img src="./image/button/finish.png" class="Button" onclick="location.href='/Tournament/';"/>

@@ -86,14 +86,14 @@ function LogInCheck(){
 function ChName(){
 	var NewName=$('#NewName').val();
 	if(NewName.length>16) alert('too long!!');
-	else if(NewName.length===0) return false;
+	else if(NewName.trim().length===0) alert('input something!!');
 	else{
 		$.ajax({
 			type:"POST",
 			url: "./ChName.php",
 			data:{name:NewName}
 		}).done(function(response){
-			location.replace("./index.php");
+			location.replace("http://judge.imslab.org/Tournament/");
 		});
 	}
 	return false;
@@ -207,17 +207,17 @@ function CallCheck(j,i,hfile,cppfile,op,Rand){
 		});
 }
 
-var T=new Array(10);
+var T=new Array(6);
 
 function AfterRace(op){
 	var win=0,lose=0;
-	for(var i=0; i<5; ++i){
+	for(var i=0; i<3; ++i){
 		var tmp1="p"+i.toString();
-		if(T[i]<T[i+5]){
+		if(T[i]<T[i+3]){
 			++win;
 			tmp="<img src='./image/win.png' height='70%' />";
 		}
-		else if(T[i]===T[i+5]){
+		else if(T[i]===T[i+3]){
 			tmp="<img src='./image/tie.png' height='70%' />";
 		}
 		else{
@@ -261,7 +261,7 @@ function AfterRace(op){
 function CallRace(j,i,Status,op){
 	if(j==0){
 		if(Status==1)
-			CallRace(5,i,2,op);
+			CallRace(3,i,2,op);
 		else
 			AfterRace(op);
 	}
@@ -278,7 +278,8 @@ function CallRace(j,i,Status,op){
 		}).done(function(respond){
 			var tmp1="t"+i.toString();
 			var tmp=respond;
-			if(tmp==='TLE'){
+			if(!tmp || tmp==='TLE'){
+				tmp='TLE';
 				tmp+="</td>";
 				T[i]=Number.MAX_VALUE;
 			}
@@ -300,17 +301,18 @@ function GO(Pre,Name){
 		ShowCl1();
 		var n;
 		var hfile=$("#prehtext").val();
-		n=hfile.search("\\\\n");
+/*		n=hfile.search("\\\\n");
 		while(n!=-1){
 			hfile=hfile.replaceAt(n,"@");
 			n=hfile.search("\\\\n");
 		}
-		var cppfile=$("#precpptext").val();
-		n=cppfile.search("\\\\n");
+*/		var cppfile=$("#precpptext").val();
+/*		n=cppfile.search("\\\\n");
 		while(n!=-1){
 			cppfile=cppfile.replaceAt(n,"@");
 			n=cppfile.search("\\\\n");
 		}
+*/		
 		$.ajax({
 			type: "POST",
 			url: "Judge.php",
@@ -335,12 +337,12 @@ function GO(Pre,Name){
 		ShowCl2();
 		var tmp="<h1 style='color:#24c0e8;'>Average time for solving a question:</h1>";
 		tmp+="<table style='width:90%;font-size:20px;padding:2px;text-align:center;'>";
-		tmp+="<tr><td width='10%'></td><th width='18%'>first</th><th width='18%'>second</th><th width='18%'>third</th><th width='18%'>fourth</th><th width='18%'>fifth</th></tr>";
-		tmp+="<tr><th>Yours</th><td id='t0'></td><td id='t1'></td><td id='t2'></td><td id='t3'></td><td id='t4'></td></tr>";
-		tmp+="<tr><th>Opponent</th><td id='t5'></td><td id='t6'></td><td id='t7'></td><td id='t8'></td><td id='t9'></td></tr>";
-		tmp+="<tr><td></td><td id='p0'></td><td id='p1'></td><td id='p2'></td><td id='p3'></td><td id='p4'></td></tr></table>";
+		tmp+="<tr><td width='10%'></td><th width='30%'>first</th><th width='30%'>second</th><th width='30%'>third</th></tr>";
+		tmp+="<tr><th>Yours</th><td id='t0'></td><td id='t1'></td><td id='t2'></td></tr>";
+		tmp+="<tr><th>Opponent</th><td id='t3'></td><td id='t4'></td><td id='t5'></td></tr>";
+		tmp+="<tr><td></td><td id='p0'></td><td id='p1'></td><td id='p2'></td></tr></table>";
 		document.getElementById('Time').innerHTML=tmp;
-		CallRace(5,0,1,Pre);
+		CallRace(3,0,1,Pre);
 		$('#step3').hide();
 	}
 	$(Name).show();

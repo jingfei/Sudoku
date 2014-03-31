@@ -21,15 +21,17 @@ int main(int argc, char *argv[]){
 	char tmp[40];
 	strcpy(tmp,str);
 	tmp[Len+2]=tmp[Len];
-	for(int i=0; i<100; ++i){
+//	for(int i=0; i<100; ++i){
+	int i=0;
 		tmp[Len]=(char)(i/10+'0');
 		tmp[Len+1]=(char)(i%10+'0');
 		const char *temp=tmp;
 		freopen(temp,"r",stdin);
-		if(!Check()){
+		if(!Check())
+//		{
 			printf("question%02d\n",i);
-			break;
-		}
-	}
+//			break;
+//		}
+//	}
 	return 0;
 }

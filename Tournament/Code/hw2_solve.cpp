@@ -17,7 +17,7 @@ int main(int argc, char *argv[]){
 	/******************/
 	Sudoku ss;
 	Clock clk;
-	double Time;
+	double Time=0;
 	char tmp[40];
 	strcpy(tmp,str);
 	tmp[Len+2]=tmp[Len];
@@ -33,11 +33,11 @@ int main(int argc, char *argv[]){
 	Time=clk.getElapsedTime();
 	/****************/
 	/* ten question */
-	if(Time==0){
+	if((int)Time==0){
 		clk.start();
 		for(int i=0; i<10; ++i){
-			tmp[Len]=(char)(i/10+'0');
-			tmp[Len+1]=(char)(i%10+'0');
+			tmp[Len]='0';
+			tmp[Len+1]='0';
 			const char *temp=tmp;
 			freopen(temp,"r",stdin);
 			ss.ReadIn();
@@ -47,11 +47,11 @@ int main(int argc, char *argv[]){
 	}
 	/****************/
 	/* 100 question */
-	if(Time==0){
+	if((int)Time*10==0){
 		clk.start();
 		for(int i=0; i<100; ++i){
-			tmp[Len]=(char)(i/10+'0');
-			tmp[Len+1]=(char)(i%10+'0');
+			tmp[Len]='0';
+			tmp[Len+1]='0';
 			const char *temp=tmp;
 			freopen(temp,"r",stdin);
 			ss.ReadIn();
