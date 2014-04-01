@@ -2,9 +2,11 @@
 #include <cstring>
 #include <cstdio>
 #include "Sudoku.h"
+#include <unistd.h>
 using namespace std;
 
 int main(int argc, char *argv[]){
+	usleep(1000000);
 	char str[30],ID[10];
 	strcpy(ID,argv[1]);
 	strcpy(str,"./tmpCode/"); strcat(str,ID); strcat(str,"/question");

@@ -5,6 +5,7 @@
 		<link rel="stylesheet" href="./style/index.css">
 		<link rel="stylesheet" href="./style/top.css">
 		<link rel="stylesheet" href="CppStyle/sh_vim-dark.min.css" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<script type="text/javascript" src="CppStyle/sh_cpp.min.js"></script>
 		<script type="text/javascript" src="CppStyle/sh_main.min.js"></script>
 		<script type="text/javascript" src="./style/jquery-2.0.3.js"></script>
@@ -121,4 +122,4 @@
 				?>
 				</textarea>
 		    </div>
-<!--hidden-->';
+<!--hidden-->

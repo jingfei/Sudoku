@@ -48,6 +48,8 @@
 	$result=$mysqli->query($sql);
 	while($rows=$result->fetch_array()){
 		$isChallenge=false;
+//		$sql="UPDATE `Users` SET `name` = ".htmlspecialchars($rows['name'], ENT_QUOTES)." WHERE `id` = '".$rows['id']."'";
+//		$result3=$mysqli->query($sql);
 		if($arr)
 			foreach($arr as $item)
 				if($item==$rows['id'])

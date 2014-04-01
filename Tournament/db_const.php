@@ -4,4 +4,7 @@
 	const DB_USER = 'root';
 	const DB_PASS = '~1qaz2wsx';
 	const DB_NAME = 'Sudoku';
+	mysql_query("SET NAMES 'utf8'");
+	mysql_query("SET CHARACTER_SET_CLIENT='utf8'");
+	mysql_query("SET CHARACTER_SET_RESULTS='utf8'");
 ?>

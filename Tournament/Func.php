@@ -143,7 +143,7 @@ function reRank(){
 	$ID=$_SESSION['id'];
 	require_once("db_const.php");
 	$mysqli=new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
-	$RANK=1;
+	$RANK=1; $realRank=1;
 	$sql="SELECT * FROM `Users` ORDER BY `score` DESC, `id`";
 	$result=$mysqli->query($sql);
 	$rows=$result->fetch_array();
@@ -151,7 +151,8 @@ function reRank(){
 	$sql="UPDATE `Users` SET rank=".(string)($RANK)." WHERE id='$nowID'";
 	$result2=$mysqli->query($sql);
 	while($rows=$result->fetch_array()){
-		if($rows['score'] < $last) $RANK++;
+		$realRank++;
+		if($rows['score'] < $last) $RANK=$realRank;
 		$last=$rows['score']; $nowID=$rows['id'];
 		$sql="UPDATE `Users` SET rank=".(string)($RANK)." WHERE id='$nowID'";
 		$result2=$mysqli->query($sql);

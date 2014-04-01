@@ -6,29 +6,12 @@
 	if($mysqli->connect_errno)
 	echo "<p>MYSQL error no {$mysqli->connect_errno} : {$mysqli->connect_error}</p>";
 ##
-	$Name=$_POST['name'];
-	$tmp=strpos($Name,'&');
-	while( $Name[0]=='&' || $tmp ){
-		$strtmp=substr($Name,$tmp,4);
-		if($strtmp=='&amp'){
-			$tmp=strpos($Name,'&',$tmp+1);
-			if($tmp) continue;
-			else break;
-		}
-		$Name=substr_replace($Name,"&amp",$tmp,1);
-		$tmp=strpos($Name,'&',$tmp+1);
+	$Name=htmlspecialchars($_POST['name'], ENT_QUOTES);
+	$Name=addslashes($Name);
+	$Name=trim($Name);
+	if(strlen($Name)>0 && strlen($Name)<17 && isset($_SESSION['id'])){
+		$ID=$_SESSION['id'];
+		$sql="UPDATE `Users` SET name='$Name' WHERE id='$ID'";
+		$result=$mysqli->query($sql);
 	}
-	$tmp=strpos($Name,'<');
-	while( $Name[0]=='<' || $tmp ){
-		$Name=substr_replace($Name,"&lt",$tmp,1);
-		$tmp=strpos($Name,'<',$tmp+1);
-	}
-	$tmp=strpos($Name,'>');
-	while( $Name[0]=='>' || $tmp ){
-		$Name=substr_replace($Name,"&gt",$tmp,1);
-		$tmp=strpos($Name,'>',$tmp+1);
-	}
-	$ID=$_SESSION['id'];
-	$sql="UPDATE `Users` SET name='$Name' WHERE id='$ID'";
-	$result=$mysqli->query($sql);
 ?>
