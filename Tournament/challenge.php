@@ -8,9 +8,6 @@
 		echo "<script>alert('select an opponent');</script>";
 		echo "<script>location.replace('./index.php');</script>";
 	}
-	$op=$_POST['op'];
-	$_SESSION['op']=$op;
-	$ID=$_SESSION['id'];
 	require_once("db_const.php");
 	$mysqli=new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
 ## check connection
@@ -19,6 +16,15 @@
 		exit();
 	}
 ##
+	$op=$_POST['op'];
+	$sql="SELECT * FROM `Users` WHERE 1";
+	$result=$mysqli->query($sql);
+	while($rows=$result->fetch_array())
+		if(md5($rows['id'])==$op){
+			$op=$rows['id']; break;
+		}	
+	$_SESSION['op']=$op;
+	$ID=$_SESSION['id'];
 	if($op!='test'){
 		$sql="SELECT * FROM `Users` WHERE id='$ID'";
 		$result=$mysqli->query($sql);

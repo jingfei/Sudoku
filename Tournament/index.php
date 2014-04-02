@@ -59,7 +59,7 @@
 		else if($_SESSION['id']==$rows['id'])
 			echo '<tr id="self">';
 		else if($rows['correct']==0)
-			echo '<tr class="enableCh" onclick="Challenge(\''.$rows['id'].'\');">';
+			echo '<tr class="enableCh" onclick="Challenge(\''.md5($rows['id']).'\');">';
 		else
 			echo '<tr>';
 		echo '<td>'.$rows['rank'].'</td>
