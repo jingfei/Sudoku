@@ -11,7 +11,13 @@
 |
 */
 
-Route::get('/', 'RankController@getRank' );
+Route::get('/', 'HomeController@getRank' );
 
-Route::get('log', function(){ return View::make('pages.log'); });
+Route::get('log', function(){return View::make('pages.log');} );
+
+Route::post('login', 'HomeController@login' );
+
+Route::get('logout', 'HomeController@logout' );
+
+Route::post('chName', 'HomeController@chName' );
 

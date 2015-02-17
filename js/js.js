@@ -1,29 +1,19 @@
 $(document).ready(function(){
-	$(".enableCh").hover(function(){
-		$(" td img",this).attr("src","./image/challenge.png");
-	}, function(){
-		$(" td img",this).attr("src","./image/challenge2.png");
-	});
 	if($('.top2').length!=1){
 		$('.enableCh').css('cursor','pointer');
 		$('#rank #self').css('cursor','default');
 	}
 });
 
-$(window).resize(function(){
-/*	var Size=$("#top").height();
-	$(".top2").css('font-size',Size/3);
-	$(".top2").css('line-height',$(".top2").height()+"px");
-*/
-});
-var Img=0;
-function ChFlip(name){
+function ChFlip(){
 	var tmp;
-	if(name=='Rule'){
-		tmp=document.getElementById('flipText').innerHTML;
+	if($("#Rule").hasClass("topClick")){
+		tmp = $('#flipImg').html();
+		$("#Rule").attr("class", "top2");
 	}
-	else if(name=='Sudoku'){
-		tmp=document.getElementById('flipImg'+((++Img)%3).toString()).innerHTML;
+	else{
+		tmp= $('#flipText').html();
+		$("#Rule").attr("class", "top2 topClick");
 	}
 	$(".flipbox").flippy({
 		duration: "500",
@@ -54,49 +44,6 @@ function Setting(){
 	else{
 		$('#Setting').hide();
 	}
-}
-
-function LogOut(ID){
-	$.ajax({
-		type: "POST",
-		url: "logout.php",
-		data:{id:ID}
-	}).done(function(response){
-		location.href="/Tournament/";
-	});
-}
-
-function LogInCheck(){
-	var login_id=$("#login_id").val();
-	var login_pw=$("#login_pw").val();
-	$.ajax({
-		type: "POST",
-		url: "login.php",
-		data: {
-			id: login_id,
-			passwd: login_pw
-		}
-	}).done(function(response){
-		if(response==="yes") location.href="/Tournament/";
-		else alert(response);
-	});
-	return false;
-}
-
-function ChName(){
-	var NewName=$('#NewName').val();
-	if(NewName.length>16) alert('too long!!');
-	else if(NewName.trim().length===0) alert('input something!!');
-	else{
-		$.ajax({
-			type:"POST",
-			url: "./ChName.php",
-			data:{name:NewName}
-		}).done(function(response){
-			location.replace("/Tournament/");
-		});
-	}
-	return false;
 }
 
 function Attack(){

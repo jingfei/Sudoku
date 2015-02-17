@@ -15,10 +15,10 @@
 		</thead>
 		<tbody>
 			@foreach($users as $rows)
-				@if(!$isLogin || $rows->$isChallenge) <tr>
+				@if(!$isLogin || $rows->isChallenge) <tr>
 				@elseif($isLogin == $rows->id) <tr id="self">
 				@elseif($rows->correct===0) 
-					<tr class="enableCh" onClick="Challenge('{{md5($rows->id)}}');">;
+					<tr class="enableCh" onClick="Challenge('{{md5($rows->id)}}');">
 				@else <tr>
 				@endif
 
@@ -73,6 +73,14 @@ function Challenge(op){
     document.body.appendChild(form);
     form.submit();
 }
+
+$(document).ready(function(){
+	$(".enableCh").hover(function(){
+		$(" td img",this).attr("src","{{asset('img/challenge.png')}}");
+	}, function(){
+		$(" td img",this).attr("src","{{asset('img/challenge2.png')}}");
+	});
+});
 </script>
 
 @stop
