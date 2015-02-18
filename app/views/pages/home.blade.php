@@ -17,8 +17,8 @@
 			@foreach($users as $rows)
 				@if(!$isLogin || $rows->isChallenge) <tr>
 				@elseif($isLogin == $rows->id) <tr id="self">
-				@elseif($rows->correct===0) 
-					<tr class="enableCh" onClick="Challenge('{{md5($rows->id)}}');">
+				@elseif($rows->correct==0) 
+					<tr class="enableCh" onClick="location.href='{{URL::to("challenge/".$rows->pw)}}';">
 				@else <tr>
 				@endif
 

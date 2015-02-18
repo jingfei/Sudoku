@@ -3,7 +3,7 @@
 		<table style="width:100%">
 		<tr><td align="left">
 		<h2> 
-			2015 Programming Design (II)
+			2015 Program Design (II)
 		</h2>
 		</td>
 		<td align="right">
