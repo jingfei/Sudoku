@@ -21,3 +21,5 @@ Route::get('logout', 'HomeController@logout' );
 
 Route::post('chName', 'HomeController@chName' );
 
+Route::get('challenge/{_id}', 'AttackController@challengeInfo' );
+

@@ -32,6 +32,10 @@ class HomeController extends BaseController {
 					$rows->addScore =  '+'.$add.' or -1';
 				}
 				else $rows->addScore = '--';
+				
+				/* encode for challenge id */
+				$rows->pw = self::enCode($rows->newid.$rows->id);
+
 			}
 		}
 		return View::make('pages.home')
@@ -176,7 +180,7 @@ class HomeController extends BaseController {
 		$result = DB::table('Users')->where('id',$ID)->first();
 		if(!$result)
 			return 'Student ID is not exist here';
-		else if($result->passwd==$pw){
+		else if($result->passwd===$pw){
 			Session::put('id',$ID);
 			return 'yes';
 		}

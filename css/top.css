@@ -32,7 +32,7 @@
 	display: inline-block;
 	position: relative;
 	width: 35%;
-	height: 55%;
+	height:300px;
 	margin-left: 7%;
 }
 #information img{
@@ -63,7 +63,7 @@
 	display: inline-block;
 	position: relative;
 	text-align: right;
-	height: 55%;
+	height: 300px;
 	width: 45%;
 	margin-left: 6%;
 	top:0;

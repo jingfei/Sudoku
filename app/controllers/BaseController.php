@@ -15,4 +15,10 @@ class BaseController extends Controller {
 		}
 	}
 
+	protected function enCode($pw){
+		for($i=0; $i<995; ++$i)
+			$pw=md5($pw);
+		return $pw;
+	}
+
 }
