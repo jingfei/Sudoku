@@ -38,5 +38,12 @@
 		{{ HTML::image("img/wait.png","",array("class"=>"Button","onClick"=>"location.href='".URL::to('/')."';")) }}
 	</div>
 </div>
+<script>
+function Attack(){
+	var tmp=confirm("Are you sure to use a chance?");
+	if(tmp) location.replace('{{URL::to('upload/'.$pw)}}');
+	else location.href="{{URL::to('/')}}";
+}
+</script>
 
 @stop

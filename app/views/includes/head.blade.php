@@ -3,7 +3,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta http-equiv="keywords" content="數獨比賽, 成大資工, 程式設計">
 <meta http-equiv="description" content="成大資工大一必修程式設計二作業，以練習數獨進行演算法效率比賽，達成練習目的">
-<link rel="shortcut icon" href="{{asset('img/csie.ico')}}" type="image/x-icon" />
+<link rel="shortcut icon" href="{{asset('img/IMSLab.ico')}}" type="image/x-icon" />
 <link href='http://fonts.googleapis.com/css?family=Sofadi+One' rel='stylesheet' type='text/css'>
 {{HTML::style('css/index.css')}}
 {{HTML::style('css/top.css')}}

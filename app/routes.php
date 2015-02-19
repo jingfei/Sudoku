@@ -23,3 +23,5 @@ Route::post('chName', 'HomeController@chName' );
 
 Route::get('challenge/{_id}', 'AttackController@challengeInfo' );
 
+Route::get('upload/{_id}', 'AttackController@uploadPage' );
+

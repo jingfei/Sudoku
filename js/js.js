@@ -46,12 +46,6 @@ function Setting(){
 	}
 }
 
-function Attack(){
-	var tmp=confirm("Are you sure to use a chance?");
-	if(tmp) location.replace('attack.php');
-	else location.href="/Tournament/";
-}
-
 var cl;
 
 function ShowCl1(){
