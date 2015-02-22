@@ -13,7 +13,7 @@
 
 Route::get('/', 'HomeController@getRank' );
 
-Route::get('log', function(){return View::make('pages.log');} );
+Route::get('log/{_id?}', 'HomeController@logPage' );
 
 Route::post('login', 'HomeController@login' );
 

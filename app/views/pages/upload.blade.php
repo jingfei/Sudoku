@@ -31,24 +31,8 @@
 		<th><label for="cppfile">paste Sudoku.cpp code here</label></th>
 	</tr> 
 	<tr>
-		<td align="center"><textarea rows="20" cols="500" style="background-color:#baffba;width:80%" id="prehtext" name="htext" onkeyup="changeH()">
-<?php
-	$hfile=fopen(asset('tmpCode/'.Session::get('id')."/Sudoku.h"),"r");
-	if($hfile)
-		while(!feof($hfile))
-			echo fgets($hfile);
-	fclose($hfile);
-?>
-		</textarea></td>
-		<td align="center"><textarea id="precpptext" name="cpptext" rows="20" cols="500" style="background-color:#c2ffff;width:80%" onkeyup="changeCpp()">
-<?php
-	$cppfile=fopen(asset("tmpCode/".Session::get('id')."/Sudoku.cpp"),"r");
-	if($cppfile)
-		while(!feof($cppfile))
-			echo fgets($cppfile);
-	fclose($cppfile);
-?>
-		</textarea></td>
+		<td align="center"><textarea rows="20" cols="500" style="background-color:#baffba;width:80%" id="prehtext" name="htext" onkeyup="changeH()">{{$header}}</textarea></td>
+		<td align="center"><textarea id="precpptext" name="cpptext" rows="20" cols="500" style="background-color:#c2ffff;width:80%" onkeyup="changeCpp()">{{$code}}</textarea></td>
 	</tr>
 	<tr>
 		<th>Sudoku.h file preview</th>

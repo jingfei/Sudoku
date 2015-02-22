@@ -43,130 +43,87 @@ class HomeController extends BaseController {
 					->with('users', $users);
 	}
 
-//	public function getLog(){
-//		return View::make('pages.log');
-//	}
+	private function logStatus($result){
+		if(!$result->op)
+			switch($result->check){
+				case 0:  return HTML::image("img/ac.png"); break;
+				case 1:  return HTML::image("img/ce.png"); break;
+				case 2:  return HTML::image("img/tle.png"); break;
+				case 3:  return HTML::image("img/wa.png"); break;
+				case 4:  return HTML::image("img/err.png"); break;
+				case 5:  return HTML::image("img/pe.png"); break;
+				case 6:  return HTML::image("img/pending.png"); break;
+				default: return "--";
+			}
+		else
+			switch($result->result){
+				case 0:  return HTML::image("img/tie.png"); break;
+				case 1:  return HTML::image("img/win.png"); break;
+				case -1: return HTML::image("img/lose.png"); break;
+				default: return "--";
+			}
+		return "--";
+	}
 
-	public static function getLog($check){
+	public function logPage($_id=null){
+		if(!$_id) return self::getLog(); 
+		$ID = Session::get('id');
+		$result = DB::table('Log')->where('id', $_id)->first();
+		if(!$result) return App::abort(404);
+		if($result->studentID==$ID && $result->check!=='0' || $result->op==$ID){
+			/* get result */
+			$result->img = self::logStatus($result);
+			return View::make('pages.eachlog')
+						->with('result', $result);
+		}
+		return App::abort(404);
+	}
+
+	private function getLog(){
 		$ID = Session::get('id');
 		$result = DB::table('Users')->get();
-		$limit1=100;
-		$limit2=15;
+		$limit_all=100;
+		$limit_spec=15;
 		$name=array();
 		foreach($result as $rows)
 			$name[$rows->id]=$rows->name;
-		$result = DB::table('Log')->orderBy('date', 'desc')->get();
-		if($check=="all"){
-			echo "<table class='rank'><tr><th>date</th><th>name</th><th>opponent</th><th>check</th><th>result</th></tr>";
-			$Count=0;
-			foreach($result as $rows){
-				if($Count>=$limit1) break;
-				$Count++;
-				echo "<tr>";
-				echo "<td>".$rows->date."</td>";
-				echo "<td>".$name[$rows->id]."</td>";
-				echo "<td>".$name[$rows->op]."</td>";
-				echo "<td>";
-				switch($rows->check){
-					case 0: 
-						echo HTML::image("img/ac.png"); break;
-					case 1:
-						echo HTML::image("img/ce.png"); break;
-					case 2:
-						echo HTML::image("img/tle.png"); break;
-					case 3:
-						echo HTML::image("img/wa.png"); break;
-					case 4:
-						echo HTML::image("img/err.png"); break;
-					case 5:
-						echo HTML::image("img/pe.png"); break;
-				}
-				echo "</td><td>";
-				switch($rows->result){
-					case 0: 
-						echo HTML::image("img/tie.png"); break;
-					case 1:
-						echo HTML::image("img/win.png"); break;
-					case -1:
-						echo HTML::image("img/lose.png"); break;
-					default: echo "--";
-				}
-				echo "</td></tr>";
-			}
-			echo "</table>";
+		/* for all record */
+		$all = DB::table('Log')
+					->orderBy('date', 'desc')
+					->take($limit_all)
+					->get();
+		foreach($all as $rows){
+			if($rows->studentID==$ID && $rows->check!='0' || $rows->op==$ID)
+				$rows->url = URL::to('log/'.$rows->id);
+			else $rows->url = null;
+			$rows->img = self::logStatus($rows);
 		}
-		else{
-			echo "<hr style='border-top:dashed 1px;' width='80%'>";
-			echo "<h2 style='text-align:center;color:#0060bf'>Your attack</h2>";
-			echo "<table class='rank'>";
-			echo "<tr><th>date</th><th>name</th><th>opponent</th><th>check</th><th>result</th><th>score</th></tr>";
-			$Count=0;
-			foreach($result as $rows){
-				if($Count>=$limit2) break;
-				if($rows->id!=$ID) continue;
-				$Count++;
-				echo "<tr>";
-				echo "<td>".$rows->date."</td>";
-				echo "<td>".$name[$rows->id]."</td>";
-				echo "<td>".$name[$rows->op]."</td>";
-				echo "<td>";
-				switch($rows->check){
-					case 0: 
-						echo HTML::image("img/ac.png"); break;
-					case 1:
-						echo HTML::image("img/ce.png"); break;
-					case 2:
-						echo HTML::image("img/tle.png"); break;
-					case 3:
-						echo HTML::image("img/wa.png"); break;
-					case 4:
-						echo HTML::image("img/err.png"); break;
-					case 5:
-						echo HTML::image("img/pe.png"); break;
-				}
-				echo "</td><td>";
-				switch($rows->result){
-					case 0: 
-						echo HTML::image("img/tie.png"); break;
-					case 1:
-						echo HTML::image("img/win.png"); break;
-					case -1:
-						echo HTML::image("img/lose.png"); break;
-					default: echo "--";
-				}
-				echo "</td><td>".$rows->add."</td>";
-				echo "</tr>";
-			}
-			echo "</table><br/>";
-			echo "<hr style='border-top:dashed 1px;' width='80%'>";
-			echo "<h2 style='text-align:center;color:#0060bf'>Being attacked</h2>";
-			echo "<table class='rank'>";
-			echo "<tr><th>date</th><th>name</th><th>opponent</th><th>your result</th><th>your score</th></tr>";
-			$result = DB::table("Log")->orderBy('date', 'desc')->get();
-			$Count=0;
-			foreach($result as $rows){
-				if($Count>=$limit2) break;
-				if($rows->op!=$ID || $rows->result==2) continue;
-				$Count++;
-				echo "<tr>";
-				echo "<td>".$rows->date."</td>";
-				echo "<td>".$name[$rows->id]."</td>";
-				echo "<td>".$name[$rows->op]."</td>";
-				echo "<td>";
-				switch($rows->result){
-					case 0: 
-						echo HTML::image("img/tie.png"); break;
-					case 1:
-						echo HTML::image("img/win.png"); break;
-					case -1:
-						echo HTML::image("img/lose.png"); break;
-					default: echo "--";
-				}
-				echo "</td><td>".$rows->op_add."</td>";
-				echo "</tr>";
-			}
-			echo "</table>";
+		/* for spec record */
+		$spec = DB::table('Log')
+					->where('studentID', $ID )
+					->orderBy('date', 'desc')
+					->take($limit_spec)
+					->get();
+		foreach($spec as $rows){
+			$rows->url = URL::to('log/'.$rows->id);
+			if($rows->check==="0") $rows->url = null;
+			$rows->img = self::logStatus($rows);
 		}
+		/* for attacked record */
+		$attacked = DB::table("Log")
+						->where('op', $ID)
+						->orderBy('date', 'desc')
+						->take($limit_spec)
+						->get();
+		foreach($attacked as $rows){
+			$rows->url = URL::to('log/'.$rows->id);
+			$rows->img = self::logStatus($rows);
+		}
+		return View::make('pages.log')
+					->with('name', $name)
+					->with('all', $all)
+					->with('spec', $spec)
+					->with('attacked', $attacked);
 	}
 
 	public function login(){

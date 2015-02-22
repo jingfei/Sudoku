@@ -13,7 +13,7 @@
 			@endif
 			onclick="location.href='{{URL::to("/")}}';">Home</div>
 		<div
-			@if(Request::path()=="log") class="topClick top2";
+			@if(strpos(Request::path(),"log")!==false) class="topClick top2";
 			@else class="top2"
 			@endif
 			onclick="location.href='{{URL::to("log")}}';">Record</div>

@@ -12,11 +12,78 @@
 		@endif
 			<h1 class="title">Record</h1>
 			@if(Session::has('id'))
-			<div id="fortable">{{HomeController::getLog('spec')}}</div>
-			<div id="fortable2" style="display:none">{{HomeController::getLog('all')}}</div>
-			@else
-			<div id="fortable2">{{HomeController::getLog('all')}}</div>
+			<div id="fortable">
+				<hr style='border-top:dashed 1px;' width='80%'>
+				<h2 style='text-align:center;color:#0060bf'>Your attack</h2>
+				<table class='rank'>
+					<tr><th>date</th>
+						<th>name</th>
+						<th>opponent</th>
+						<th>result</th>
+						<th>reward</th>
+					</tr>
+					@foreach($spec as $rows)
+
+					@if($rows->url!=null)
+					<tr onClick='location.href="{{$rows->url}}"' style='cursor:pointer'>
+					@else <tr>
+					@endif
+
+						<td>{{$rows->date}}</td>
+						<td>{{$name[$rows->studentID]}}</td>
+						<td>{{$rows->op ? $name[$rows->op] : "--"}}</td>
+						<td>{{$rows->img}}</td>
+						<td>{{$rows->add}}</td>
+					</tr>
+					@endforeach
+				</table>
+				<br/>
+
+				<hr style='border-top:dashed 1px;' width='80%'>
+				<h2 style='text-align:center;color:#0060bf'>Being attacked</h2>
+				<table class='rank'>
+					<tr><th>date</th>
+						<th>name</th>
+						<th>opponent</th>
+						<th>result</th>
+						<th>your rewards</th>
+					</tr>
+					@foreach($attacked as $rows)
+					<tr onClick='location.href="{{$rows->url}}"' style='cursor:pointer'>
+						<td>{{$rows->date}}</td>
+						<td>{{$name[$rows->studentID]}}</td>
+						<td>{{$name[$rows->op]}}</td>
+						<td>{{$rows->img}}</td>
+						<td>{{$rows->op_add}}</td>
+					</tr>
+					@endforeach
+				</table>
+			</div>
 			@endif
+			<div id="fortable2" @if(Session::has('id')) style="display:none" @endif >
+				<table class='rank'>
+					<tr><th>date</th>
+						<th>name</th>
+						<th>opponent</th>
+						<th>result</th>
+						<th>rewards</th>
+					</tr>
+					@foreach($all as $rows)
+
+					@if($rows->url)
+					<tr onClick='location.href="{{$rows->url}}"' style='cursor:pointer'>
+					@else <tr>
+					@endif
+
+						<td>{{$rows->date}}</td>
+						<td>{{$name[$rows->studentID]}}</td>
+						<td>{{$rows->op ? $name[$rows->op] : "--"}}</td>
+						<td>{{$rows->img}}</td>
+						<td>{{$rows->add}}</td>
+					</tr>
+					@endforeach
+				</table>
+			</div>
 		</div>
 <script>
 	$(document).ready(function(){
