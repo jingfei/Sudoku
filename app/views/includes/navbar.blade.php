@@ -3,15 +3,8 @@
 	<div id="top">
 	<table width="100%"><tr><td align="left">
 	<h1 style="display:table-cell;" >
-		
-<?php
-	if($_SERVER["REQUEST_URI"]=='/Tournament/challenge.php')
-		echo 'Challenge';
-	else if($_SERVER["REQUEST_URI"]=='/Tournament/attack.php')
-		echo 'Attack';
-	else echo '<a href="/Sudoku">Sudoku Tournament</a>'
-?>
-&nbsp;</h1></td>
+		<a href="{{URL::to('/')}}">Sudoku Tournament</a>
+	</h1></td>
 	<td align="right">
 		<div class="top2" id="Rule" onclick="ChFlip();">Rule</div>
 		<div
@@ -25,7 +18,13 @@
 			@endif
 			onclick="location.href='{{URL::to("log")}}';">Record</div>
 		@if(Session::has('id'))
-		<div class="top2" onClick="Setting();">Setting</div>
+		<div
+			@if(Request::path()=="upload" || Request::path()=="checker")
+				class="topClick top2"
+			@else class="top2"
+			@endif
+			onClick="location.href='{{URL::to('upload')}}'">Checker</div>
+		<div class="top2" onClick="Setting();">Rename</div>
 		<div class="top2" onClick="location.href='{{URL::to("logout")}}'">Logout</div>
 		@else
 		<div class="top2" onClick="LogIn();">Login</div>
@@ -53,10 +52,10 @@
 				$row = DB::table('Users')->where('id',Session::get('id'))->first();
 				echo '<div id="RemainTime">';
 				echo '<table style="width:100%"><tr>
-				<td class="title" style="width:10%;font-size:inherit"><a href="http://judge.imslab.org/CheckHW2/" target="_blank">Checker</a></td><td style="width:90%;">';
-				echo 'Hello~ '.$row->name.'. You\'re
+				<td style="width:90%;">';
+				echo 'Hello '.$row->name.',
 				<a href="#" onclick="GO();" style="text-decoration:underline;">rank '.$row->rank.'</a>, 
-				and you have '.$row->challenge.' chance(s) to challenge.';
+				'.$row->challenge.' chance(s) remained.';
 				echo '</td></tr></table><hr/></div>';
 			}
 ?>

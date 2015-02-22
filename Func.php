@@ -126,7 +126,8 @@ function exec_timeout($cmd, $timeout) {
   	$timeout = $timeout * 1000000;
 
   	// Output buffer.
-//	  $buffer = '';
+	$buffer = '';
+	$error = '';
 
   	// While we have time to wait.
   	$Result=true;
@@ -145,7 +146,9 @@ function exec_timeout($cmd, $timeout) {
 
   	  	// Read the contents from the buffer.
   	  	// This function will always return immediately as the stream is none-blocking.
-//	  	  $buffer .= stream_get_contents($pipes[1]);
+	  	$buffer .= stream_get_contents($pipes[1]);
+	  	// Check if there were any errors.
+	    $buffer .= stream_get_contents($pipes[2]);
   	  	if (!$status['running']) {
   	  		$Result=false;
   	  		//Break from this loop if the process exited before the timeout.
@@ -156,8 +159,6 @@ function exec_timeout($cmd, $timeout) {
   		$timeout -= (microtime(true) - $start) * 1000000;
   	}
 
-  	// Check if there were any errors.
-//  $errors = stream_get_contents($pipes[2]);
 
 //  if (!empty($errors)) {
 //    throw new \Exception($errors);

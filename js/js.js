@@ -250,47 +250,36 @@ function CallRace(j,i,Status,op){
 	}
 }
 
+function Checker(){
+	var n;
+	var hfile=$("#prehtext").val();
+	var cppfile=$("#precpptext").val();
+
+	$.ajax({
+		type: "POST",
+		url: "Judge.php",
+		data: {
+			op: Pre,
+			hfile: hfile,
+			cppfile: cppfile
+		}
+	}).done(function(respond){
+		var Rand=Math.floor((Math.random()*5)+10);
+		if(!respond)  //compile success
+			CallCheck(5,1,hfile,cppfile,Pre,Rand);
+		else{
+			document.getElementById('Result').innerHTML=respond;
+			cl.hide();
+			$('#Finish1').show();
+		}
+	});
+}
+
 function GO(Pre,Name){
 	String.prototype.replaceAt=function(index, character) {
     	return this.substr(0, index) + character + this.substr(index+character.length);
 	}
-	if(Name==='#step3'){
-		ShowCl1();
-		var n;
-		var hfile=$("#prehtext").val();
-/*		n=hfile.search("\\\\n");
-		while(n!=-1){
-			hfile=hfile.replaceAt(n,"@");
-			n=hfile.search("\\\\n");
-		}
-*/		var cppfile=$("#precpptext").val();
-/*		n=cppfile.search("\\\\n");
-		while(n!=-1){
-			cppfile=cppfile.replaceAt(n,"@");
-			n=cppfile.search("\\\\n");
-		}
-*/		
-		$.ajax({
-			type: "POST",
-			url: "Judge.php",
-			data: {
-				op: Pre,
-				hfile: hfile,
-				cppfile: cppfile
-			}
-		}).done(function(respond){
-			var Rand=Math.floor((Math.random()*5)+10);
-			if(!respond)  //compile success
-				CallCheck(5,1,hfile,cppfile,Pre,Rand);
-			else{
-				document.getElementById('Result').innerHTML=respond;
-				cl.hide();
-				$('#Finish1').show();
-			}
-		});
-		$('#step1').hide();
-	}
-	else if(Name==='#step4'){
+	if(Name==='#step4'){
 		ShowCl2();
 		var tmp="<h1 style='color:#24c0e8;'>Average time for solving a question:</h1>";
 		tmp+="<table style='width:90%;font-size:20px;padding:2px;text-align:center;'>";

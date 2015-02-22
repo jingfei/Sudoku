@@ -8,7 +8,7 @@
 				<input type="radio" value="spec" name="log" checked="checked"/>yours
 				<input type="radio" value="all" name="log"/>all
 			</form>
-			<hr>;
+			<hr>
 		@endif
 			<h1 class="title">Record</h1>
 			@if(Session::has('id'))
