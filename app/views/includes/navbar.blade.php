@@ -1,17 +1,24 @@
-<div id="logo">
+<div id="logo" 
+		@if(Request::path()=="/")
+		style="background:rgba(255,255,255,0.3);top:50px;font-size:1.3em;width:100%;border-radius:0;left:0;position:absolute;height:auto"
+		@endif >
+	<div id="top" style="position:absolute;width:100%;z-index:10;background:rgba(255,255,255,0.4);top:30px;">
 	<hr>
-	<div id="top">
-	<table width="100%"><tr><td align="left">
-	<h1 style="display:table-cell;" >
-		<a href="{{URL::to('/')}}">Sudoku Tournament</a>
+	<table width="100%" style="padding:0 50px"><tr><td align="left">
+	<h1 style="display:table-cell;cursor:default" >
+		@if(Request::path()==('/')) Program Design II
+		@else <a href="{{URL::to('/')}}">Sudoku Tournament</a>
+		@endif
 	</h1></td>
 	<td align="right">
-		<div class="top2" id="Rule" onclick="ChFlip();">Rule</div>
+		@if(!Session::has('id'))
+		<div class="top2" id="Rule" onclick=" $('html, body').animate({ scrollTop: $('#RuleArticle').offset().top }, 1000);">Rule</div>
 		<div
-			@if(Request::path()=="/") class="topClick top2"
+			@if(Request::path()=="rank") class="topClick top2"
 			@else class="top2"
 			@endif
-			onclick="location.href='{{URL::to("/")}}';">Home</div>
+			onclick="location.href='{{URL::to("rank")}}';">Rank</div>
+		@endif
 		<div
 			@if(strpos(Request::path(),"log")!==false) class="topClick top2";
 			@else class="top2"
@@ -60,31 +67,12 @@
 			}
 ?>
 </div>
-<div class="flipbox-container">
-		<div class="flipbox" style="height:500px">
-			{{ HTML::image("img/sudoku2.jpg", "", array('class'=>'big')) }}
-		</div>
-	</div>
-	{{ HTML::image("img/logo.png", "", array('class'=>'small')) }}
+@if(Request::path()!="/")
+<div id="BigIMG" style="background:#f1ebeb">
+{{ HTML::image("img/sudoku2.jpg", "", array('class'=>'big')) }}
 </div>
-<!--hidden-->
-	<div id="flipImg" style="display:none">
-		{{ HTML::image("img/sudoku2.jpg", "", array('class'=>'big')) }}
-	</div>
-    <div id="flipText" style="display:none;">
-		<textarea id="Regu" readonly>
-		<?php 
-			$file=fopen("Regular.txt","r");
-			echo "\n";
-			if($file)
-				while(!feof($file))
-					echo fgets($file);
-			fclose($file);
-			for($i=0; $i<15; $i++) echo "\n";
-		?>
-		</textarea>
-    </div>
-<!--hidden-->
+	{{ HTML::image("img/logo.png", "", array('class'=>'small','style'=>'bottom:10%')) }}
+@endif
 <script>
 $(document).ready(function(){
 	$("#LogIn>form").submit(function(e){

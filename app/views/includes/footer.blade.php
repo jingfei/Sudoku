@@ -1,6 +1,6 @@
-		<div id="foot">
+		<div id="foot" @if(Request::path()=="/") style="position:relative;width:100%;" @endif >
 		<hr>
-		<table style="width:100%">
+		<table style="width:100%;padding:0 50px">
 		<tr><td align="left">
 		<h2> 
 			2015 Program Design (II)

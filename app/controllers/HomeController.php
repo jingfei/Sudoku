@@ -44,7 +44,7 @@ class HomeController extends BaseController {
 
 			}
 		}
-		return View::make('pages.home')
+		return View::make('pages.rank')
 					->with('isLogin', $isLogin)
 					->with('isAC', $isAC)
 					->with('users', $users);

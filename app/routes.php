@@ -11,7 +11,13 @@
 |
 */
 
-Route::get('/', 'HomeController@getRank' );
+Route::get('/', 
+			function(){
+				if(Session::has('id')) return Redirect::to('rank');
+				else return View::make('pages.home');
+			} );
+
+Route::get('rank', 'HomeController@getRank' );
 
 Route::get('log/{_id?}', 'HomeController@logPage' );
 

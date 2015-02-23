@@ -1,86 +1,38 @@
 @extends('layouts.navbar')
 @section('content')
 
-<div class="main">
-	<h1 class="title">Ranking</h1>
-	<table class="rank">
-		<thead>
-			<tr>
-				<th>rank</th>
-				<th>name</th>
-				<th>score</th>
-				@if($isLogin) <th>win or lose</th> @endif
-				<th>status</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach($users as $rows)
-				@if(!$isLogin || $rows->isChallenge) <tr>
-				@elseif($isLogin == $rows->id) <tr id="self">
-				@elseif($rows->correct==0 && $isAC) 
-					<tr class="enableCh" onClick="location.href='{{URL::to("challenge/".$rows->pw)}}';">
-				@else <tr>
-				@endif
-
-				<td> {{$rows->rank}} </td>
-				<td> {{$rows->name}} </td>
-				<td> {{$rows->score}} </td>
-
-				@if($isLogin) <td> {{$rows->addScore}} </td> @endif
-				
-				<td>
-				@if($rows->correct==0)
-					@if($isLogin && $rows->id!=$isLogin && !$rows->isChallenge && $isAC)
-						{{ HTML::image("img/challenge2.png") }}
-					@else
-						{{ HTML::image("img/ac.png","",array("height"=>"33px")) }}
-					@endif
-				@elseif($rows->correct==1)
-					{{ HTML::image("img/ce.png","",array("height"=>"33px")) }}
-				@elseif($rows->correct==2)
-					{{ HTML::image("img/tle.png","",array("height"=>"33px")) }}
-				@elseif($rows->correct==3)
-					{{ HTML::image("img/wa.png","",array("height"=>"33px")) }}
-				@elseif($rows->correct==4)
-					{{ HTML::image("img/err.png","",array("height"=>"33px")) }}
-				@elseif($rows->correct==5)
-					{{ HTML::image("img/pe.png","",array("height"=>"33px")) }}
-				@endif
-				</td></tr>
-			@endforeach
-		</tbody>
-	</table>
+<div id="BigIMG" style="width:100%;height:100%;position:fixed;z-index:-1;top:0;left:0">
+{{ HTML::image("img/sudoku.jpg", "", array('class'=>'big')) }}
 </div>
+<div>
+	{{ HTML::image("img/logo.png", "", array('class'=>'small','style'=>'bottom:10%')) }}
+</div>
+	<div id="hidden" style="position:relative;z-index:-1"></div>
+    <div id="RuleArticle" style="position:relative; width:100%;">
+		<div class="title" style="padding:30px;font-size:3.5em">Rule</div>
+		<div id="Regu" style="background:rgba(255,255,255,0.4);margin:0 5%;padding:5%;border-radius:10px;width:80%;font-size:1.4em">
+		<?php 
+			$file=fopen("Regular.txt","r");
+			echo "\n";
+			if($file)
+				while(!feof($file))
+					echo fgets($file)."<br/>";
+			fclose($file);
+		?>
+		</div>
+    </div>
+<!--hidden-->
 <script>
-function GO(){
-	$('body,html').animate({
-		scrollTop:  $('#self').offset().top
-	}, 800);
-}
-function Challenge(op){
-	method = "post"; 
-    var form = document.createElement("form");
-    form.setAttribute("method", method);
-    form.setAttribute("action", "challenge.php");
-
-    var hiddenField = document.createElement("input");
-    hiddenField.setAttribute("type", "hidden");
-    hiddenField.setAttribute("name", "op");
-    hiddenField.setAttribute("value", op);
-
-    form.appendChild(hiddenField);
-
-    document.body.appendChild(form);
-    form.submit();
-}
-
 $(document).ready(function(){
-	$(".enableCh").hover(function(){
-		$(" td img",this).attr("src","{{asset('img/challenge.png')}}");
-	}, function(){
-		$(" td img",this).attr("src","{{asset('img/challenge2.png')}}");
-	});
+	$("#hidden").height( $(window).height());
+});
+$(window).load(function(){
+	$(".container").fadeIn('slow');
 });
 </script>
+<style>
+body{margin:0;}
+.container{display:none;}
+</style>
 
 @stop
