@@ -49,8 +49,9 @@ class AttackController extends BaseController {
 		return Redirect::to('log');
 	}
 
-	public function ploadPage($_id){
+	public function attack($_id){
 		if(!Session::has('id')) return '<script>alert("please login");</script>'.Redirect::to('/');
+		/* check challenge times */
 		$User = DB::table('Users')->where('id', Session::get('id'))->first();
 		if($User->challenge<=0){
 			$result = DB::table('Users')
@@ -58,7 +59,7 @@ class AttackController extends BaseController {
 						->update(array('challenge'=>0));
 			return '<script>alert("you challenge too much");</script>'.Redirect::to('/');
 		}
-
+		/* find op */
 		$result = DB::table('Users')->get();
 		$op = null;
 		foreach($result as $rows){
@@ -83,8 +84,9 @@ class AttackController extends BaseController {
 					->update(array('challenge'=> ($User->challenge-1),
 								   'challenge_id' => $ser));
 		/***********************************************/
-		return View::make('pages.upload')
-					->with('op', $op);
+		$LogID = self::newRecord($header, $code, $op);
+		Queue::push('CompileController@doAttack', array('LogID'=>$LogID,'op'=>$op));
+		return Redirect::to('log');
 	}
 
 

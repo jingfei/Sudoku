@@ -17,6 +17,71 @@ class CompileController extends BaseController {
 		self::reRank();
 	}
 
+	public function doAttack($job, $data){
+		$LogID = $data['LogID'];
+		$op = $data['op'];
+		$self = Session::get('id');
+		$final = 0;
+		$result = array( "op1"=>null, "self1"=>null, "res1"=>null,
+						 "op2"=>null, "self2"=>null, "res2"=>null,
+						 "op3"=>null, "self3"=>null, "res3"=>null );
+		$result['op1'] = self::Race($LogID, $op, $self);
+		DB::table('Log')->where('id', $LogID)
+						->update( array('comment'=> serialize($result) );
+		$result['self1'] = self::Race($LogID, $op, $self);
+		if($result['op1']<$result['self1']){ $result['res1']=-1; --$final; }
+		else if($result['op1']>$result['self1']){ $result['res1']=1; ++$final; }
+		else $result['res1']=0;
+		DB::table('Log')->where('id', $LogID)
+						->update( array('comment'=> serialize($result) );
+		$result['op2'] = self::Race($LogID, $op, $self);
+		DB::table('Log')->where('id', $LogID)
+						->update( array('comment'=> serialize($result) );
+		$result['self2'] = self::Race($LogID, $op, $self);
+		if($result['op2']<$result['self2']){ $result['res2']=-1; --$final; }
+		else if($result['op2']>$result['self2']){ $result['res2']=1; ++$final; }
+		else $result['res2']=0;
+		DB::table('Log')->where('id', $LogID)
+						->update( array('comment'=> serialize($result) );
+		$result['op3'] = self::Race($LogID, $op, $self);
+		DB::table('Log')->where('id', $LogID)
+						->update( array('comment'=> serialize($result) );
+		$result['self3'] = self::Race($LogID, $op, $self);
+		if($result['op3']<$result['self3']){ $result['res3']=-1; --$final; }
+		else if($result['op3']>$result['self3']){ $result['res3']=1; ++$final; }
+		else $result['res3']=0;
+		DB::table('Log')->where('id', $LogID)
+						->update( array('comment'=> serialize($result) );
+		/* change score */
+		$rank1 = DB::table('Users')->where('id', $ID)->first()->rank;
+		$rank2 = DB::table('Users')->where('id', $op)->first()->rank;
+		if($final > 0){
+			$final = 1;
+			$add=0;
+			if($rank2>=$rank1) $add=1;
+			else $add=(int)(($rank1-$rank2)/5)+2;
+			DB::table('Log')->where('id', $LogID)
+							->update( array('result'=>$final,
+											'add'=> (string)$add,
+											'op_add'=>'-1') );
+		}
+		else if($final<0){ 
+			$final = -1;
+			$add = 0;
+			if($rank1>=$rank2) $add=1;
+			else $add=(int)(($rank2-$rank1)/5)+2;
+			DB::table('Log')->where('id', $LogID)
+							->update( array('result'=>$final,
+											'add'=>'-1',
+											'op_add'=> (string)$add) );
+		}
+		else
+			DB::table('Log')->where('id', $LogID)
+							->update( array('result'=>$final,
+											'add'=>'0',
+											'op_add'=>'0') );
+	}
+
 	private function Compile($LogID){
 		$ID = Session::get('id');
 		/* files */
@@ -165,6 +230,30 @@ class CompileController extends BaseController {
 					->update( array('score'=> $score) );
 		self::reRank();
 		self::Record($LogID,1,2,-5,$msg);
+	}
+
+	// Race function return seconds, $timeout+10 for TLE
+	private function Race($LogID, $a, $b){  // a solve
+		$ID = Session::get('id');
+		$timeout = 30;
+		$aCMD= self::$CodePath.'/tmpCode/'.$b.'/hw2_give_question '.$ID;
+		$bCMD= self::$CodePath.'/tmpCode/'.$a.'/hw2_solve '.$ID;
+		$stdout = "";
+		$errout = "";
+		/* give question time out */
+		if(exec_timeout($aCMD,$timeout,$stdout,$errout))
+			return 0;
+		/* solve time out */
+		else if(exec_timeout($bCMD,$timeout,$stdout,$errout))
+			return $timeout+10;
+		else{
+			$fileTime = fopen( self::$CodePath."/tmpCode/".$ID."/Time","r");
+			$Time=fgets($fileTime);
+			fclose($fileTime);
+			shell_exec('rm '.self::$CodePath.'/tmpCode/'.$ID.'/question*');
+			shell_exec('rm '.self::$CodePath.'/tmpCode/'.$ID.'/Time');
+			return $Time;
+		}
 	}
 
 }

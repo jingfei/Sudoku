@@ -42,7 +42,6 @@ class BaseController extends Controller {
 	}
 
 	protected function Record($LogID, $check,$Status,$add1,$comment=null,$add2=null){
-		$ID = Session::get('id');
 		$result = DB::table('Log')
 					->where('id', $LogID)
 					->update( array('check'=>$check, 
