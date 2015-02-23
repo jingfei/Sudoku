@@ -17,7 +17,7 @@
 			@foreach($users as $rows)
 				@if(!$isLogin || $rows->isChallenge) <tr>
 				@elseif($isLogin == $rows->id) <tr id="self">
-				@elseif($rows->correct==0) 
+				@elseif($rows->correct==0 && $isAC) 
 					<tr class="enableCh" onClick="location.href='{{URL::to("challenge/".$rows->pw)}}';">
 				@else <tr>
 				@endif
@@ -30,7 +30,7 @@
 				
 				<td>
 				@if($rows->correct==0)
-					@if($isLogin && $rows->id!=$isLogin && !$rows->isChallenge)
+					@if($isLogin && $rows->id!=$isLogin && !$rows->isChallenge && $isAC)
 						{{ HTML::image("img/challenge2.png") }}
 					@else
 						{{ HTML::image("img/ac.png","",array("height"=>"33px")) }}

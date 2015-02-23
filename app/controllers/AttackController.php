@@ -19,27 +19,12 @@ class AttackController extends BaseController {
 
 	public function uploadPage(){
 		if(!Session::has('id')) return '<script>alert("please login");</script>'.Redirect::to('/');
-		$headerpath = self::$CodePath.'/tmpCode/'.Session::get('id')."/Sudoku.h";
-		$codepath = self::$CodePath."/tmpCode/".Session::get('id')."/Sudoku.cpp";
-		/* get header file */
-		$header = "";
-		if(file_exists($headerpath)){
-			$hfile=fopen(self::$CodePath.'/tmpCode/'.Session::get('id')."/Sudoku.h","r");
-			if($hfile)
-				while(!feof($hfile))
-					$header .= fgets($hfile);
-			fclose($hfile);
-		}
-		/* get cpp file */
-		$code = "";
-		if(file_exists($codepath)){
-			$cppfile=fopen(self::$CodePath."/tmpCode/".Session::get('id')."/Sudoku.cpp","r");
-			if($cppfile)
-				while(!feof($cppfile))
-					$code .= fgets($cppfile);
-			fclose($cppfile);
-		}
-
+		$result = DB::table('Log')
+					->where('studentID', Session::get('id'))
+					->orderBy('date', 'desc')
+					->first();
+		if($result){ $header = $result->header; $code = $result->code; }
+		else{ $header = ""; $code = ""; }
 		return View::make('pages.upload')
 					->with('header',$header)
 					->with('code', $code);
@@ -50,6 +35,7 @@ class AttackController extends BaseController {
 		$header = Input::get('htext');
 		$code = Input::get('cpptext');
 		$ID = Session::get('id');
+		if(!$header || !$code) return '<script>alert("recieved no code here");</script>'.Redirect::to('/');
 		/* files */
 		$SudokuH = self::$CodePath."/tmpCode/".$ID."/Sudoku.h";
 		$SudokuCPP = self::$CodePath."/tmpCode/".$ID."/Sudoku.cpp";
@@ -58,13 +44,8 @@ class AttackController extends BaseController {
 		fwrite($fileh,$header); fclose($fileh);
 		$filecpp = fopen($SudokuCPP,"w");
 		fwrite($filecpp,$code); fclose($filecpp);
-		/*update code to SQL*/
-	//	$header = mysql_real_escape_string($header);
-	//	$code = mysql_real_escape_string($code);
-		$result = DB::table('Users')
-					->where('id', $ID)
-					->update( array('header'=>$header, 'code'=>$code) );
-		Queue::push('CompileController@doChecker');
+		$LogID = self::newRecord($header, $code);
+		Queue::push('CompileController@doChecker', array('LogID'=>$LogID));
 		return Redirect::to('log');
 	}
 

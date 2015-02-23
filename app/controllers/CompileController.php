@@ -2,8 +2,8 @@
 
 class CompileController extends BaseController {
 
-	public function doChecker($job, $data=null){
-		$LogID = self::newRecord();
+	public function doChecker($job, $data){
+		$LogID = $data['LogID'];
 		$result = true;
 		$r=rand(10,14);
 		if(!self::Compile($LogID)) $result = false;
@@ -14,6 +14,7 @@ class CompileController extends BaseController {
 		else if(!self::check_ans($LogID, $r+20)) $result = false;
 		else if(!self::check_give($LogID)) $result = false;
 		else self::Record($LogID,0,2,0);
+		self::reRank();
 	}
 
 	private function Compile($LogID){
@@ -161,7 +162,7 @@ class CompileController extends BaseController {
 		$score-=5; if($score<0) $score=0;
 		$result = DB::table('Users')
 					->where('id', $ID)
-					->update( array('correct'=>1, 'score'=> $score) );
+					->update( array('score'=> $score) );
 		self::reRank();
 		self::Record($LogID,1,2,-5,$msg);
 	}

@@ -31,12 +31,12 @@ class BaseController extends Controller {
 					->orderBy('id')
 					->get();
 		foreach($result as $rows){
+			if($rows->score < $last) $RANK=$realRank;
 			$nowID=$rows->id;
 			$User = DB::table("Users")
 						->where('id', $nowID)
 						->update( array('rank'=> $RANK) );
 			$realRank++;
-			if($rows->score < $last) $RANK=$realRank;
 			$last=$rows->score; 
 		}
 	}
@@ -53,11 +53,13 @@ class BaseController extends Controller {
 		return $result;
 	}
 
-	protected function newRecord($op=null){
+	protected function newRecord($header, $code, $op=null){
 		$ID = Session::get('id');
 		$result = DB::table('Log')
 					->insertGetId( array('studentID'=>$ID,
-									'op'=>$op) );
+										 'op'=>$op,
+										 'header'=>$header,
+										 'code'=>$code) );
 		return $result;
 	}
 
@@ -71,7 +73,6 @@ class BaseController extends Controller {
 					->where('id',$ID)
 					->update( array( 'correct'=>$Status, 
 									 'score'=>$score ) );
-		self::reRank();
 	}
 	
 	protected function exec_timeout($cmd,$timeout,&$stdout,&$errout){

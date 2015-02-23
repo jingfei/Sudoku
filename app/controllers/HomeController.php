@@ -6,10 +6,13 @@ class HomeController extends BaseController {
 	{
 		$isLogin = Session::has('id') ? Session::get('id') : false;
 		$arr = array();
+		$isAC = false;
 		if($isLogin){
 			$result = DB::table('Users')->where('id', $isLogin)->first();
 			$rank = $result->rank;
 			$arr = unserialize($result->challenge_id);
+			$result = DB::table('Log')->where('studentID', $isLogin)->orderBy('date', 'desc')->first();
+			$isAC = $result ? $result->check==0 ? true : false : false;
 		}
 		$users = DB::table('Users')
 					->orderBy('score', 'desc')
@@ -17,6 +20,9 @@ class HomeController extends BaseController {
 					->get();
 		foreach($users as $rows){
 			$isChallenge = false;
+			$Log = DB::table('Log')->where('studentID', $rows->id)->orderBy('date', 'desc')->first();
+			if($Log) $rows->correct=$Log->check;
+			else $rows->correct=4;
 			if($arr)
 				foreach($arr as $item)
 					if($item==$rows->id)
@@ -40,6 +46,7 @@ class HomeController extends BaseController {
 		}
 		return View::make('pages.home')
 					->with('isLogin', $isLogin)
+					->with('isAC', $isAC)
 					->with('users', $users);
 	}
 
@@ -69,8 +76,10 @@ class HomeController extends BaseController {
 		if(!$_id) return self::getLog(); 
 		$ID = Session::get('id');
 		$result = DB::table('Log')->where('id', $_id)->first();
+		$result->header = htmlspecialchars($result->header, ENT_QUOTES);
+		$result->code = htmlspecialchars($result->code, ENT_QUOTES);
 		if(!$result) return App::abort(404);
-		if($result->studentID==$ID && $result->check!=='0' || $result->op==$ID){
+		if($result->studentID==$ID || $result->op==$ID){
 			/* get result */
 			$result->img = self::logStatus($result);
 			return View::make('pages.eachlog')
@@ -93,7 +102,9 @@ class HomeController extends BaseController {
 					->take($limit_all)
 					->get();
 		foreach($all as $rows){
-			if($rows->studentID==$ID && $rows->check!='0' || $rows->op==$ID)
+			if($rows->studentID==$ID)
+				$rows->url = URL::to('log/'.$rows->id);
+			else if($rows->op && $rows->op==$ID)
 				$rows->url = URL::to('log/'.$rows->id);
 			else $rows->url = null;
 			$rows->img = self::logStatus($rows);
@@ -106,7 +117,6 @@ class HomeController extends BaseController {
 					->get();
 		foreach($spec as $rows){
 			$rows->url = URL::to('log/'.$rows->id);
-			if($rows->check==="0") $rows->url = null;
 			$rows->img = self::logStatus($rows);
 		}
 		/* for attacked record */

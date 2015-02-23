@@ -41,7 +41,6 @@
 	<tr>
 		<td align="center" style="width:50%"><pre class="sh_cpp" style="width:420px;height:20pc;overflow-y:scroll;" id="hPreview"></pre></td>
 		<td align="center" style="width:50%"><pre class="sh_cpp" style="width:420px;height:20pc;overflow-y:scroll;" id="cppPreview"></pre></td>
-	<tr>
 	</tr>
 	<tr>
 		<td colspan="2" align="center">
