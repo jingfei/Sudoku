@@ -9,6 +9,7 @@
 {{HTML::style('css/top.css')}}
 {{HTML::style('css/sh_vim-dark.min.css')}}
 {{HTML::style('css/sh_vim-dark.min.css')}}
+{{HTML::style('css/attackResult.css')}}
 {{HTML::script('js/sh_cpp.min.js')}}
 {{HTML::script('js/sh_main.min.js')}}
 {{HTML::script('js/jquery-2.0.3.js')}}

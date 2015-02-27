@@ -27,33 +27,33 @@ class CompileController extends BaseController {
 						 "op3"=>null, "self3"=>null, "res3"=>null );
 		$result['op1'] = self::Race($LogID, $op, $self);
 		DB::table('Log')->where('id', $LogID)
-						->update( array('comment'=> serialize($result) );
+						->update( array('comment'=> serialize($result)) );
 		$result['self1'] = self::Race($LogID, $op, $self);
 		if($result['op1']<$result['self1']){ $result['res1']=-1; --$final; }
 		else if($result['op1']>$result['self1']){ $result['res1']=1; ++$final; }
 		else $result['res1']=0;
 		DB::table('Log')->where('id', $LogID)
-						->update( array('comment'=> serialize($result) );
+						->update( array('comment'=> serialize($result)) );
 		$result['op2'] = self::Race($LogID, $op, $self);
 		DB::table('Log')->where('id', $LogID)
-						->update( array('comment'=> serialize($result) );
+						->update( array('comment'=> serialize($result)) );
 		$result['self2'] = self::Race($LogID, $op, $self);
 		if($result['op2']<$result['self2']){ $result['res2']=-1; --$final; }
 		else if($result['op2']>$result['self2']){ $result['res2']=1; ++$final; }
 		else $result['res2']=0;
 		DB::table('Log')->where('id', $LogID)
-						->update( array('comment'=> serialize($result) );
+						->update( array('comment'=> serialize($result)) );
 		$result['op3'] = self::Race($LogID, $op, $self);
 		DB::table('Log')->where('id', $LogID)
-						->update( array('comment'=> serialize($result) );
+						->update( array('comment'=> serialize($result)) );
 		$result['self3'] = self::Race($LogID, $op, $self);
 		if($result['op3']<$result['self3']){ $result['res3']=-1; --$final; }
 		else if($result['op3']>$result['self3']){ $result['res3']=1; ++$final; }
 		else $result['res3']=0;
 		DB::table('Log')->where('id', $LogID)
-						->update( array('comment'=> serialize($result) );
+						->update( array('comment'=> serialize($result)) );
 		/* change score */
-		$rank1 = DB::table('Users')->where('id', $ID)->first()->rank;
+		$rank1 = DB::table('Users')->where('id', $self)->first()->rank;
 		$rank2 = DB::table('Users')->where('id', $op)->first()->rank;
 		if($final > 0){
 			$final = 1;
@@ -241,10 +241,10 @@ class CompileController extends BaseController {
 		$stdout = "";
 		$errout = "";
 		/* give question time out */
-		if(exec_timeout($aCMD,$timeout,$stdout,$errout))
+		if(self::exec_timeout($aCMD,$timeout,$stdout,$errout))
 			return 0;
 		/* solve time out */
-		else if(exec_timeout($bCMD,$timeout,$stdout,$errout))
+		else if(self::exec_timeout($bCMD,$timeout,$stdout,$errout))
 			return $timeout+10;
 		else{
 			$fileTime = fopen( self::$CodePath."/tmpCode/".$ID."/Time","r");

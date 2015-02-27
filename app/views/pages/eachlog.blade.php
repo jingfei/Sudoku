@@ -4,7 +4,41 @@
 		<div class="main">
 			<h1 class="title">Result</h1>
 			{{$result->img}}
-			@if($result->comment)
+			@if($result->op)
+			<div>
+				<table id="attackResult">
+				<tr><th></th>
+					<th>opponent's</th>
+					<th>yours</th>
+					<th>result</th>
+				</tr>
+				<tr><th>Round 1</th>
+					<td>{{$result->comment['op1']}} second(s)</td>
+					<td>{{$result->comment['self1']}} second(s)</td>
+					<td>@if($result->comment['res1']==0) tie
+						@elseif($result->comment['res1']==1) win  
+						@elseif($result->comment['res1']==-1) lose
+						@endif</td>
+				</tr>
+				<tr><th>Round 2</th>
+					<td>{{$result->comment['op2']}} second(s)</td>
+					<td>{{$result->comment['self2']}} second(s)</td>
+					<td>@if($result->comment['res2']==0) tie
+						@elseif($result->comment['res2']==1) win
+						@elseif($result->comment['res2']==-1) lose
+						@endif</td>
+				</tr>
+				<tr><th>Round 3</th>
+					<td>{{$result->comment['op3']}} second(s)</td>
+					<td>{{$result->comment['self3']}} second(s)</td>
+					<td>@if($result->comment['res3']==0) tie
+						@elseif($result->comment['res3']==1) win  
+						@elseif($result->comment['res3']==-1) lose
+						@endif</td>
+				</tr>
+				</table>
+			</div>
+			@elseif($result->comment)
 			<div id="Hint">
 				<br/>
 				<div style="font-size:24px">hint message:</div><br/>

@@ -41,7 +41,7 @@
 <script>
 function Attack(){
 	var tmp=confirm("Are you sure to use a chance?");
-	if(tmp) location.replace('{{URL::to('upload/'.$pw)}}');
+	if(tmp) location.replace('{{URL::to('attack/'.$pw)}}');
 	else location.href="{{URL::to('/')}}";
 }
 </script>

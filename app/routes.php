@@ -33,3 +33,5 @@ Route::get('upload', 'AttackController@uploadPage' );
 
 Route::post('checker', 'AttackController@checker' );
 
+Route::get('attack/{_id}', 'AttackController@attack' );
+

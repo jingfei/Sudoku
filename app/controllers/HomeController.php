@@ -80,10 +80,21 @@ class HomeController extends BaseController {
 		$result->code = htmlspecialchars($result->code, ENT_QUOTES);
 		if(!$result) return App::abort(404);
 		if($result->studentID==$ID || $result->op==$ID){
-			/* get result */
-			$result->img = self::logStatus($result);
-			return View::make('pages.eachlog')
-						->with('result', $result);
+			/* attack */
+			if($result->op){
+				$result->img = self::logStatus($result);
+				$result->comment = unserialize($result->comment);
+				return View::make('pages.eachlog')
+							->with('result', $result);
+
+			}
+			/* checker */
+			else{
+				/* get result */
+				$result->img = self::logStatus($result);
+				return View::make('pages.eachlog')
+							->with('result', $result);
+			}
 		}
 		return App::abort(404);
 	}

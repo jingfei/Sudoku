@@ -7,18 +7,18 @@
 	<table width="100%" style="padding:0 50px"><tr><td align="left">
 	<h1 style="display:table-cell;cursor:default" >
 		@if(Request::path()==('/')) Program Design II
-		@else <a href="{{URL::to('/')}}">Sudoku Tournament</a>
+		@else <a href="{{URL::to('/')}}">Sudoku<br/> Tournament</a>
 		@endif
 	</h1></td>
 	<td align="right">
-		@if(!Session::has('id'))
+		@if(Request::path()=="/")
 		<div class="top2" id="Rule" onclick=" $('html, body').animate({ scrollTop: $('#RuleArticle').offset().top }, 1000);">Rule</div>
+		@endif
 		<div
 			@if(Request::path()=="rank") class="topClick top2"
 			@else class="top2"
 			@endif
 			onclick="location.href='{{URL::to("rank")}}';">Rank</div>
-		@endif
 		<div
 			@if(strpos(Request::path(),"log")!==false) class="topClick top2";
 			@else class="top2"

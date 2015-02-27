@@ -51,6 +51,7 @@ class AttackController extends BaseController {
 
 	public function attack($_id){
 		if(!Session::has('id')) return '<script>alert("please login");</script>'.Redirect::to('/');
+		$ID = Session::get('id');
 		/* check challenge times */
 		$User = DB::table('Users')->where('id', Session::get('id'))->first();
 		if($User->challenge<=0){
@@ -84,6 +85,14 @@ class AttackController extends BaseController {
 					->update(array('challenge'=> ($User->challenge-1),
 								   'challenge_id' => $ser));
 		/***********************************************/
+		/* files */
+		$SudokuH = self::$CodePath."/tmpCode/".$ID."/Sudoku.h";
+		$SudokuCPP = self::$CodePath."/tmpCode/".$ID."/Sudoku.cpp";
+		/*read file code*/
+		$fileh = fopen($SudokuH,"r");
+		$header = fread($fileh,filesize($SudokuH)); fclose($fileh);
+		$filecpp = fopen($SudokuCPP,"r");
+		$code = fread($filecpp,filesize($SudokuCPP)); fclose($filecpp);
 		$LogID = self::newRecord($header, $code, $op);
 		Queue::push('CompileController@doAttack', array('LogID'=>$LogID,'op'=>$op));
 		return Redirect::to('log');
