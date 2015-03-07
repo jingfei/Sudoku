@@ -5,15 +5,26 @@ class CompileController extends BaseController {
 	public function doChecker($job, $data){
 		$LogID = $data['LogID'];
 		$result = true;
-		$r=rand(10,14);
+//		$r=rand(10,14);
 		if(!self::Compile($LogID)) $result = false;
-		else if(!self::check_ans($LogID, $r)) $result=false;
-		else if(!self::check_ans($LogID, $r+5)) $result = false;
-		else if(!self::check_ans($LogID, $r+10)) $result = false;
-		else if(!self::check_ans($LogID, $r+15)) $result = false;
-		else if(!self::check_ans($LogID, $r+20)) $result = false;
-		else if(!self::check_give($LogID)) $result = false;
-		else self::Record($LogID,0,2,0);
+		else{
+			for($r=10; $r<45; $r++)
+				if(!self::check_ans($LogID,$r)){
+					$result = false;
+					break;
+				}
+		}
+//		else if(!self::check_ans($LogID, $r)) $result=false;
+//		else if(!self::check_ans($LogID, $r+5)) $result = false;
+//		else if(!self::check_ans($LogID, $r+10)) $result = false;
+//		else if(!self::check_ans($LogID, $r+15)) $result = false;
+//		else if(!self::check_ans($LogID, $r+20)) $result = false;
+//		else if(!self::check_give($LogID)) $result = false;
+//		else self::Record($LogID,0,2,0);
+		if($result){
+			if(!self::check_give($LogID)) $result=false;
+		}
+		if($result) self::Record($LogID,0,2,0);
 		self::reRank();
 	}
 
@@ -28,7 +39,7 @@ class CompileController extends BaseController {
 		$result['op1'] = self::Race($LogID, $op, $self);
 		DB::table('Log')->where('id', $LogID)
 						->update( array('comment'=> serialize($result)) );
-		$result['self1'] = self::Race($LogID, $op, $self);
+		$result['self1'] = self::Race($LogID, $self, $op);
 		if($result['op1']<$result['self1']){ $result['res1']=-1; --$final; }
 		else if($result['op1']>$result['self1']){ $result['res1']=1; ++$final; }
 		else $result['res1']=0;
@@ -37,7 +48,7 @@ class CompileController extends BaseController {
 		$result['op2'] = self::Race($LogID, $op, $self);
 		DB::table('Log')->where('id', $LogID)
 						->update( array('comment'=> serialize($result)) );
-		$result['self2'] = self::Race($LogID, $op, $self);
+		$result['self2'] = self::Race($LogID, $self, $op);
 		if($result['op2']<$result['self2']){ $result['res2']=-1; --$final; }
 		else if($result['op2']>$result['self2']){ $result['res2']=1; ++$final; }
 		else $result['res2']=0;
@@ -46,7 +57,7 @@ class CompileController extends BaseController {
 		$result['op3'] = self::Race($LogID, $op, $self);
 		DB::table('Log')->where('id', $LogID)
 						->update( array('comment'=> serialize($result)) );
-		$result['self3'] = self::Race($LogID, $op, $self);
+		$result['self3'] = self::Race($LogID, $self, $op);
 		if($result['op3']<$result['self3']){ $result['res3']=-1; --$final; }
 		else if($result['op3']>$result['self3']){ $result['res3']=1; ++$final; }
 		else $result['res3']=0;
@@ -102,19 +113,19 @@ class CompileController extends BaseController {
 		$hw2_check_give = self::$CodePath."/tmpCode/".$ID."/hw2_check_give";
 		$hw2_check_giveCPP = self::$CodePath."/tmpCode/".$ID."/hw2_check_give.cpp";
 		/*compile*/
-		exec('g++ -c '.$SudokuCPP.' -o '.$SudokuO.' 2>&1',$ce);
+		exec('g++ -std=c++0x -c '.$SudokuCPP.' -o '.$SudokuO.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
 		/*make execution file*/
 		shell_exec('cp '.$CodeDIR.' '.$tmpCodeDIR);
-		exec('g++ -o '.$hw2_check.' '.$hw2_checkCPP.' '.$SudokuO.' 2>&1',$ce);
+		exec('g++ -std=c++0x -o '.$hw2_check.' '.$hw2_checkCPP.' '.$SudokuO.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
-		exec('g++ '.$hw2_solveCPP.' '.$SudokuO.' '.$ClockO.' -o '.$hw2_solve.' 2>&1',$ce);
+		exec('g++ -std=c++0x '.$hw2_solveCPP.' '.$SudokuO.' '.$ClockO.' -o '.$hw2_solve.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
-		exec('g++ -o '.$hw2_give_question.' '.$SudokuO.' '.$hw2_give_questionCPP.' 2>&1',$ce);
+		exec('g++ -std=c++0x -o '.$hw2_give_question.' '.$SudokuO.' '.$hw2_give_questionCPP.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
-		exec('g++ -o '.$CheckSudokuO.' -c '.$CheckSudokuCPP.' 2>&1',$ce);
+		exec('g++ -std=c++0x -o '.$CheckSudokuO.' -c '.$CheckSudokuCPP.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
-		exec('g++ -o '.$hw2_check_give.' '.$hw2_check_giveCPP.' '.$CheckSudokuO.' 2>&1',$ce);
+		exec('g++ -std=c++0x -o '.$hw2_check_give.' '.$hw2_check_giveCPP.' '.$CheckSudokuO.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
 		/*********************/
 		return true;
@@ -137,18 +148,16 @@ class CompileController extends BaseController {
 		/*****************/
 		/*check answer*/
 		else if(!file_exists(self::$CodePath.'/tmpCode/'.$ID.'/Correct')){
-			$Wrong='file not exist, please contact with TA';
-			self::UpdateScore(0,4);
+			$Wrong='no outputs';
+			self::UpdateScore(-5,4);
 			self::Record($LogID,4,2,0,$Wrong);
 			$Result = false;
 		}
 		else{
-			$AnsPath= self::$CodePath."/outputs/ans/ans".(string)$r;
+			$AnsPath= self::$CodePath."/outputs/A/".(string)$r;
 			$CodePath= self::$CodePath."/tmpCode/".$ID."/Correct";
 			$Check=exec('diff -w -B '.$AnsPath.' '.$CodePath);
 			if($Check){ 
-				self::UpdateScore(-5,3);
-				self::Record($LogID,3,2,-5,$Wrong);
 				//ansCode
 				$Wrong = "Correct:\n";
 				$file = fopen($AnsPath,"r");
@@ -166,6 +175,8 @@ class CompileController extends BaseController {
 					}
 				fclose($file);
 				$Result = false;
+				self::UpdateScore(-5,3);
+				self::Record($LogID,3,2,-5,$Wrong);
 			}
 		}
 		shell_exec("rm ".self::$CodePath."/tmpCode/".$ID."/question*");
@@ -191,16 +202,16 @@ class CompileController extends BaseController {
 		/*****************/
 		/*check answer*/
 		else{
+			$cmd = self::$CodePath.'/tmpCode/'.$ID.'/hw2_check_give'.' '.$ID;
+			exec($cmd,$ce);
 //			$Check=exec(sprintf($cmd." 2>&1 & echo $!"),$pidArr);
-			if($stdout){ 
+			if($ce){ 
 				$Wrong = "presentation error\n1. You should have exactly 81 digits.\n2. They're in the range of 0 to 9.\n\nYour GiveQuestion() output:\n";
-				$pePath=self::$CodePath."/tmpCode/".$ID."/".$stdout;
+				$pePath=self::$CodePath."/tmpCode/".$ID."/".$ce[0];
 				$file = fopen($pePath,"r");
 				if($file)
-					while(!feof($file)){
-						$peCode.=fgets($file);
-						$peCode.="\n";
-					}
+					while(!feof($file))
+						$Wrong.=fgets($file);
 				fclose($file);
 				self::UpdateScore(-5,5);
 				self::Record($LogID,5,2,-5,$Wrong);
@@ -242,7 +253,7 @@ class CompileController extends BaseController {
 		$errout = "";
 		/* give question time out */
 		if(self::exec_timeout($aCMD,$timeout,$stdout,$errout))
-			return 0;
+			return -1;
 		/* solve time out */
 		else if(self::exec_timeout($bCMD,$timeout,$stdout,$errout))
 			return $timeout+10;

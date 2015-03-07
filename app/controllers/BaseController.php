@@ -70,8 +70,7 @@ class BaseController extends Controller {
 		$score+=$Add; if($score<0) $score=0;
 		$result = DB::table('Users')
 					->where('id',$ID)
-					->update( array( 'correct'=>$Status, 
-									 'score'=>$score ) );
+					->update( array( 'score'=>$score ) );
 	}
 	
 	protected function exec_timeout($cmd,$timeout,&$stdout,&$errout){

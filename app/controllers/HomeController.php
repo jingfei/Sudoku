@@ -11,7 +11,7 @@ class HomeController extends BaseController {
 			$result = DB::table('Users')->where('id', $isLogin)->first();
 			$rank = $result->rank;
 			$arr = unserialize($result->challenge_id);
-			$result = DB::table('Log')->where('studentID', $isLogin)->orderBy('date', 'desc')->first();
+			$result = DB::table('Log')->where('studentID', $isLogin)->where('op', NULL)->orderBy('date', 'desc')->first();
 			$isAC = $result ? $result->check==0 ? true : false : false;
 		}
 		$users = DB::table('Users')
@@ -20,7 +20,7 @@ class HomeController extends BaseController {
 					->get();
 		foreach($users as $rows){
 			$isChallenge = false;
-			$Log = DB::table('Log')->where('studentID', $rows->id)->orderBy('date', 'desc')->first();
+			$Log = DB::table('Log')->where('studentID', $rows->id)->where('op', NULL)->orderBy('date', 'desc')->first();
 			if($Log) $rows->correct=$Log->check;
 			else $rows->correct=4;
 			if($arr)
