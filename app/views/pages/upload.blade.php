@@ -12,14 +12,12 @@
 	<tr>
 		<td align="center" style="width:50%"><pre class="sh_cpp"><code>main()
 {
-	freopen("output.txt","w",stdout);
 	Sudoku ss;
 	ss.GiveQuestion();
 	return 0;
 }</pre></code></td>
 		<td align="center"><pre class="sh_cpp"><code>main()
 {
-	freopen("output.txt","r",stdin);
 	Sudoku ss;
 	ss.ReadIn();
 	ss.Solve();
