@@ -2,7 +2,7 @@
 @section('content')
 
 		<div class="main">
-		@if(Session::has('id'))
+		@if(Session::has('id') && Session::get('id')!=='admin')
 			<form style="text-align:right;padding-right:10px;font-size:20px;color:#0060bf">
 				view:&nbsp;&nbsp;
 				<input type="radio" value="spec" name="log" checked="checked"/>yours
@@ -11,7 +11,7 @@
 			<hr>
 		@endif
 			<h1 class="title">Record</h1>
-			@if(Session::has('id'))
+			@if(Session::has('id') && Session::get('id')!=='admin')
 			<div id="fortable">
 				<hr style='border-top:dashed 1px;' width='80%'>
 				<h2 style='text-align:center;color:#0060bf'>Your attack</h2>
@@ -60,7 +60,7 @@
 				</table>
 			</div>
 			@endif
-			<div id="fortable2" @if(Session::has('id')) style="display:none" @endif >
+			<div id="fortable2" @if(Session::has('id') && Session::get('id')!=='admin') style="display:none" @endif >
 				<table class='rank'>
 					<tr><th>date</th>
 						<th>name</th>

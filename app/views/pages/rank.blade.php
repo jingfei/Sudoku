@@ -14,7 +14,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			@foreach($users as $rows)
+			@foreach($users as $rows) @if($rows->id!=='admin')
 				@if(!$isLogin || $rows->isChallenge) <tr>
 				@elseif($isLogin == $rows->id) <tr id="self">
 				@elseif($rows->correct==0 && $isAC) 
@@ -47,7 +47,7 @@
 					{{ HTML::image("img/pe.png","",array("height"=>"33px")) }}
 				@endif
 				</td></tr>
-			@endforeach
+			@endif @endforeach
 		</tbody>
 	</table>
 </div>
