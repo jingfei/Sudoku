@@ -75,6 +75,11 @@ class CompileController extends BaseController {
 							->update( array('result'=>$final,
 											'add'=> (string)$add,
 											'op_add'=>'-1') );
+			self::UpdateScore($add,0);
+			$score = DB::table('Users')->where('id', $op)->first()->score;
+			$result = DB::table('Users')
+						->where('id',$op)
+						->update( array( 'score'=>$score-1 ) );
 		}
 		else if($final<0){ 
 			$final = -1;
@@ -85,6 +90,11 @@ class CompileController extends BaseController {
 							->update( array('result'=>$final,
 											'add'=>'-1',
 											'op_add'=> (string)$add) );
+			self::UpdateScore(-1,0);
+			$score = DB::table('Users')->where('id', $op)->first()->score;
+			$result = DB::table('Users')
+						->where('id',$op)
+						->update( array( 'score'=>$score+$add ) );
 		}
 		else
 			DB::table('Log')->where('id', $LogID)
