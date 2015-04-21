@@ -101,6 +101,7 @@ class CompileController extends BaseController {
 							->update( array('result'=>$final,
 											'add'=>'0',
 											'op_add'=>'0') );
+		self::reRank();
 	}
 
 	private function Compile($LogID){
