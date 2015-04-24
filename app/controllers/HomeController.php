@@ -10,6 +10,7 @@ class HomeController extends BaseController {
 		if($isLogin){
 			$result = DB::table('Users')->where('id', $isLogin)->first();
 			$rank = $result->rank;
+			$score = $result->score;
 			$arr = unserialize($result->challenge_id);
 			$result = DB::table('Log')->where('studentID', $isLogin)->where('op', NULL)->orderBy('date', 'desc')->first();
 			$isAC = $result ? $result->check==0 ? true : false : false;
@@ -33,8 +34,8 @@ class HomeController extends BaseController {
 				if($rows->id=='test') $rows->addScore = "+0 or -0";
 				else if($rows->id!=$isLogin){
 					$add=0;
-					if($rows->rank>=$rank) $add=1;
-					else $add=(int)(($rank-$rows->rank)/5)+2;
+					if($rows->score<$score) $add=1;
+					else $add=(int)(($rows->score-$score)/5)+2;
 					$rows->addScore =  '+'.$add.' or -1';
 				}
 				else $rows->addScore = '--';

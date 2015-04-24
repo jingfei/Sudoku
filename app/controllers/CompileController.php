@@ -64,13 +64,13 @@ class CompileController extends BaseController {
 		DB::table('Log')->where('id', $LogID)
 						->update( array('comment'=> serialize($result)) );
 		/* change score */
-		$rank1 = DB::table('Users')->where('id', $self)->first()->rank;
-		$rank2 = DB::table('Users')->where('id', $op)->first()->rank;
+		$score1 = DB::table('Users')->where('id', $self)->first()->score;
+		$score2 = DB::table('Users')->where('id', $op)->first()->score;
 		if($final > 0){
 			$final = 1;
 			$add=0;
-			if($rank2>=$rank1) $add=1;
-			else $add=(int)(($rank1-$rank2)/5)+2;
+			if($score1>=$score2) $add=1;
+			else $add=(int)(($score2-$score1)/5)+2;
 			DB::table('Log')->where('id', $LogID)
 							->update( array('result'=>$final,
 											'add'=> (string)$add,
@@ -84,8 +84,8 @@ class CompileController extends BaseController {
 		else if($final<0){ 
 			$final = -1;
 			$add = 0;
-			if($rank1>=$rank2) $add=1;
-			else $add=(int)(($rank2-$rank1)/5)+2;
+			if($score2>=$score1) $add=1;
+			else $add=(int)(($score1-$score2)/5)+2;
 			DB::table('Log')->where('id', $LogID)
 							->update( array('result'=>$final,
 											'add'=>'-1',
@@ -217,7 +217,7 @@ class CompileController extends BaseController {
 			exec($cmd,$ce);
 //			$Check=exec(sprintf($cmd." 2>&1 & echo $!"),$pidArr);
 			if($ce){ 
-				$Wrong = "presentation error\n1. You should have exactly 81 digits.\n2. They're in the range of 0 to 9.\n\nYour GiveQuestion() output:\n";
+				$Wrong = "presentation error\n1. You should have exactly 144 digits.\n2. They're in the range of -1 to 9.\n3. -1 must appear exactly 36 times.\n\nYour GiveQuestion() output:\n";
 				$pePath=self::$CodePath."/tmpCode/".$ID."/".$ce[0];
 				$file = fopen($pePath,"r");
 				if($file)
