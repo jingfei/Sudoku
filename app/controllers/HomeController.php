@@ -11,6 +11,7 @@ class HomeController extends BaseController {
 			$result = DB::table('Users')->where('id', $isLogin)->first();
 			$rank = $result->rank;
 			$score = $result->score;
+			$challenge_time = $result->challenge;
 			$arr = unserialize($result->challenge_id);
 			$result = DB::table('Log')->where('studentID', $isLogin)->where('op', NULL)->orderBy('date', 'desc')->first();
 			$isAC = $result ? $result->check==0 ? true : false : false;
@@ -48,6 +49,7 @@ class HomeController extends BaseController {
 		return View::make('pages.rank')
 					->with('isLogin', $isLogin)
 					->with('isAC', $isAC)
+					->with('challenge_time', $challenge_time)
 					->with('users', $users);
 	}
 
