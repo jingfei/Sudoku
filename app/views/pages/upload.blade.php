@@ -42,7 +42,7 @@
 	</tr>
 	<tr>
 		<td colspan="2" align="center">
-		{{ HTML::image("img/next.png","",array("class"=>"Button","onClick"=>"$('#uploadForm').submit();")) }}
+		{{ HTML::image("img/next.png","",array("class"=>"Button","onClick"=>"uploadForm(); return false;")) }}
 		</td>
 	</tr>
 	</table>
@@ -55,6 +55,10 @@ $(document).ready(function(){
 	changeH();
 	changeCpp();
 });
+function uploadForm(){
+	$.post('{{URL::to("checker")}}',$("#uploadForm").serialize());
+	location.href='{{URL::to("log")}}';
+}
 function changeH(){
 	var tmp=htmlspecialchars($('#prehtext').val());
 	$("#hPreview").html(tmp);
