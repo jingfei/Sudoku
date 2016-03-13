@@ -5,22 +5,14 @@ class CompileController extends BaseController {
 	public function doChecker($job, $data){
 		$LogID = $data['LogID'];
 		$result = true;
-//		$r=rand(10,14);
 		if(!self::Compile($LogID)) $result = false;
 		else{
-			for($r=10; $r<45; $r++)
+			for($r=0; $r<10000; $r++)
 				if(!self::check_ans($LogID,$r)){
 					$result = false;
 					break;
 				}
 		}
-//		else if(!self::check_ans($LogID, $r)) $result=false;
-//		else if(!self::check_ans($LogID, $r+5)) $result = false;
-//		else if(!self::check_ans($LogID, $r+10)) $result = false;
-//		else if(!self::check_ans($LogID, $r+15)) $result = false;
-//		else if(!self::check_ans($LogID, $r+20)) $result = false;
-//		else if(!self::check_give($LogID)) $result = false;
-//		else self::Record($LogID,0,2,0);
 		if($result){
 			if(!self::check_give($LogID)) $result=false;
 		}
@@ -110,41 +102,39 @@ class CompileController extends BaseController {
 		$SudokuH = self::$CodePath."/tmpCode/".$ID."/Sudoku.h";
 		$SudokuCPP = self::$CodePath."/tmpCode/".$ID."/Sudoku.cpp";
 		$SudokuO = self::$CodePath."/tmpCode/".$ID."/Sudoku.o";
-		$ClockO = self::$CodePath."/tmpCode/".$ID."/Clock.o";
 		$CodeDIR = self::$CodePath."/Code/*";
+		$ClockO = self::$CodePath."/tmpCode/".$ID."/Clock.o";
 		$tmpCodeDIR = self::$CodePath."/tmpCode/".$ID."/";
-		$hw2_check = self::$CodePath."/tmpCode/".$ID."/hw2_check";
-		$hw2_checkCPP = self::$CodePath."/tmpCode/".$ID."/hw2_check.cpp";
+		$Solve = self::$CodePath."/tmpCode/".$ID."/Solve";
+		$SolveCPP = self::$CodePath."/tmpCode/".$ID."/Solve.cpp";
 		$hw2_solve = self::$CodePath."/tmpCode/".$ID."/hw2_solve";
 		$hw2_solveCPP = self::$CodePath."/tmpCode/".$ID."/hw2_solve.cpp";
-		$hw2_give_question = self::$CodePath."/tmpCode/".$ID."/hw2_give_question";
-		$hw2_give_questionCPP = self::$CodePath."/tmpCode/".$ID."/hw2_give_question.cpp";
+		$Give = self::$CodePath."/tmpCode/".$ID."/Give";
+		$GiveCPP = self::$CodePath."/tmpCode/".$ID."/Give.cpp";
 		$CheckSudokuO = self::$CodePath."/tmpCode/".$ID."/CheckSudoku.o";
 		$CheckSudokuCPP = self::$CodePath."/tmpCode/".$ID."/CheckSudoku.cpp";
-		$hw2_check_give = self::$CodePath."/tmpCode/".$ID."/hw2_check_give";
-		$hw2_check_giveCPP = self::$CodePath."/tmpCode/".$ID."/hw2_check_give.cpp";
 		/*compile*/
 		exec('g++ -std=c++0x -c '.$SudokuCPP.' -o '.$SudokuO.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
 		/*make execution file*/
 		shell_exec('cp '.$CodeDIR.' '.$tmpCodeDIR);
-		exec('g++ -std=c++0x -o '.$hw2_check.' '.$hw2_checkCPP.' '.$SudokuO.' 2>&1',$ce);
+		exec('g++ -std=c++0x -o '.$Solve.' '.$SolveCPP.' '.$SudokuO.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
 		exec('g++ -std=c++0x '.$hw2_solveCPP.' '.$SudokuO.' '.$ClockO.' -o '.$hw2_solve.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
-		exec('g++ -std=c++0x -o '.$hw2_give_question.' '.$SudokuO.' '.$hw2_give_questionCPP.' 2>&1',$ce);
+		exec('g++ -std=c++0x -o '.$Give.' '.$SudokuO.' '.$GiveCPP.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
 		exec('g++ -std=c++0x -o '.$CheckSudokuO.' -c '.$CheckSudokuCPP.' 2>&1',$ce);
-		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
-		exec('g++ -std=c++0x -o '.$hw2_check_give.' '.$hw2_check_giveCPP.' '.$CheckSudokuO.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
 		/*********************/
 		return true;
 	}
 
 	private function check_ans($LogID, $r){
+		$r = (string)$r;
 		$ID=Session::get('id');
-		$cmd= self::$CodePath.'/tmpCode/'.$ID.'/hw2_check '.$ID.' '.(string)$r;
+		/* cmd: $CodePath/tmpCode/$ID/Solve $CodePath $ID $r */
+		$cmd= self::$CodePath.'/tmpCode/'.$ID.'/Solve '.self::$CodePath.' '.$ID.' '.$r;
 		$timeout=30; //seconds
 		$Wrong=null; 
 		$Result = true;
@@ -165,7 +155,7 @@ class CompileController extends BaseController {
 			$Result = false;
 		}
 		else{
-			$AnsPath= self::$CodePath."/outputs/A/".(string)$r;
+			$AnsPath= self::$CodePath."/outputs/A/".$r;
 			$CodePath= self::$CodePath."/tmpCode/".$ID."/Correct";
 			$Check=exec('diff -w -B '.$AnsPath.' '.$CodePath);
 			if($Check){ 
@@ -198,7 +188,7 @@ class CompileController extends BaseController {
 
 	private function check_give($LogID){
 		$ID = Session::get('id');
-		$cmd=self::$CodePath.'/tmpCode/'.$ID.'/hw2_give_question'.' '.$ID;
+		$cmd=self::$CodePath.'/tmpCode/'.$ID.'/Give '.self::$CodePath.' '.$ID.' giveOutput';
 		$timeout=30; //seconds
 		$Wrong=null;
 		$Result = true;
@@ -213,23 +203,34 @@ class CompileController extends BaseController {
 		/*****************/
 		/*check answer*/
 		else{
-			$cmd = self::$CodePath.'/tmpCode/'.$ID.'/hw2_check_give'.' '.$ID;
-			exec($cmd,$ce);
-//			$Check=exec(sprintf($cmd." 2>&1 & echo $!"),$pidArr);
-			if($ce){ 
-				$Wrong = "presentation error\n1. You should have exactly 144 digits.\n2. They're in the range of -1 to 9.\n3. -1 must appear exactly 36 times.\n\nYour GiveQuestion() output:\n";
-				$pePath=self::$CodePath."/tmpCode/".$ID."/".$ce[0];
-				$file = fopen($pePath,"r");
-				if($file)
-					while(!feof($file))
-						$Wrong.=fgets($file);
-				fclose($file);
-				self::UpdateScore(-5,5);
-				self::Record($LogID,5,2,-5,$Wrong);
+			$outputPath=self::$CodePath.'/tmpCode/'.$ID.'/giveOutput';
+			if(!file_exists($outputPath)){
+				$Wrong = "GiveQuestion(): no output file";
 				$Result = false;
+				self::UpdateScore(-5,3);
+				self::Record($LogID,3,2,-5,$Wrong);
+			} else {
+				$outputFile = fopen($outputPath, "r");
+				$content = "";
+				$i = 0;
+				while(!feof($outputFile)) {
+					$c = fgetc($outputFile);
+					if(!strlen($c)) continue;
+					else if(ctype_digit($c)) ++$i;
+					else if(!ctype_space($c)) $Result = false;
+					$content .= $c;
+				}
+				fclose($outputFile);
+				if($i!=81) $Result = false;
+				if(!$Result){
+					$Wrong = "Presentation error:\n1. You should have exactly 81 digits.\n2. They're in the range of 0 to 9.\n\nYour GiveQuestion() output:\n";
+					$Wrong .= $content;
+					self::UpdateScore(-5,5);
+					self::Record($LogID,5,2,-5,$Wrong);
+				}
+				shell_exec("rm ".$outputPath);
 			}
 		}
-		shell_exec("rm ".self::$CodePath."/tmpCode/".$ID."/question*" );
 		return $Result;
 	}
 
@@ -258,7 +259,7 @@ class CompileController extends BaseController {
 	private function Race($LogID, $a, $b){  // a solve
 		$ID = Session::get('id');
 		$timeout = 30;
-		$aCMD= self::$CodePath.'/tmpCode/'.$b.'/hw2_give_question '.$ID;
+		$aCMD= self::$CodePath.'/tmpCode/'.$b.'/Give '.$ID;
 		$bCMD= self::$CodePath.'/tmpCode/'.$a.'/hw2_solve '.$ID;
 		$stdout = "";
 		$errout = "";
@@ -277,5 +278,5 @@ class CompileController extends BaseController {
 			return $Time;
 		}
 	}
-
 }
+
