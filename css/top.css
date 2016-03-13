@@ -62,15 +62,11 @@
 #regular{
 	display: inline-block;
 	position: relative;
-	text-align: right;
 	height: 500px;
+	overflow-y: scroll;
 	width: 45%;
 	margin-left: 6%;
 	top:0;
-}
-#regular *{
-	height: 100%;
-	width: 100%;
 }
 
 .ButtonDiv{

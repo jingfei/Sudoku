@@ -19,17 +19,6 @@ textarea, pre { -moz-tab-size:4; -o-tab-size:4; tab-size:4; }
 	border: none;
 }
 
-#Regu{
-	width:100%;
-	height: 100%;
-	background: #f1ebeb;
-	color: #0060bf;
-	font-weight:bold;
-	font-size: 18px;
-	border:none;
-	overflow: auto;
-}
-
 #logo input[type=text],input[type=password]{
     background-color: #cacaca;
     border:solid 1px #cacaca;

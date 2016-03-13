@@ -21,16 +21,13 @@
 		</table>
 	</div>
 	<div id="regular">
-		<textarea wrap="off" rows="10" cols="55" style="font-size:15px;background:#cacaca;color:#0060bf;font-weight:bold" readonly>
 		<?php 
 			$file=fopen("Regular.txt","r");
-			echo "\n";
 			if($file)
 				while(!feof($file))
 					echo fgets($file);
 			fclose($file);
 		?>
-		</textarea>	
 	</div><br/>
 	<div class="ButtonDiv">
 		<h2>Ready to attack?</h2>

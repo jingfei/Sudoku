@@ -13,10 +13,9 @@
 		<div id="Regu" style="background:rgba(255,255,255,0.4);margin:0 5%;padding:5%;border-radius:10px;width:80%;font-size:1.4em">
 		<?php 
 			$file=fopen("Regular.txt","r");
-			echo "\n";
 			if($file)
 				while(!feof($file))
-					echo fgets($file)."<br/>";
+					echo fgets($file);
 			fclose($file);
 		?>
 		</div>
@@ -33,6 +32,19 @@ $(window).load(function(){
 <style>
 body{margin:0;}
 .container{display:none;}
+#Regu{
+	font-family: 'Source Sans Pro', sans-serif;
+	width:100%;
+	height: 100%;
+	background: #f1ebeb;
+	color: #0060bf;
+	font-weight:bold;
+	font-size: 18px;
+	border:none;
+	overflow: auto;
+}
+#Regu h2{ font-size: 45px; font-weight: bold; margin-top:0;}
+#Regu h3{ font-family: 'Source Sans Pro', sans-serif; font-size: 28px; font-weight: 400; line-height: 32px; margin: 0 0 24px; }
 </style>
 
 @stop
