@@ -3,12 +3,12 @@
 		<table style="width:100%;padding:0 50px">
 		<tr><td align="left">
 		<h2> 
-			2015 Program Design (II)
+			2016 Program Design (II)
 		</h2>
 		</td>
 		<td align="right">
 		<h4> 
-			Designed by jingfei
+			Designed by Jingfei
 		</h4>
 		</td>
 		</tr></table>

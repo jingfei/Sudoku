@@ -15,10 +15,18 @@
 		<div class="top2" id="Rule" onclick=" $('html, body').animate({ scrollTop: $('#RuleArticle').offset().top }, 1000);">Rule</div>
 		@endif
 		<div
-			@if(Request::path()=="rank") class="topClick top2"
+			@if(Request::path()=="status") class="topClick top2"
 			@else class="top2"
 			@endif
-			onclick="location.href='{{URL::to("rank")}}';">Rank</div>
+			onclick="location.href='{{URL::to("status")}}';">Status</div>
+		@if(Session::has('id'))
+<!--		<div
+			@if(Request::path()=="contest") class="topClick top2";
+			@else class="top2"
+			@endif
+			onclick="location.href='{{URL::to("contest")}}';">Contest</div>
+			-->
+		@endif
 		<div
 			@if(strpos(Request::path(),"log")!==false) class="topClick top2";
 			@else class="top2"
@@ -60,8 +68,8 @@
 				echo '<div id="RemainTime">';
 				echo '<table style="width:100%"><tr>
 				<td style="width:90%;">';
-				echo 'Hello '.$row->name.',
-				<a href="#" onclick="GO();" style="text-decoration:underline;">rank '.$row->rank.'</a>, 
+				echo 'Hello '.'
+				<a href="#" onclick="GO();" style="text-decoration:underline;font-weight:bold;">'.$row->name.'</a>, 
 				'.$row->challenge.' chance(s) remained.';
 				echo '</td></tr></table><hr/></div>';
 			}

@@ -2,11 +2,28 @@
 
 class HomeController extends BaseController {
 
+	public function getStatus()
+	{
+		$isLogin = Session::has('id') ? Session::get('id') : false;
+		$users = DB::table('Users')
+					->orderBy('score', 'desc')
+					->orderBy('id')
+					->get();
+		foreach($users as $rows){
+			$Log = DB::table('Log')->where('studentID', $rows->id)->where('op', NULL)->orderBy('date', 'desc')->first();
+			if($Log) $rows->correct=$Log->check;
+			else $rows->correct=4;
+		}
+		return View::make('pages.status')
+					->with('isLogin', $isLogin)
+					->with('users', $users);
+	}
+
 	public function getRank()
 	{
 		$isLogin = Session::has('id') ? Session::get('id') : false;
 		$arr = array();
-		$isAC = false;
+		$challenge_time = $isAC = false;
 		if($isLogin){
 			$result = DB::table('Users')->where('id', $isLogin)->first();
 			$rank = $result->rank;

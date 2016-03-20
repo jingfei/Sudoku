@@ -5,17 +5,16 @@ class CompileController extends BaseController {
 	public function doChecker($job, $data){
 		$LogID = $data['LogID'];
 		$result = true;
-		if(!self::Compile($LogID)) $result = false;
-		else{
+		$result = self::Compile($LogID);
+		if($result){
 			for($r=0; $r<10000; $r++)
 				if(!self::check_ans($LogID,$r)){
 					$result = false;
 					break;
 				}
 		}
-		if($result){
-			if(!self::check_give($LogID)) $result=false;
-		}
+		if($result) $result = self::check_trans($LogID);
+		if($result) $result = self::check_give($LogID);
 		if($result) self::Record($LogID,0,2,0);
 		self::reRank();
 	}
@@ -103,12 +102,15 @@ class CompileController extends BaseController {
 		$SudokuCPP = self::$CodePath."/tmpCode/".$ID."/Sudoku.cpp";
 		$SudokuO = self::$CodePath."/tmpCode/".$ID."/Sudoku.o";
 		$CodeDIR = self::$CodePath."/Code/*";
-		$ClockO = self::$CodePath."/tmpCode/".$ID."/Clock.o";
 		$tmpCodeDIR = self::$CodePath."/tmpCode/".$ID."/";
 		$Solve = self::$CodePath."/tmpCode/".$ID."/Solve";
 		$SolveCPP = self::$CodePath."/tmpCode/".$ID."/Solve.cpp";
 		$Give = self::$CodePath."/tmpCode/".$ID."/Give";
 		$GiveCPP = self::$CodePath."/tmpCode/".$ID."/Give.cpp";
+		$Trans = self::$CodePath."/tmpCode/".$ID."/Trans";
+		$TransCPP = self::$CodePath."/tmpCode/".$ID."/Trans.cpp";
+		$CheckTrans = self::$CodePath."/tmpCode/".$ID."/CheckTrans";
+		$CheckTransCPP = self::$CodePath."/tmpCode/".$ID."/CheckTrans.cpp";
 		/*compile*/
 		exec('g++ -std=c++0x -c '.$SudokuCPP.' -o '.$SudokuO.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
@@ -118,8 +120,65 @@ class CompileController extends BaseController {
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
 		exec('g++ -std=c++0x -o '.$Give.' '.$SudokuO.' '.$GiveCPP.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
+		exec('g++ -std=c++0x -o '.$Trans.' '.$SudokuO.' '.$TransCPP.' 2>&1',$ce);
+		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
+		exec('g++ -std=c++0x -o '.$CheckTrans.' '.$SudokuO.' '.$CheckTransCPP.' 2>&1',$ce);
+		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
 		/*********************/
 		return true;
+	}
+
+	private function check_trans($LogID){
+		$ID = Session::get('id');
+		/* cmd: $CodePath/tmpCode/$ID/Trans $CodePath $input $output */
+		$cmd= self::$CodePath.'/tmpCode/'.$ID.'/Trans '.self::$CodePath.' /outputs/transInput /tmpCode/'.$ID.'/transOutput';
+		$timeout=30; //seconds
+		$Wrong=null;
+		$Result = true;
+		$stdout=null; $errout=null;
+		/*check timelimit*/
+		if(self::exec_timeout($cmd, $timeout, $stdout, $errout)){
+			$Wrong='Transform(): time limited exceed';
+			self::UpdateScore(-5,2);
+			self::Record($LogID,2,2,-5,$Wrong);
+			$Result = false;
+		}
+		/*****************/
+		/*check answer*/
+		else{
+			$outputPath=self::$CodePath.'/tmpCode/'.$ID.'/transOutput';
+			if(!file_exists($outputPath)){
+				$Wrong = "Transform(): no output";
+				$Result = false;
+				self::UpdateScore(-5,3);
+				self::Record($LogID,3,2,-5,$Wrong);
+			} else {
+				/* input file: $CodePath/outputs/transInput */
+				$outputFile = fopen($outputPath, "r");
+				$content = "";
+				$i = 0;
+				$num = array(0,0,0,0,0,0,0,0,0,0);
+				$ans_num = array(34,6,7,5,1,5,6,4,5,8);
+				while(!feof($outputFile)) {
+					$c = fgetc($outputFile);
+					if(!strlen($c)) continue;
+					else if(ctype_digit($c)) ++$num[$c];
+					else if(!ctype_space($c)) $Result = false;
+					$content .= $c;
+				}
+				fclose($outputFile);
+				if($num!==$ans_num) $Result = false;
+				if(!$Result){
+					$Wrong = "Transform Error.\n";
+					$Wrong .= $content;
+					self::UpdateScore(-5,5);
+					self::Record($LogID,5,2,-5,$Wrong);
+				}
+				shell_exec("rm ".$outputPath);
+			}
+		}
+		return $Result;
+		
 	}
 
 	private function check_ans($LogID, $r){
@@ -127,14 +186,17 @@ class CompileController extends BaseController {
 		while(strlen($r)<4) $r = '0'.$r;
 		$ID=Session::get('id');
 		/* cmd: $CodePath/tmpCode/$ID/Solve $CodePath $input $output */
-		$cmd= self::$CodePath.'/tmpCode/'.$ID.'/Solve '.self::$CodePath.' /outputs/Q/'.$r.' /tmpCode/'.$ID.'/Correct';
+		if($r=="9999")
+			$cmd= self::$CodePath.'/tmpCode/'.$ID.'/CheckTrans '.self::$CodePath.' /outputs/Q/'.$r.' /tmpCode/'.$ID.'/Correct';
+		else
+			$cmd= self::$CodePath.'/tmpCode/'.$ID.'/Solve '.self::$CodePath.' /outputs/Q/'.$r.' /tmpCode/'.$ID.'/Correct';
 		$timeout=30; //seconds
 		$Wrong=null; 
 		$Result = true;
 		$stdout=null; $errout=null;
 		/*check timelimit*/
 		if(self::exec_timeout($cmd, $timeout, $stdout, $errout)){
-			$Wrong='Solve(): time limited exceed';
+			$Wrong='Solve() or transform functions time limited exceed';
 			self::UpdateScore(-5,2);
 			self::Record($LogID,2,2,-5,$Wrong);
 			$Result = false;
@@ -199,7 +261,7 @@ class CompileController extends BaseController {
 		else{
 			$outputPath=self::$CodePath.'/tmpCode/'.$ID.'/giveOutput';
 			if(!file_exists($outputPath)){
-				$Wrong = "GiveQuestion(): no output file";
+				$Wrong = "GiveQuestion(): no output";
 				$Result = false;
 				self::UpdateScore(-5,3);
 				self::Record($LogID,3,2,-5,$Wrong);

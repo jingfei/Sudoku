@@ -61,7 +61,7 @@ textarea, pre { -moz-tab-size:4; -o-tab-size:4; tab-size:4; }
 	-moz-border-radius: 10px;
 	border-radius: 10px;
 	border: none;
-	font-size: 1.8em;
+	font-size: 1.5em;
 }
 .top2:not(.topClick){
 	color: #24c0eb;
@@ -158,10 +158,10 @@ textarea, pre { -moz-tab-size:4; -o-tab-size:4; tab-size:4; }
 #foot *{color: #24c0eb;}
 
 #foot,#logo h1{ color: #24c0eb; font-family: 'Sofadi One', cursive; }
-#foot,#logo a{ color: #24c0eb; text-decoration:none;}
-#foot,#logo a:visited {color:#24c0eb;}  /* visited link */
-#foot,#logo a:hover {color:#0060bf;}  /* mouse over link */
-#foot,#logo a:active {color:#24c0eb;}  /* selected link */
+#foot,#logo a{ text-decoration:none; color:#0060bf; }
+#foot,#logo a:visited { }  /* visited link */
+#foot,#logo a:hover {opacity: 0.7;}  /* mouse over link */
+#foot,#logo a:active { }  /* selected link */
 
 .arrow{
 	float:right;
