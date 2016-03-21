@@ -8,7 +8,7 @@ class BaseController extends Controller {
 	 * @return void
 	 */
 
-	protected static $CodePath = "/home/jingfei/Sudoku";
+	protected static $CodePath = "/var/www/Sudoku";
 
 	protected function setupLayout()
 	{

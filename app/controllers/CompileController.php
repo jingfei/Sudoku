@@ -158,7 +158,7 @@ class CompileController extends BaseController {
 				$content = "";
 				$i = 0;
 				$num = array(0,0,0,0,0,0,0,0,0,0);
-				$ans_num = array(34,6,7,5,1,5,6,4,5,8);
+				$ans_num = array(1,4,5,5,5,6,6,7,8,34);
 				while(!feof($outputFile)) {
 					$c = fgetc($outputFile);
 					if(!strlen($c)) continue;
@@ -167,6 +167,7 @@ class CompileController extends BaseController {
 					$content .= $c;
 				}
 				fclose($outputFile);
+				sort($num);
 				if($num!==$ans_num) $Result = false;
 				if(!$Result){
 					$Wrong = "Transform Error.\n";

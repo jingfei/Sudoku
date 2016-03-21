@@ -7,9 +7,10 @@ class HomeController extends BaseController {
 		$isLogin = Session::has('id') ? Session::get('id') : false;
 		$users = DB::table('Users')
 					->orderBy('score', 'desc')
-					->orderBy('id')
+					->orderBy('name')
 					->get();
-		foreach($users as $rows){
+		foreach($users as $key=>$rows){
+			if($rows->id=="admin"){ unset($users[$key]); continue; }
 			$Log = DB::table('Log')->where('studentID', $rows->id)->where('op', NULL)->orderBy('date', 'desc')->first();
 			if($Log) $rows->correct=$Log->check;
 			else $rows->correct=4;
