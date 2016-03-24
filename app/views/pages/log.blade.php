@@ -20,7 +20,6 @@
 						<th>name</th>
 						<th>opponent</th>
 						<th>result</th>
-						<th>reward</th>
 					</tr>
 					@foreach($spec as $rows)
 
@@ -33,7 +32,6 @@
 						<td>{{$name[$rows->studentID]}}</td>
 						<td>{{$rows->op ? $name[$rows->op] : "--"}}</td>
 						<td>{{$rows->img}}</td>
-						<td>{{$rows->add}}</td>
 					</tr>
 					@endforeach
 				</table>
@@ -46,7 +44,6 @@
 						<th>name</th>
 						<th>opponent</th>
 						<th>result</th>
-						<th>your rewards</th>
 					</tr>
 					@foreach($attacked as $rows)
 					<tr onClick='location.href="{{$rows->url}}"' style='cursor:pointer'>
@@ -54,7 +51,6 @@
 						<td>{{$name[$rows->studentID]}}</td>
 						<td>{{$name[$rows->op]}}</td>
 						<td>{{$rows->img}}</td>
-						<td>{{$rows->op_add}}</td>
 					</tr>
 					@endforeach
 				</table>
@@ -66,7 +62,6 @@
 						<th>name</th>
 						<th>opponent</th>
 						<th>result</th>
-						<th>rewards</th>
 					</tr>
 					@foreach($all as $rows)
 
@@ -79,7 +74,6 @@
 						<td>{{$name[$rows->studentID]}}</td>
 						<td>{{$rows->op ? $name[$rows->op] : "--"}}</td>
 						<td>{{$rows->img}}</td>
-						<td>{{$rows->add}}</td>
 					</tr>
 					@endforeach
 				</table>
