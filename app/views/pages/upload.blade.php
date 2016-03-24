@@ -13,14 +13,14 @@
 		<td align="center" style="width:50%"><pre class="sh_cpp"><code>main()
 {
 	Sudoku ss;
-	ss.GiveQuestion();
+	ss.giveQuestion();
 	return 0;
 }</pre></code></td>
 		<td align="center"><pre class="sh_cpp"><code>main()
 {
 	Sudoku ss;
-	ss.ReadIn();
-	ss.Solve();
+	ss.readIn();
+	ss.solve();
 	return 0;
 }</pre></code></td>
 	</tr>

@@ -2,25 +2,15 @@
 
 <h3>Basic:</h3>
 <ol><li>You need a header file and a code file named Sudoku.h and Sudoku.cpp </li>
-  	<li>At least three member functions, GiveQuestion(), ReadIn() and Solve(), should be defined </li>
+		<li>You have a time limit 30 seconds to giveQuestion and solve with transform function.<br/>
+  	<li>at least 9 public functions:<br/>
+giveQuestion, readIn, solve, changeNum, changeRow, changeCol, rotate, flip, transform should be defined.</li>
   	<li>We'll have programs to check your code by calling the functions.</li>
   	<li>For more details about project 1, you can go to ncku moodle and download the ppt. </li></ol>
 
 <h3>Different from project 1: </h3>
-<ol><li>In function GiveQuestion(), you can make questions with unsolvable or multiple solutions here</li>
-	<li>You have a time limit 30 seconds.<br/>
-	   It means your Solve() function is able to solve the problem in 30 seconds.</li>
+<ol>
 	<li>You have 5 chances per day to challenge </li></ol>
-
-<h3>Format of GiveQuestion(): </h3>
-<ol><li>Output 9 lines with 9 digits in each line, totally 81 digits separate by a space.</li>
-	<li>Range of the digits are between 0 and 9</li></ol>
-
-<h3>Outputs of Solve(): </h3>
-<ol><li>Unsolvable: output a single character '0' </li>
-	<li>Exactly one solution: output a single character '1' in the first line. </li>
-	<li>And the following 12 lines are the solutions</li>
-	<li>Multiple solutions: output a single character '2'</li></ol>
 
 <h3>The kinds of statement: </h3>
 <ol><li>Accepted </li>
@@ -29,6 +19,38 @@
 	<li>Wrong Answer</li>
 	<li>Presentation Error</li>
 	<li>Other unexpected error: please contact with TAs</li></ol>
+
+<h3>Tasks for each function:</h3>
+<ol><li>giveQuestion(): Create your own Sudoku board.
+		<ul><li>Use ‘0’ character to represent the blanks</li>
+			<li>Any two digits are separated by a space</li></ul>
+	</li>
+	<li>readIn(): Read in Sudoku board.</li>
+	<li>solve(): Judge if the board read in by `readIn()` function is
+solvable; then solve it, and print it out.
+		<ul><li>Unsolvable: output a single character ‘0’</li>
+			<li>Exactly one solution: output a single character ‘1’ in the first line. The next 9 lines are the solution.</li>
+			<li>More than one solution: output a single character ‘2’</li></ul>
+	</li>
+	<li>changeNum(int a, int b): Exchange number a and b in the board. (1 <= a, b <= 9)</li>
+	<li>changeRow(int a, int b): Exchange row set a and b in the board, each row set include three continuous rows. (0 <= a, b <= 2)
+For example, if a=0 and b=1, you should exchange the whole first three rows (row 0~2) and second three rows (row 3~5). That is: row0 ↔ row3, row1 ↔ row4, row2 ↔ row5.</li>
+	<li>changeCol(int a,int b): Concept is the same as ChangeRow. This time we exchange columns. (0 <= a, b <= 2)</li>
+	<li>rotate(int n): Rotate the board 90 degrees n times in clockwise direction. (0 <= n <= 100)</li>
+	<li>flip(int n): If n equals to 0, flip the board vertically. Otherwise, flip it horizontally. (0 <= n <= 1)</li>
+	<li>transform(): Use data read in by `readIn()` function and any function from 4 to 8 above inside `transform()` function, then print it out.</li>
+</ol>
+
+<h3>input / output for each function:</h3>
+<ol><li>giveQuestion(): no input / output 81 digits</li>
+	<li>readIn(): input 81 digits / no output</li>
+<li>solve(): no input (use the one in `readIn()`) / output your answer</li>
+<li>changeNum(int a, int b): no input / no output</li>
+<li>changeRow(int a, int b): no input / no output</li>
+<li>changeCol(int a,int b): no input / no output</li>
+<li>rotate(int n): no input / no output</li>
+<li>flip(int n): no input / no output</li>
+<li>transform(): no input (use the one in `readIn()`) / output 81 digits</li></ol>
 
 <h3>Goals: </h3>
 <ol><li>Make sure your code is correct!</li>

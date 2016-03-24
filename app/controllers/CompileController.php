@@ -167,6 +167,7 @@ class CompileController extends BaseController {
 					$content .= $c;
 				}
 				fclose($outputFile);
+				if($num[0]!==34) $Result = false;
 				sort($num);
 				if($num!==$ans_num) $Result = false;
 				if(!$Result){
