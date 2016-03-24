@@ -184,21 +184,23 @@ class CompileController extends BaseController {
 	}
 
 	private function check_ans($LogID, $r){
-		$r = (string)$r;
-		while(strlen($r)<4) $r = '0'.$r;
 		$ID=Session::get('id');
 		/* cmd: $CodePath/tmpCode/$ID/Solve $CodePath $input $output */
-		if($r=="9999")
+		if($r>=9500 && $r<10000)
 			$cmd= self::$CodePath.'/tmpCode/'.$ID.'/CheckTrans '.self::$CodePath.' /outputs/Q/'.$r.' /tmpCode/'.$ID.'/Correct';
-		else
+		else {
+			/* change $r to string and add 0 to 4 digits */
+			$r = (string)$r;
+			while(strlen($r)<4) $r = '0'.$r;
 			$cmd= self::$CodePath.'/tmpCode/'.$ID.'/Solve '.self::$CodePath.' /outputs/Q/'.$r.' /tmpCode/'.$ID.'/Correct';
+		}
 		$timeout=30; //seconds
 		$Wrong=null; 
 		$Result = true;
 		$stdout=null; $errout=null;
 		/*check timelimit*/
 		if(self::exec_timeout($cmd, $timeout, $stdout, $errout)){
-			$Wrong='solve() or transform() function time limited exceed';
+			$Wrong='solve() or transform functions time limited exceed';
 			self::UpdateScore(-5,2);
 			self::Record($LogID,2,2,-5,$Wrong);
 			$Result = false;
@@ -206,7 +208,7 @@ class CompileController extends BaseController {
 		/*****************/
 		/*check answer*/
 		else if(!file_exists(self::$CodePath.'/tmpCode/'.$ID.'/Correct')){
-			$Wrong='no outputs';
+			$Wrong='solve() no outputs';
 			self::UpdateScore(-5,4);
 			self::Record($LogID,4,2,0,$Wrong);
 			$Result = false;
