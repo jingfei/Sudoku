@@ -138,7 +138,7 @@ class CompileController extends BaseController {
 		$stdout=null; $errout=null;
 		/*check timelimit*/
 		if(self::exec_timeout($cmd, $timeout, $stdout, $errout)){
-			$Wrong='Transform(): time limited exceed';
+			$Wrong='transform(): time limited exceed';
 			self::UpdateScore(-5,2);
 			self::Record($LogID,2,2,-5,$Wrong);
 			$Result = false;
@@ -148,7 +148,7 @@ class CompileController extends BaseController {
 		else{
 			$outputPath=self::$CodePath.'/tmpCode/'.$ID.'/transOutput';
 			if(!file_exists($outputPath)){
-				$Wrong = "Transform(): no output";
+				$Wrong = "transform(): no output";
 				$Result = false;
 				self::UpdateScore(-5,3);
 				self::Record($LogID,3,2,-5,$Wrong);
@@ -171,7 +171,7 @@ class CompileController extends BaseController {
 				sort($num);
 				if($num!==$ans_num) $Result = false;
 				if(!$Result){
-					$Wrong = "Transform Error.\n";
+					$Wrong = "transform Error.\n";
 					$Wrong .= $content;
 					self::UpdateScore(-5,5);
 					self::Record($LogID,5,2,-5,$Wrong);
@@ -198,7 +198,7 @@ class CompileController extends BaseController {
 		$stdout=null; $errout=null;
 		/*check timelimit*/
 		if(self::exec_timeout($cmd, $timeout, $stdout, $errout)){
-			$Wrong='Solve() or transform functions time limited exceed';
+			$Wrong='solve() or transform() function time limited exceed';
 			self::UpdateScore(-5,2);
 			self::Record($LogID,2,2,-5,$Wrong);
 			$Result = false;

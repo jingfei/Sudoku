@@ -42,7 +42,7 @@
 	</tr>
 	<tr>
 		<td colspan="2" align="center">
-		{{ HTML::image("img/next.png","",array("class"=>"Button","onClick"=>"uploadForm(); return false;")) }}
+		{{ HTML::image("img/next.png","",array("class"=>"Button","id"=>"uploadFormSubmit")) }}
 		</td>
 	</tr>
 	</table>
@@ -54,11 +54,17 @@ $(document).ready(function(){
 	sh_highlightDocument();
 	changeH();
 	changeCpp();
+	$("#uploadFormSubmit").on("click", function(){
+		$(".container").first().prepend('<div id="loading"><div class="sk-folding-cube"><div class="sk-cube1 sk-cube"></div><div class="sk-cube2 sk-cube"></div><div class="sk-cube4 sk-cube"></div><div class="sk-cube3 sk-cube"></div></div><h1>Wait a minute...<br/>or go to <a href="{{URL::to('log')}}">Record</a> page.</h1></div>');
+		$("body").css("overflow","hidden");
+		$.ajax({
+			 type: "POST",
+			 url: "{{URL::to('checker')}}",
+			 dataType: "text",
+			 data: $("#uploadForm").serialize()
+		}).done(function(){ location.href='{{URL::to("log")}}'; });
+	});
 });
-function uploadForm(){
-	$.post('{{URL::to("checker")}}',$("#uploadForm").serialize());
-	location.href='{{URL::to("log")}}';
-}
 function changeH(){
 	var tmp=htmlspecialchars($('#prehtext').val());
 	$("#hPreview").html(tmp);
