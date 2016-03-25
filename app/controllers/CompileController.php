@@ -18,12 +18,14 @@ class CompileController extends BaseController {
 		if($result) self::Record($LogID,0,2,0);
 		self::reRank();
 		/* speed test */
-		$pass = true;
-		for($r=9500; $r<10000; $r++){ 
-			$pass = self::speedTest($LogID,$r);
-			if(!$pass) break;
+		if($result){
+			$pass = true;
+			for($r=9500; $r<10000; $r++){ 
+				$pass = self::speedTest($LogID,$r);
+				if(!$pass) break;
+			}
+			if($pass) self::recordSpeed($LogID,6);
 		}
-		if($pass) self::recordSpeed($LogID,6);
 	}
 
 	public function doAttack($job, $data){
