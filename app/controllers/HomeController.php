@@ -12,8 +12,13 @@ class HomeController extends BaseController {
 		foreach($users as $key=>$rows){
 			if($rows->id=="admin"){ unset($users[$key]); continue; }
 			$Log = DB::table('Log')->where('studentID', $rows->id)->where('op', NULL)->orderBy('date', 'desc')->first();
-			if($Log) $rows->correct=$Log->check;
-			else $rows->correct=4;
+			if($Log) {
+				$rows->correct=$Log->check;
+				$rows->speed=$Log->speed=='0' ? '-' : $Log->speed;
+			} else {
+				$rows->correct=4;
+				$rows->speed='-';
+			}
 		}
 		return View::make('pages.status')
 					->with('isLogin', $isLogin)

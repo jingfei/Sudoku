@@ -8,6 +8,7 @@
 			<tr>
 				<th>name</th>
 				<th>status</th>
+				<th>speed level<br/>(1 to 6, slow to fast)</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -31,7 +32,8 @@
 				@elseif($rows->correct==5)
 					{{ HTML::image("img/pe.png","",array("height"=>"33px")) }}
 				@endif
-				</td></tr>
+				</td>
+				<td> {{$rows->speed}} </td></tr>
 			@endforeach
 		</tbody>
 	</table>

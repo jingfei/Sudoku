@@ -19,7 +19,7 @@
 					<tr><th>date</th>
 						<th>name</th>
 						<th>result</th>
-						<th>speed level<br/>(1 to 6, slow to fast)</th>
+						<th>speed level</th>
 					</tr>
 					@foreach($spec as $rows)
 
@@ -43,7 +43,7 @@
 					<tr><th>date</th>
 						<th>name</th>
 						<th>result</th>
-						<th>speed level<br/>(1 to 6, slow to fast)</th>
+						<th>speed level</th>
 					</tr>
 					@foreach($attacked as $rows)
 					<tr onClick='location.href="{{$rows->url}}"' style='cursor:pointer'>
@@ -61,7 +61,7 @@
 					<tr><th>date</th>
 						<th>name</th>
 						<th>result</th>
-						<th>speed level<br/>(1 to 6, slow to fast)</th>
+						<th>speed level</th>
 					</tr>
 					@foreach($all as $rows)
 
