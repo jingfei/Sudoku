@@ -140,6 +140,7 @@ class HomeController extends BaseController {
 				$rows->url = URL::to('log/'.$rows->id);
 			else $rows->url = null;
 			$rows->img = self::logStatus($rows);
+			if($rows->speed==0) $rows->speed='-';
 		}
 		/* for spec record */
 		$spec = DB::table('Log')

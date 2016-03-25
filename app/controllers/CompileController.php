@@ -7,7 +7,7 @@ class CompileController extends BaseController {
 		$result = true;
 		$result = self::Compile($LogID);
 		if($result){
-			for($r=0; $r<10000; $r++)
+			for($r=0; $r<9500; $r++)
 				if(!self::check_ans($LogID,$r)){
 					$result = false;
 					break;
@@ -17,6 +17,13 @@ class CompileController extends BaseController {
 		if($result) $result = self::check_give($LogID);
 		if($result) self::Record($LogID,0,2,0);
 		self::reRank();
+		/* speed test */
+		$pass = true;
+		for($r=9500; $r<10000; $r++){ 
+			$pass = self::speedTest($LogID,$r);
+			if(!$pass) break;
+		}
+		if($pass) self::recordSpeed($LogID,6);
 	}
 
 	public function doAttack($job, $data){
@@ -186,7 +193,7 @@ class CompileController extends BaseController {
 	private function check_ans($LogID, $r){
 		$ID=Session::get('id');
 		/* cmd: $CodePath/tmpCode/$ID/Solve $CodePath $input $output */
-		if($r>=9500 && $r<10000)
+		if($r>=9000 && $r<9500)
 			$cmd= self::$CodePath.'/tmpCode/'.$ID.'/CheckTrans '.self::$CodePath.' /outputs/Q/'.$r.' /tmpCode/'.$ID.'/Correct';
 		else {
 			/* change $r to string and add 0 to 4 digits */
@@ -239,6 +246,40 @@ class CompileController extends BaseController {
 				self::Record($LogID,3,2,-5,$Wrong);
 			}
 		}
+		shell_exec("rm ".self::$CodePath."/tmpCode/".$ID."/question*");
+		shell_exec("rm ".self::$CodePath."/tmpCode/".$ID."/Correct");
+		/******************/
+		return $Result;
+	}
+
+	private function recordSpeed($LogID,$level){
+		$ID=Session::get('id');
+		$result = DB::table('Log')
+					->where('id', $LogID)
+					->update( array('speed'=>$level) );
+	}
+
+	private function speedTest($LogID,$r){
+		$ID=Session::get('id');
+		/* change $r to string and add 0 to 4 digits */
+		$r = (string)$r;
+		while(strlen($r)<4) $r = '0'.$r;
+		/* cmd: $CodePath/tmpCode/$ID/Solve $CodePath $input $output */
+		$cmd= self::$CodePath.'/tmpCode/'.$ID.'/Solve '.self::$CodePath.' /outputs/Q/'.$r.' /tmpCode/'.$ID.'/Correct';
+
+		$Result = true;
+		$timeout=10; //seconds
+		$stdout=null; $errout=null;
+		/*check timelimit*/
+		if(self::exec_timeout($cmd, $timeout, $stdout, $errout)){
+			$Result = false;
+			if($r < 9600) self::recordSpeed($LogID,1);
+			else if($r < 9700) self::recordSpeed($LogID,2);
+			else if($r < 9800) self::recordSpeed($LogID,3);
+			else if($r < 9900) self::recordSpeed($LogID,4);
+			self::recordSpeed($LogID,5);
+		}
+		/*****************/
 		shell_exec("rm ".self::$CodePath."/tmpCode/".$ID."/question*");
 		shell_exec("rm ".self::$CodePath."/tmpCode/".$ID."/Correct");
 		/******************/

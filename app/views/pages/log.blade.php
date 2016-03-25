@@ -18,8 +18,8 @@
 				<table class='rank'>
 					<tr><th>date</th>
 						<th>name</th>
-						<th>opponent</th>
 						<th>result</th>
+						<th>speed level<br/>(1 to 6, low to fast)</th>
 					</tr>
 					@foreach($spec as $rows)
 
@@ -30,8 +30,8 @@
 
 						<td>{{$rows->date}}</td>
 						<td>{{$name[$rows->studentID]}}</td>
-						<td>{{$rows->op ? $name[$rows->op] : "--"}}</td>
 						<td>{{$rows->img}}</td>
+						<td>{{$rows->speed}}</td>
 					</tr>
 					@endforeach
 				</table>
@@ -42,15 +42,15 @@
 				<table class='rank'>
 					<tr><th>date</th>
 						<th>name</th>
-						<th>opponent</th>
 						<th>result</th>
+						<th>speed level<br/>(1 to 6, low to fast)</th>
 					</tr>
 					@foreach($attacked as $rows)
 					<tr onClick='location.href="{{$rows->url}}"' style='cursor:pointer'>
 						<td>{{$rows->date}}</td>
 						<td>{{$name[$rows->studentID]}}</td>
-						<td>{{$name[$rows->op]}}</td>
 						<td>{{$rows->img}}</td>
+						<td>{{$rows->speed}}</td>
 					</tr>
 					@endforeach
 				</table>
@@ -60,8 +60,8 @@
 				<table class='rank'>
 					<tr><th>date</th>
 						<th>name</th>
-						<th>opponent</th>
 						<th>result</th>
+						<th>speed level<br/>(1 to 6, low to fast)</th>
 					</tr>
 					@foreach($all as $rows)
 
@@ -72,8 +72,8 @@
 
 						<td>{{$rows->date}}</td>
 						<td>{{$name[$rows->studentID]}}</td>
-						<td>{{$rows->op ? $name[$rows->op] : "--"}}</td>
 						<td>{{$rows->img}}</td>
+						<td>{{$rows->speed}}</td>
 					</tr>
 					@endforeach
 				</table>
