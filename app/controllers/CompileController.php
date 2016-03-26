@@ -22,9 +22,10 @@ class CompileController extends BaseController {
 			$pass = true;
 			for($r=9500; $r<10000; $r++){ 
 				$pass = self::speedTest($LogID,$r);
-				if(!$pass) break;
+				if($pass!=1) break;
 			}
-			if($pass) self::recordSpeed($LogID,6);
+			if($pass==1) self::recordSpeed($LogID,6);
+			else if($pass==-1) self::recordSpeed($LogID,0);
 		}
 	}
 
@@ -269,12 +270,12 @@ class CompileController extends BaseController {
 		/* cmd: $CodePath/tmpCode/$ID/Solve $CodePath $input $output */
 		$cmd= self::$CodePath.'/tmpCode/'.$ID.'/Solve '.self::$CodePath.' /outputs/Q/'.$r.' /tmpCode/'.$ID.'/Correct';
 
-		$Result = true;
+		$Result = 1;
 		$timeout=10; //seconds
 		$stdout=null; $errout=null;
 		/*check timelimit*/
 		if(self::exec_timeout($cmd, $timeout, $stdout, $errout)){
-			$Result = false;
+			$Result = 0;
 			if($r < 9600) self::recordSpeed($LogID,1);
 			else if($r < 9700) self::recordSpeed($LogID,2);
 			else if($r < 9800) self::recordSpeed($LogID,3);
@@ -282,6 +283,39 @@ class CompileController extends BaseController {
 			self::recordSpeed($LogID,5);
 		}
 		/*****************/
+		/*check answer*/
+		else if(!file_exists(self::$CodePath.'/tmpCode/'.$ID.'/Correct')){
+			$Wrong='solve() no outputs';
+			self::UpdateScore(-5,4);
+			self::Record($LogID,4,2,0,$Wrong);
+			$Result = -1;
+		}
+		else{
+			$AnsPath= self::$CodePath."/outputs/A/".$r;
+			$CodePath= self::$CodePath."/tmpCode/".$ID."/Correct";
+			$Check=exec('diff -w -B '.$AnsPath.' '.$CodePath);
+			if($Check){ 
+				//ansCode
+				$Wrong = "Correct:\n";
+				$file = fopen($AnsPath,"r");
+				if($file)
+					while(!feof($file)){
+						$Wrong.=fgets($file);
+					}
+				fclose($file);
+				//waCode
+				$Wrong .= "\nYours:\n";
+				$file = fopen($CodePath,"r");
+				if($file)
+					while(!feof($file)){
+						$Wrong.=fgets($file);
+					}
+				fclose($file);
+				$Result = -1;
+				self::UpdateScore(-5,3);
+				self::Record($LogID,3,2,-5,$Wrong);
+			}
+		}
 		shell_exec("rm ".self::$CodePath."/tmpCode/".$ID."/question*");
 		shell_exec("rm ".self::$CodePath."/tmpCode/".$ID."/Correct");
 		/******************/

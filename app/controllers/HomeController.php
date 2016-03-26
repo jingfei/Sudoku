@@ -156,6 +156,7 @@ class HomeController extends BaseController {
 		foreach($spec as $rows){
 			$rows->url = URL::to('log/'.$rows->id);
 			$rows->img = self::logStatus($rows);
+			if($rows->speed==0) $rows->speed='-';
 		}
 		/* for attacked record */
 		$attacked = DB::table("Log")
