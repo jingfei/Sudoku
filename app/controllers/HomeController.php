@@ -99,7 +99,7 @@ class HomeController extends BaseController {
 	}
 
 	public function logPage($_id=null){
-		if(!$_id) return self::getLog(); 
+		if(!$_id || !Session::has('id')) return self::getLog(); 
 		$ID = Session::get('id');
 		$result = DB::table('Log')->where('id', $_id)->first();
 		$result->header = htmlspecialchars($result->header, ENT_QUOTES);
