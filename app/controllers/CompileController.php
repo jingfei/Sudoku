@@ -431,7 +431,7 @@ class CompileController extends BaseController {
 				return -1;
 			else{
 				$start = microtime(true);
-				$isTimeout = self::exec_timeout($aSOLVE2,$timeout,$stdout,$errout));
+				$isTimeout = self::exec_timeout($aSOLVE2,$timeout,$stdout,$errout);
 				$timeuse += (microtime(true) - $start);
 				if($isTimeout) return 100;
 			}
