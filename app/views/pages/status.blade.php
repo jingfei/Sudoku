@@ -13,7 +13,8 @@
 			<tr>
 				<th>name</th>
 				<th>status</th>
-				<th>speed level<br/>(1 to 6, slow to fast)</th>
+				<th>platform</th>
+				<th>rank</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -38,7 +39,8 @@
 					{{ HTML::image("img/pe.png","",array("height"=>"33px")) }}
 				@endif
 				</td>
-				<td> {{$rows->speed}} </td></tr>
+				<td> {{$rows->platform}} </td>
+				<td> {{$rows->rank}} </td></tr>
 			@endforeach
 		</tbody>
 	</table>

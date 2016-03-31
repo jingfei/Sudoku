@@ -16,17 +16,11 @@
 		@endif
 		<div
 			@if(Request::path()=="status") class="topClick top2"
+			@elseif(strpos(Request::path(),"rank")!==false && !$isAttack) 
+				class="topClick top2"
 			@else class="top2"
 			@endif
 			onclick="location.href='{{URL::to("status")}}';">Status</div>
-		@if(Session::has('id'))
-<!--		<div
-			@if(Request::path()=="contest") class="topClick top2";
-			@else class="top2"
-			@endif
-			onclick="location.href='{{URL::to("contest")}}';">Contest</div>
-			-->
-		@endif
 		<div
 			@if(strpos(Request::path(),"log")!==false) class="topClick top2";
 			@else class="top2"
@@ -35,6 +29,8 @@
 		@if(Session::has('id'))
 		<div
 			@if(Request::path()=="upload" || Request::path()=="checker")
+				class="topClick top2"
+			@elseif(strpos(Request::path(),"rank")!==false && $isAttack) 
 				class="topClick top2"
 			@else class="top2"
 			@endif

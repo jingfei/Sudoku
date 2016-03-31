@@ -11,13 +11,13 @@ class HomeController extends BaseController {
 					->get();
 		foreach($users as $key=>$rows){
 			if($rows->id=="admin"){ unset($users[$key]); continue; }
+			$rows->platform = $rows->platform==0 ? '-' : 
+												$rows->platform==1 ? 'Basic' : 'Advanced';
 			$Log = DB::table('Log')->where('studentID', $rows->id)->where('op', NULL)->orderBy('date', 'desc')->first();
 			if($Log) {
 				$rows->correct=$Log->check;
-				$rows->speed=$Log->speed=='0' ? '-' : $Log->speed;
 			} else {
 				$rows->correct=4;
-				$rows->speed='-';
 			}
 		}
 		return View::make('pages.status')

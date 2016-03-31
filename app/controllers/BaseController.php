@@ -39,7 +39,7 @@ class BaseController extends Controller {
 			foreach($result as $rows){
 				if($rows->score < $last) $RANK=$realRank;
 				$nowID=$rows->id;
-				if($rows->rank != $RANK)
+				if((int)$rows->rank !== $RANK)
 					$User = DB::table("Users")
 								->where('id', $nowID)
 								->update( array('rank'=> $RANK) );
