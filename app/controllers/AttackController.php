@@ -39,6 +39,14 @@ class AttackController extends BaseController {
 		/* files */
 		$SudokuH = self::$CodePath."/tmpCode/".$ID."/Sudoku.h";
 		$SudokuCPP = self::$CodePath."/tmpCode/".$ID."/Sudoku.cpp";
+		/* find forbidden functions */
+		$forbid = array("dirent","readdir","opendir");
+		foreach( $forbid as $findme )
+			if(strpos($header,$findme)!==false || strpos($code,$findme)!==false) {
+				$LogID = self::newRecord($header, $code);
+				self::Record($LogID,4,2,0,"Do not use dirent library.");
+				return Redirect::to('log');
+			}
 		/*save code to file*/
 		$fileh = fopen($SudokuH,"w");
 		fwrite($fileh,$header); fclose($fileh);

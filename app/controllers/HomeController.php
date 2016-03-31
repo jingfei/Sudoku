@@ -222,10 +222,11 @@ class HomeController extends BaseController {
 	}
 
 	public function chName(){
-		$Len = strlen(Input::get('NewName'));
+		$inputStr = str_replace(array(" ","　"), "", Input::get('NewName'));
+		$Len = strlen($inputStr);
 		if($Len>16 || $Len===0) 
 			return "<script>alert('The length of name is 1 to 16');</script>".Redirect::to('/');
-		$newName = htmlspecialchars(Input::get('NewName'), ENT_QUOTES);
+		$newName = htmlspecialchars($inputStr, ENT_QUOTES);
 		$newName = addslashes($newName);
 		$newName = trim($newName);
 		$result = DB::table('Users')
