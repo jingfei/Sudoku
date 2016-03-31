@@ -9,9 +9,8 @@
 	<div width="90%" style="padding-left:5%; padding-right:5%;">
 		注意事項:
 		<ol>
-			<li>比賽進行中請勿按重新整理，有些人的程式會跑比較久，就請各位等一下囉</li>
-			<li>如果解題時間為0sec，有兩種可能：解題時間少於0.0001或是對方的GiveQuestion()有問題</li>
-			<li>如果ReadIn()或Solve()有問題，會拿到TLE(逾時)，該次判定為輸</li>
+			<li>如果解題時間為0sec，有兩種可能：解題時間少於0.0001或是對方的giveQuestion()有問題</li>
+			<li>如果readIn()或solve()有問題，會拿到TLE(逾時)，該次判定為輸</li>
 			<li>目前給的時限是120sec，超過會拿到TLE(逾時)，該次認定為輸</li>
 			<li>如果很不幸，一直遇到error，那請檢查你的code有沒有呼叫exit(0)，如果有，請改成return等等，因為網站會呼叫solve()多於一次</li>
 			<li>如果有其他網站上的問題麻煩截圖，寄信給助教或到moodle留言，會盡快處理的~~ :)</li>

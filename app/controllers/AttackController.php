@@ -58,10 +58,11 @@ class AttackController extends BaseController {
 	}
 
 	public function attack($_id){
-		if(!Session::has('id')) return '<script>alert("please login");</script>'.Redirect::to('/');
+		if(!Session::has('id')) return '<script>alert("please login");</script>';
 		$ID = Session::get('id');
-		/* check challenge times */
+		/* check challenge times and platform */
 		$User = DB::table('Users')->where('id', Session::get('id'))->first();
+		$platform = $User->platform;
 		if($User->challenge<=0){
 			$result = DB::table('Users')
 						->where('id', Session::get('id'))
@@ -73,8 +74,11 @@ class AttackController extends BaseController {
 		$op = null;
 		foreach($result as $rows){
 			$thisPW = self::enCode($rows->newid.$rows->id);
-			if($thisPW === $_id)
+			if($thisPW === $_id){
 				$op = $rows->id;
+				if($rows->platform !== $platform)
+					return '<script>alert("different platform with your opponent");</script>'.Redirect::to('/');
+			}
 		}
 		/*find challenge list*/
 		$arr=array();
@@ -102,7 +106,7 @@ class AttackController extends BaseController {
 		$filecpp = fopen($SudokuCPP,"r");
 		$code = fread($filecpp,filesize($SudokuCPP)); fclose($filecpp);
 		$LogID = self::newRecord($header, $code, $op);
-		Queue::push('CompileController@doAttack', array('LogID'=>$LogID,'op'=>$op));
+		Queue::push('CompileController@doAttack', array('LogID'=>$LogID,'op'=>$op,'platform'=>$platform));
 		return Redirect::to('log');
 	}
 }

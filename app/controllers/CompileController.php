@@ -32,33 +32,34 @@ class CompileController extends BaseController {
 	public function doAttack($job, $data){
 		$LogID = $data['LogID'];
 		$op = $data['op'];
+		$platform = $data['platform'];
 		$self = Session::get('id');
 		$final = 0;
 		$result = array( "op1"=>null, "self1"=>null, "res1"=>null,
 						 "op2"=>null, "self2"=>null, "res2"=>null,
 						 "op3"=>null, "self3"=>null, "res3"=>null );
-		$result['op1'] = self::Race($LogID, $op, $self);
+		$result['op1'] = self::Race($LogID, $op, $self, $platform);
 		DB::table('Log')->where('id', $LogID)
 						->update( array('comment'=> serialize($result)) );
-		$result['self1'] = self::Race($LogID, $self, $op);
+		$result['self1'] = self::Race($LogID, $self, $op, $platform);
 		if($result['op1']<$result['self1']){ $result['res1']=-1; --$final; }
 		else if($result['op1']>$result['self1']){ $result['res1']=1; ++$final; }
 		else $result['res1']=0;
 		DB::table('Log')->where('id', $LogID)
 						->update( array('comment'=> serialize($result)) );
-		$result['op2'] = self::Race($LogID, $op, $self);
+		$result['op2'] = self::Race($LogID, $op, $self, $platform);
 		DB::table('Log')->where('id', $LogID)
 						->update( array('comment'=> serialize($result)) );
-		$result['self2'] = self::Race($LogID, $self, $op);
+		$result['self2'] = self::Race($LogID, $self, $op, $platform);
 		if($result['op2']<$result['self2']){ $result['res2']=-1; --$final; }
 		else if($result['op2']>$result['self2']){ $result['res2']=1; ++$final; }
 		else $result['res2']=0;
 		DB::table('Log')->where('id', $LogID)
 						->update( array('comment'=> serialize($result)) );
-		$result['op3'] = self::Race($LogID, $op, $self);
+		$result['op3'] = self::Race($LogID, $op, $self, $platform);
 		DB::table('Log')->where('id', $LogID)
 						->update( array('comment'=> serialize($result)) );
-		$result['self3'] = self::Race($LogID, $self, $op);
+		$result['self3'] = self::Race($LogID, $self, $op, $platform);
 		if($result['op3']<$result['self3']){ $result['res3']=-1; --$final; }
 		else if($result['op3']>$result['self3']){ $result['res3']=1; ++$final; }
 		else $result['res3']=0;
@@ -393,27 +394,50 @@ class CompileController extends BaseController {
 	}
 
 	// Race function return seconds, $timeout+10 for TLE
-	private function Race($LogID, $a, $b){  // a solve
+	private function Race($LogID, $a, $b, $method){  // a solve
 		$ID = Session::get('id');
 		/* cmd: $CodePath/tmpCode/$ID/Give $CodePath $output */
-		$aCMD=self::$CodePath.'/tmpCode/'.$b.'/Give '.self::$CodePath.' /tmpCode/'.$ID.'/giveOutput';
+		$bGIVE=self::$CodePath.'/tmpCode/'.$b.'/Give '.self::$CodePath.' /tmpCode/'.$ID.'/giveOutput';
 		/* cmd: $CodePath/tmpCode/$ID/Solve $CodePath $input $output */
-		$bCMD=self::$CodePath.'/tmpCode/'.$a.'/Solve '.self::$CodePath.' /tmpCode/'.$ID.'/giveOutput /tmpCode/'.$ID.'/Correct';
+		$aSOLVE=self::$CodePath.'/tmpCode/'.$a.'/Solve '.self::$CodePath.' /tmpCode/'.$ID.'/giveOutput /tmpCode/'.$ID.'/Correct';
+		if($method==2){
+			/* cmd: $CodePath/tmpCode/$ID/Give $CodePath $output */
+			$aGIVE=self::$CodePath.'/tmpCode/'.$a.'/Give '.self::$CodePath.' /tmpCode/'.$ID.'/giveOutput';
+			/* cmd: $CodePath/tmpCode/$ID/Solve $CodePath $input $output */
+			$bTRANS=self::$CodePath.'/tmpCode/'.$b.'/Trans '.self::$CodePath.' /tmpCode/'.$ID.'/giveOutput /tmpCode/'.$ID.'/transOutput';
+			/* cmd: $CodePath/tmpCode/$ID/Solve $CodePath $input $output */
+			$aSOLVE2=self::$CodePath.'/tmpCode/'.$a.'/Solve '.self::$CodePath.' /tmpCode/'.$ID.'/transOutput /tmpCode/'.$ID.'/Correct';
+		}
 		$stdout = "";
 		$errout = "";
 		$timeout = 30;
+		$timeuse = 0;
 		/* give question time out */
-		if(self::exec_timeout($aCMD,$timeout,$stdout,$errout))
+		if(self::exec_timeout($bGIVE,$timeout,$stdout,$errout))
 			return -1;
 		/* solve time out */
 		else{
 			$start = microtime(true);
-		   	$isTimeout = self::exec_timeout($bCMD,$timeout,$stdout,$errout);
-	  		$timeout = microtime(true) - $start;
+		  $isTimeout = self::exec_timeout($aSOLVE,$timeout,$stdout,$errout);
+	  	$timeuse = microtime(true) - $start;
 			if($isTimeout) return 100;
-
-			return $timeout;
 		}
+
+		/* method 2 */
+		if($method==2){
+			if(self::exec_timeout($aGIVE,$timeout,$stdout,$errout))
+				return 100;
+			else if(self::exec_timeout($bTRANS,$timeout,$stdout,$errout))
+				return -1;
+			else{
+				$start = microtime(true);
+				$isTimeout = self::exec_timeout($aSOLVE2,$timeout,$stdout,$errout));
+				$timeuse += (microtime(true) - $start);
+				if($isTimeout) return 100;
+			}
+		}
+
+		return $timeuse;
 	}
 }
 
