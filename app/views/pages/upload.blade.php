@@ -62,7 +62,14 @@ $(document).ready(function(){
 			 url: "{{URL::to('checker')}}",
 			 dataType: "text",
 			 data: $("#uploadForm").serialize()
-		}).done(function(){ location.href='{{URL::to("log")}}'; });
+		}).done(function(data){ 
+			if(data){ 
+				$("#loading").remove();
+				$("body").css("overflow","auto");
+				alert(data);
+			}
+			else location.href='{{URL::to("log")}}'; 
+		});
 	});
 });
 function changeH(){

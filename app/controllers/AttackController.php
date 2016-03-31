@@ -31,11 +31,11 @@ class AttackController extends BaseController {
 	}
 
 	public function checker(){
-		if(!Session::has('id')) return '<script>alert("please login");</script>'.Redirect::to('/');
+		if(!Session::has('id')) return 'Please login';
 		$header = Input::get('htext');
 		$code = Input::get('cpptext');
 		$ID = Session::get('id');
-		if(!$header || !$code) return '<script>alert("recieved no code here");</script>'.Redirect::to('/');
+		if(!$header || !$code) return 'Please fill in both header and cpp code.';
 		/* files */
 		$SudokuH = self::$CodePath."/tmpCode/".$ID."/Sudoku.h";
 		$SudokuCPP = self::$CodePath."/tmpCode/".$ID."/Sudoku.cpp";
@@ -45,7 +45,7 @@ class AttackController extends BaseController {
 			if(strpos($header,$findme)!==false || strpos($code,$findme)!==false) {
 				$LogID = self::newRecord($header, $code);
 				self::Record($LogID,4,2,0,"Do not use dirent library.");
-				return Redirect::to('log');
+				return;
 			}
 		/*save code to file*/
 		$fileh = fopen($SudokuH,"w");
@@ -54,7 +54,7 @@ class AttackController extends BaseController {
 		fwrite($filecpp,$code); fclose($filecpp);
 		$LogID = self::newRecord($header, $code);
 		Queue::push('CompileController@doChecker', array('LogID'=>$LogID));
-		return Redirect::to('log');
+		return; 
 	}
 
 	public function attack($_id){
