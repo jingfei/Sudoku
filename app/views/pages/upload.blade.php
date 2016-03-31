@@ -76,6 +76,7 @@
 		</tr>
 		</table>
 	</div>
+	{{Form::close()}}
 </div>
 
 <script>
