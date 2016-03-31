@@ -25,6 +25,30 @@
 }</pre></code></td>
 	</tr>
 	<tr>
+		<th>main function to check transformated functions:<br/>(Following is only one of examples.)</td>
+		<th>main function to transform sudoku:</td>
+	</tr>
+	<tr>
+		<td align="center" style="width:50%"><pre class="sh_cpp"><code>main()
+{
+	Sudoku ss;
+	ss.readIn();
+	/* put transformated functions here */
+	ss.rotate(80);
+	ss.flip(0);
+	ss.changeNum(3,4);
+	ss.solve();
+	return 0;
+}</pre></code></td>
+		<td align="center"><pre class="sh_cpp"><code>main()
+{
+	Sudoku ss;
+	ss.readIn();
+	ss.transform();
+	return 0;
+}</pre></code></td>
+	</tr>
+	<tr>
 		<th><label for="hfile">paste Sudoku.h code here</label></th>
 		<th><label for="cppfile">paste Sudoku.cpp code here</label></th>
 	</tr> 
