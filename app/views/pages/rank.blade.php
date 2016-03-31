@@ -3,27 +3,39 @@
 
 <div class="main">
 	<div class="sub-menu">
+		@if ($isAttack)
+		<button class="top2 sub-button"><a href="{{URL::to('upload')}}">Checker</a></button>
+		<button class="topClick top2 sub-button"><a href="{{URL::to('platform')}}">Challenge</a></button>
+		@else
 		<button class="top2 sub-button"><a href="{{URL::to('status')}}">Status</a></button>
-		<button class="topClick top2 sub-button"><a href="{{URL::to('rank')}}">Basic</a></button>
-		<button class="top2 sub-button"><a href="{{URL::to('rank')}}">Advanced</a></button>
+		<button class="@if($platform==1) topClick @endif top2 sub-button">
+			<a href="{{URL::to('rank/1')}}">Basic</a>
+		</button>
+		<button class="@if($platform==2) topClick @endif top2 sub-button">
+			<a href="{{URL::to('rank/2')}}">Advanced</a>
+		</button>
+		@endif
 	</div>
-	<h1 class="title">Ranking</h1>
+	<h1 class="title">
+		@if($platform==1) Basic
+		@elseif($platform==2) Advanced
+		@endif
+		Ranking
+	</h1>
 	<table class="rank">
 		<thead>
 			<tr>
 				<th>rank</th>
 				<th>name</th>
 				<th>score</th>
-				@if($isLogin) <th>win or lose</th> @endif
+				@if($isAttack) <th>win or lose</th> @endif
 				<th>status</th>
 			</tr>
 		</thead>
 		<tbody>
-			@foreach($users as $rows) @if($rows->id!=='admin')
-				@if(!$isLogin || $rows->isChallenge) <tr>
-				@elseif($isLogin == $rows->id) <tr id="self">
-				@elseif($challenge_time==0) <tr> 
-				@elseif($rows->correct==0 && $isAC) 
+			@foreach($users as $rows) 
+				@if($isLogin == $rows->id) <tr id="self">
+				@elseif($isAttack)
 					<tr class="enableCh" onClick="location.href='{{URL::to("challenge/".$rows->pw)}}';">
 				@else <tr>
 				@endif
@@ -32,11 +44,11 @@
 				<td> {{$rows->name}} </td>
 				<td> {{$rows->score}} </td>
 
-				@if($isLogin) <td> {{$rows->addScore}} </td> @endif
+				@if($isAttack) <td> {{$rows->addScore}} </td> @endif
 				
 				<td>
 				@if($rows->correct==0)
-					@if($isLogin && $rows->id!=$isLogin && !$rows->isChallenge && $isAC && $challenge_time)
+					@if($isAttack && $rows->id!=$isLogin)
 						{{ HTML::image("img/challenge2.png") }}
 					@else
 						{{ HTML::image("img/ac.png","",array("height"=>"33px")) }}
@@ -53,7 +65,7 @@
 					{{ HTML::image("img/pe.png","",array("height"=>"33px")) }}
 				@endif
 				</td></tr>
-			@endif @endforeach
+			@endforeach
 		</tbody>
 	</table>
 </div>

@@ -28,25 +28,31 @@ class HomeController extends BaseController {
 	public function getRank($platform=1,$isAttack=0)
 	{
 		$isLogin = Session::has('id') ? Session::get('id') : false;
+		if(!$isLogin) $isAttack=0;
 		$arr = array();
 		$challenge_time = $isAC = false;
-		if($isAttack && $isLogin){
-			$result = DB::table('Users')->where('id', $isLogin)->first();
-			$rank = $result->rank;
-			$score = $result->score;
-			$challenge_time = $result->challenge;
-			$arr = unserialize($result->challenge_id);
-			$result = DB::table('Log')->where('studentID', $isLogin)->where('op', NULL)->orderBy('date', 'desc')->first();
-			$isAC = $result ? $result->check==0 ? true : false : false;
-		}
 		$users = DB::table('Users')
 					->where('platform', $platform)
 					->orderBy('score', 'desc')
 					->orderBy('id')
 					->get();
-		foreach($users as $rows){
+		if($isAttack){
+			$result = DB::table('Users')->where('id', $isLogin)->first();
+			$score = $result->score;
+			$challenge_time = $result->challenge;
+			$arr = unserialize($result->challenge_id);
+			$result = DB::table('Log')->where('studentID', $isLogin)->where('op', NULL)->orderBy('date', 'desc')->first();
+			$isAC = $result ? $result->check==0 ? true : false : false;
+			if(!$challenge_time || !$isAC)
+				$users = DB::table('Users')->where('id', $isLogin)->get();
+		}
+		foreach($users as $key=>$rows){
 			$isChallenge = false;
-			$Log = DB::table('Log')->where('studentID', $rows->id)->where('op', NULL)->orderBy('date', 'desc')->first();
+			$Log = DB::table('Log')
+						->where('studentID', $rows->id)
+						->where('op', NULL)
+						->orderBy('date', 'desc')
+						->first();
 			if($Log) $rows->correct=$Log->check;
 			else $rows->correct=4;
 			if($arr)
@@ -55,9 +61,8 @@ class HomeController extends BaseController {
 						$isChallenge=true;
 			$rows->isChallenge = $isChallenge;
 
-			if($isLogin){
-				if($rows->id=='test') $rows->addScore = "+0 or -0";
-				else if($rows->id!=$isLogin){
+			if($isAttack){
+				if($rows->id!=$isLogin){
 					$add=0;
 					if($rows->score<$score) $add=1;
 					else $add=(int)(($rows->score-$score)/5)+2;
@@ -67,15 +72,16 @@ class HomeController extends BaseController {
 				
 				/* encode for challenge id */
 				$rows->pw = self::enCode($rows->newid.$rows->id);
-
+				
+				/* if not qualified to challenge */
+				if($rows->isChallenge || $rows->correct!=0)
+					unset($users[$key]);
 			}
 		}
 		return View::make('pages.rank')
 					->with('isLogin', $isLogin)
 					->with('platform', $platform)
 					->with('isAttack', $isAttack)
-					->with('isAC', $isAC)
-					->with('challenge_time', $challenge_time)
 					->with('users', $users);
 	}
 

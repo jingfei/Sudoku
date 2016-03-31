@@ -24,20 +24,28 @@ class BaseController extends Controller {
 		return $pw;
 	}
 
-	protected function reRank(){
-		$RANK=1; $realRank=1; $last=0;
-		$result = DB::table('Users')
-					->orderBy('score','desc')
-					->orderBy('id')
-					->get();
-		foreach($result as $rows){
-			if($rows->score < $last) $RANK=$realRank;
-			$nowID=$rows->id;
-			$User = DB::table("Users")
-						->where('id', $nowID)
-						->update( array('rank'=> $RANK) );
-			$realRank++;
-			$last=$rows->score; 
+	protected function reRank($platform=0){
+		if($platform==0){
+			self::reRank(1);
+			self::reRank(2);
+		}
+		else{
+			$RANK=1; $realRank=1; $last=0;
+			$result = DB::table('Users')
+						->where('platform', $platform)
+						->orderBy('score','desc')
+						->orderBy('id')
+						->get();
+			foreach($result as $rows){
+				if($rows->score < $last) $RANK=$realRank;
+				$nowID=$rows->id;
+				if($rows->rank != $RANK)
+					$User = DB::table("Users")
+								->where('id', $nowID)
+								->update( array('rank'=> $RANK) );
+				$realRank++;
+				$last=$rows->score; 
+			}
 		}
 	}
 
