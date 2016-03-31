@@ -10,8 +10,8 @@
 		<h2 style='color:#0060bf'>Please select one platform:</h2>
 		<div style="color:gray;font-size:1.1em;">You cannot change your selection after clicking on it. Think twice before you do!</div>
 		<ul>
-		  <li><a href="#" class="round green">Basic<span class="round">You will need to solve your opponent’s Sudoku board and give him a board to solve it. </span></a></li>
-			<li><a href="#" class="round yellow">Advanced<span class="round">Two board need to be solved: one is your opponent’s, the another is yours; However, the second one is transformed by your opponent.</span></a></li>
+		  <li><a href="{{URL::to('choose/1')}}" class="round green">Basic<span class="round">You will need to solve your opponent’s Sudoku board and give him a board to solve it. </span></a></li>
+			<li><a href="{{URL::to('choose/2')}}" class="round yellow">Advanced<span class="round">Two board need to be solved: one is your opponent’s, the another is yours; However, the second one is transformed by your opponent.</span></a></li>
 		</ul> 
 	</div>
 </div>

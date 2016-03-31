@@ -111,7 +111,34 @@ class AttackController extends BaseController {
 	}
 
 	public function platform(){
-		return Redirect::to('choose');
+		if(!Session::has('id')) return '<script>alert("please login");</script>';
+		$ID = Session::get('id');
+		$result = DB::table('Users')
+						->where('id', $ID)
+						->first();
+		if($result->platform==1) return Redirect::to('rank/1/1');
+		else if($result->platform==2) return Redirect::to('rank/2/1');
+		else return Redirect::to('choose');
+	}
+
+	public function choose($selection=0){
+		if(!Session::has('id')) return '<script>alert("please login");</script>';
+		$ID = Session::get('id');
+		/* if the user has chose the platform */
+		$result = DB::table('Users')
+						->where('id', $ID)
+						->first();
+		if($result->platform==1 || $result->platform==2)
+			return Redirect::to('platform');
+		/* if he has selection */
+		if($selection==1 || $selection==2){
+			$result = DB::table('Users')
+						->where('id', $ID)
+						->update(array('platform'=>$selection));
+			return Redirect::to('platform');
+		}
+		/* to make selection */
+		return View::make('pages.choose');
 	}
 	
 }

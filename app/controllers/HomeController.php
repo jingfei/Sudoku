@@ -25,12 +25,12 @@ class HomeController extends BaseController {
 					->with('users', $users);
 	}
 
-	public function getRank()
+	public function getRank($platform=1,$isAttack=0)
 	{
 		$isLogin = Session::has('id') ? Session::get('id') : false;
 		$arr = array();
 		$challenge_time = $isAC = false;
-		if($isLogin){
+		if($isAttack && $isLogin){
 			$result = DB::table('Users')->where('id', $isLogin)->first();
 			$rank = $result->rank;
 			$score = $result->score;
@@ -40,6 +40,7 @@ class HomeController extends BaseController {
 			$isAC = $result ? $result->check==0 ? true : false : false;
 		}
 		$users = DB::table('Users')
+					->where('platform', $platform)
 					->orderBy('score', 'desc')
 					->orderBy('id')
 					->get();
@@ -71,6 +72,8 @@ class HomeController extends BaseController {
 		}
 		return View::make('pages.rank')
 					->with('isLogin', $isLogin)
+					->with('platform', $platform)
+					->with('isAttack', $isAttack)
 					->with('isAC', $isAC)
 					->with('challenge_time', $challenge_time)
 					->with('users', $users);

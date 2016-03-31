@@ -17,7 +17,7 @@ Route::get('/',
 				else return View::make('pages.home');
 			} );
 
-Route::get('rank', 'HomeController@getRank' );
+Route::get('rank/{platform?}/{isAttack?}', 'HomeController@getRank' );
 Route::get('status', 'HomeController@getStatus' );
 
 Route::get('log/{_id?}', 'HomeController@logPage' );
@@ -38,5 +38,5 @@ Route::get('attack/{_id}', 'AttackController@attack' );
 
 Route::get('platform', 'AttackController@platform' );
 
-Route::get('choose', function(){ return View::make('pages.choose'); } );
+Route::get('choose/{selection?}', 'AttackController@choose' );
 
