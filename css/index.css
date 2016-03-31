@@ -65,6 +65,7 @@ textarea, pre { -moz-tab-size:4; -o-tab-size:4; tab-size:4; }
 }
 .top2:not(.topClick){
 	color: #24c0eb;
+	background: transparent;
 }
 .top2:hover{
 	background-color: #24c0eb;
@@ -149,6 +150,26 @@ textarea, pre { -moz-tab-size:4; -o-tab-size:4; tab-size:4; }
 .rank tr:hover{
 	color: #0060bf;
 }
+
+.sub-menu {
+	text-align:right;
+	padding: 0 15px 15px;
+	font-size:20px;
+	border-bottom: 1px solid gray;
+}
+
+.sub-button {
+	font-size: 1.2em;
+}
+
+.sub-button a { 
+	text-decoration: none; 
+	color: #24c0eb; 
+}
+
+.topClick.sub-button a:link, 
+.topClick.sub-button a:visited,
+.sub-button a:hover { color: #fff; }
 
 #foot{
 	width: 80%;

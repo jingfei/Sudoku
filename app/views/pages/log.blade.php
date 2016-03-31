@@ -3,12 +3,10 @@
 
 		<div class="main">
 		@if(Session::has('id') && Session::get('id')!=='admin')
-			<form style="text-align:right;padding-right:10px;font-size:20px;color:#0060bf">
-				view:&nbsp;&nbsp;
-				<input type="radio" value="spec" name="log" checked="checked"/>yours
-				<input type="radio" value="all" name="log"/>all
-			</form>
-			<hr>
+			<div class="sub-menu">
+				<button class="topClick top2 sub-button" id="yours">yours</button>
+				<button class="top2 sub-button" id="all">all</button>
+			</div>
 		@endif
 			<h1 class="title">Record</h1>
 			@if(Session::has('id') && Session::get('id')!=='admin')
@@ -81,15 +79,19 @@
 		</div>
 <script>
 	$(document).ready(function(){
-		$('input[type=radio][name=log]').change(function() {
-			if(this.value=="all"){
-				$("#fortable2").show();
-				$("#fortable").hide();
-			}
-			else{
-				$("#fortable").show();
-				$("#fortable2").hide();
-			}
+		$("#yours").on('click',function(e){
+			e.preventDefault();
+			$("#fortable").show();
+			$("#fortable2").hide();
+			$(this).addClass("topClick");
+			$("#all").removeClass("topClick");
+		});
+		$("#all").on('click',function(e){
+			e.preventDefault();
+			$("#fortable2").show();
+			$("#fortable").hide();
+			$(this).addClass("topClick");
+			$("#yours").removeClass("topClick");
 		});
 	});
 </script>

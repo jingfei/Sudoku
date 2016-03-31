@@ -2,6 +2,11 @@
 @section('content')
 
 <div class="main">
+	<div class="sub-menu">
+		<button class="top2 sub-button"><a href="{{URL::to('status')}}">Status</a></button>
+		<button class="topClick top2 sub-button"><a href="{{URL::to('rank')}}">Basic</a></button>
+		<button class="top2 sub-button"><a href="{{URL::to('rank')}}">Advanced</a></button>
+	</div>
 	<h1 class="title">Ranking</h1>
 	<table class="rank">
 		<thead>

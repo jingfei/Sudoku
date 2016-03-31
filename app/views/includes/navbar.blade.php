@@ -38,7 +38,7 @@
 				class="topClick top2"
 			@else class="top2"
 			@endif
-			onClick="location.href='{{URL::to('upload')}}'">Checker</div>
+			onClick="location.href='{{URL::to('upload')}}'">Contest</div>
 		<div class="top2" onClick="Setting();">Rename</div>
 		<div class="top2" onClick="location.href='{{URL::to("logout")}}'">Logout</div>
 		@else

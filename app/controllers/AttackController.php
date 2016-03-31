@@ -109,4 +109,9 @@ class AttackController extends BaseController {
 		Queue::push('CompileController@doAttack', array('LogID'=>$LogID,'op'=>$op,'platform'=>$platform));
 		return Redirect::to('log');
 	}
+
+	public function platform(){
+		return Redirect::to('choose');
+	}
+	
 }

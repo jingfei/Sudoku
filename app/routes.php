@@ -36,3 +36,7 @@ Route::post('checker', 'AttackController@checker' );
 
 Route::get('attack/{_id}', 'AttackController@attack' );
 
+Route::get('platform', 'AttackController@platform' );
+
+Route::get('choose', function(){ return View::make('pages.choose'); } );
+
