@@ -11,8 +11,9 @@ class HomeController extends BaseController {
 					->get();
 		foreach($users as $key=>$rows){
 			if($rows->id=="admin"){ unset($users[$key]); continue; }
-			$rows->platform = $rows->platform==0 ? '-' : 
-												$rows->platform==1 ? 'Basic' : 'Advanced';
+			if($rows->platform==1) $rows->platform='Basic';
+			else if($rows->platform==2)$rows->platform='Advanced';
+			else $rows->platform='-';
 			$Log = DB::table('Log')->where('studentID', $rows->id)->where('op', NULL)->orderBy('date', 'desc')->first();
 			if($Log) {
 				$rows->correct=$Log->check;
