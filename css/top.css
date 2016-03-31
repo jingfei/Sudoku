@@ -24,7 +24,8 @@
 	border-right:1pt dashed #C7BA99;
 }
 
-#step1 table tr:nth-child(2) td{
+#step1 table tr:nth-child(2) td,
+#step1 table tr:nth-child(4) td{
 	border-bottom:1pt dashed #C7BA99;
 }
 
