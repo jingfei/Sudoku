@@ -182,7 +182,7 @@ class CompileController extends BaseController {
 				sort($num);
 				if($num!==$ans_num) $Result = false;
 				if(!$Result){
-					$Wrong = "transform Error.\n";
+					$Wrong = "transform() function Error.\n\nYour output:\n";
 					$Wrong .= $content;
 					self::UpdateScore(-5,5);
 					self::Record($LogID,5,2,-5,$Wrong);
@@ -196,22 +196,34 @@ class CompileController extends BaseController {
 
 	private function check_ans($LogID, $r){
 		$ID=Session::get('id');
+		/* change $r to string and add 0 to 4 digits */
+		$r = (string)$r;
+		while(strlen($r)<4) $r = '0'.$r;
+		$QusPath = '/outputs/Q/'.$r;
+		$AnsPath = "/outputs/A/".$r;
 		/* cmd: $CodePath/tmpCode/$ID/Solve $CodePath $input $output */
 		if($r>=9000 && $r<9500)
-			$cmd= self::$CodePath.'/tmpCode/'.$ID.'/CheckTrans '.self::$CodePath.' /outputs/Q/'.$r.' /tmpCode/'.$ID.'/Correct';
-		else {
-			/* change $r to string and add 0 to 4 digits */
-			$r = (string)$r;
-			while(strlen($r)<4) $r = '0'.$r;
-			$cmd= self::$CodePath.'/tmpCode/'.$ID.'/Solve '.self::$CodePath.' /outputs/Q/'.$r.' /tmpCode/'.$ID.'/Correct';
-		}
+			$cmd= self::$CodePath.'/tmpCode/'.$ID.'/CheckTrans '.self::$CodePath.' '.$QusPath.' /tmpCode/'.$ID.'/Correct';
+		else
+			$cmd= self::$CodePath.'/tmpCode/'.$ID.'/Solve '.self::$CodePath.' '.$QusPath.' /tmpCode/'.$ID.'/Correct';
+		$QusPath = self::$CodePath.$QusPath;
+		$AnsPath = self::$CodePath.$AnsPath;
 		$timeout=30; //seconds
 		$Wrong=null; 
 		$Result = true;
 		$stdout=null; $errout=null;
+		/* Problem */
+		$Problem="Problem:\n";
+		$file = fopen($QusPath,"r");
+		if($file)
+			while(!feof($file)){
+				$Problem.=fgets($file);
+			}
+		fclose($file);
+		$Problem.="\n";
 		/*check timelimit*/
 		if(self::exec_timeout($cmd, $timeout, $stdout, $errout)){
-			$Wrong='solve() or transform functions time limited exceed';
+			$Wrong="solve() or transform functions time limited exceed.\n\n".$Problem;
 			self::UpdateScore(-5,2);
 			self::Record($LogID,2,2,-5,$Wrong);
 			$Result = false;
@@ -219,18 +231,18 @@ class CompileController extends BaseController {
 		/*****************/
 		/*check answer*/
 		else if(!file_exists(self::$CodePath.'/tmpCode/'.$ID.'/Correct')){
-			$Wrong='solve() no outputs';
+			$Wrong="solve() function ternimates unexpectedly.\n\n".$Problem;
 			self::UpdateScore(-5,4);
 			self::Record($LogID,4,2,0,$Wrong);
 			$Result = false;
 		}
 		else{
-			$AnsPath= self::$CodePath."/outputs/A/".$r;
 			$CodePath= self::$CodePath."/tmpCode/".$ID."/Correct";
 			$Check=exec('diff -w -B '.$AnsPath.' '.$CodePath);
 			if($Check){ 
+				$Wrong = $Problem;
 				//ansCode
-				$Wrong = "Correct:\n";
+				$Wrong .= "Correct:\n";
 				$file = fopen($AnsPath,"r");
 				if($file)
 					while(!feof($file)){
