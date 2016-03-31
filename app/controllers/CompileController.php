@@ -6,12 +6,19 @@ class CompileController extends BaseController {
 		$LogID = $data['LogID'];
 		$result = true;
 		$result = self::Compile($LogID);
+		$Array=array();
+		$a=0; $arNum=50;
+		while( $a<$arNum ){
+			$sn = mt_rand(0,499); 
+			if(!in_array($sn,$Array)) $Array[$a++]=$sn;
+		}
 		if($result){
-			for($r=0; $r<9500; $r++)
-				if(!self::check_ans($LogID,$r)){
-					$result = false;
-					break;
-				}
+			foreach($Array as $base)
+				for($r=0; $r<9500; $r+=500)
+					if(!self::check_ans($LogID,$r+$base)){
+						$result = false;
+						break;
+					}
 		}
 		if($result) $result = self::check_trans($LogID);
 		if($result) $result = self::check_give($LogID);
