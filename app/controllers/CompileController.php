@@ -25,13 +25,14 @@ class CompileController extends BaseController {
 		if($result) self::Record($LogID,0,2,0);
 		self::reRank();
 		/* speed test */
+		$totalTime=0;
 		if($result){
 			$pass = true;
-			for($r=9500; $r<10000; $r++){ 
-				$pass = self::speedTest($LogID,$r);
+			for($r=9500; $r<9600; $r++){ 
+				$pass = self::speedTest($LogID,$r,$totalTime);
 				if($pass!=1) break;
 			}
-			if($pass==1) self::recordSpeed($LogID,6);
+			if($pass==1) self::recordSpeed($LogID,(60-$totalTime)/10+1);
 			else if($pass==-1) self::recordSpeed($LogID,0);
 		}
 	}
@@ -282,41 +283,56 @@ class CompileController extends BaseController {
 					->update( array('speed'=>$level) );
 	}
 
-	private function speedTest($LogID,$r){
+	private function speedTest($LogID,$r,&$totalTime){
 		$ID=Session::get('id');
 		/* change $r to string and add 0 to 4 digits */
 		$r = (string)$r;
 		while(strlen($r)<4) $r = '0'.$r;
+		$QusPath = '/outputs/Q/'.$r;
+		$AnsPath = "/outputs/A/".$r;
+		/* cmd: $CodePath/tmpCode/$ID/CheckTrans $CodePath $input $output */
+		if($r>=9500 && $r<9520)
+			$cmd= self::$CodePath.'/tmpCode/'.$ID.'/CheckTrans '.self::$CodePath.' '.$QusPath.' /tmpCode/'.$ID.'/Speed';
 		/* cmd: $CodePath/tmpCode/$ID/Solve $CodePath $input $output */
-		$cmd= self::$CodePath.'/tmpCode/'.$ID.'/Solve '.self::$CodePath.' /outputs/Q/'.$r.' /tmpCode/'.$ID.'/Correct';
+		else
+			$cmd= self::$CodePath.'/tmpCode/'.$ID.'/Solve '.self::$CodePath.' /outputs/Q/'.$r.' /tmpCode/'.$ID.'/Speed';
 
+		$QusPath = self::$CodePath.$QusPath;
+		$AnsPath = self::$CodePath.$AnsPath;
+		$timeout=60; //seconds
+		$Wrong=null; 
 		$Result = 1;
-		$timeout=10; //seconds
 		$stdout=null; $errout=null;
+		/* Problem */
+		$Problem="Problem:\n";
+		$file = fopen($QusPath,"r");
+		if($file)
+			while(!feof($file)){
+				$Problem.=fgets($file);
+			}
+		fclose($file);
+		$Problem.="\n";
 		/*check timelimit*/
-		if(self::exec_timeout($cmd, $timeout, $stdout, $errout)){
-			$Result = 0;
-			if($r < 9600) self::recordSpeed($LogID,1);
-			else if($r < 9700) self::recordSpeed($LogID,2);
-			else if($r < 9800) self::recordSpeed($LogID,3);
-			else if($r < 9900) self::recordSpeed($LogID,4);
-			self::recordSpeed($LogID,5);
-		}
+		$start = microtime(true);
+		$isTimeout = self::exec_timeout($cmd,$timeout,$stdout,$errout);
+	  $timeuse = microtime(true) - $start;
+		$totalTime+=$timeuse;
+		if($isTimeout) $Result=0;
 		/*****************/
 		/*check answer*/
-		else if(!file_exists(self::$CodePath.'/tmpCode/'.$ID.'/Correct')){
-			$Wrong='solve() no outputs';
+		else if(!file_exists(self::$CodePath.'/tmpCode/'.$ID.'/Speed')){
+			$Wrong="solve() function ternimates unexpectedly.\n\n".$Problem;
 			self::UpdateScore(-5,4);
 			self::Record($LogID,4,2,0,$Wrong);
 			$Result = -1;
 		}
 		else{
-			$AnsPath= self::$CodePath."/outputs/A/".$r;
-			$CodePath= self::$CodePath."/tmpCode/".$ID."/Correct";
+			$CodePath= self::$CodePath."/tmpCode/".$ID."/Speed";
 			$Check=exec('diff -w -B '.$AnsPath.' '.$CodePath);
 			if($Check){ 
+				$Wrong = $Problem;
 				//ansCode
-				$Wrong = "Correct:\n";
+				$Wrong .= "Correct:\n";
 				$file = fopen($AnsPath,"r");
 				if($file)
 					while(!feof($file)){
@@ -336,8 +352,7 @@ class CompileController extends BaseController {
 				self::Record($LogID,3,2,-5,$Wrong);
 			}
 		}
-		shell_exec("rm ".self::$CodePath."/tmpCode/".$ID."/question*");
-		shell_exec("rm ".self::$CodePath."/tmpCode/".$ID."/Correct");
+		shell_exec("rm ".self::$CodePath."/tmpCode/".$ID."/Speed");
 		/******************/
 		return $Result;
 	}
