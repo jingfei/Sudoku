@@ -302,7 +302,7 @@ class CompileController extends BaseController {
 
 		$QusPath = self::$CodePath.$QusPath;
 		$AnsPath = self::$CodePath.$AnsPath;
-		$timeout=60; //seconds
+		$timeout=10; //seconds
 		$Wrong=null; 
 		$Result = 1;
 		$stdout=null; $errout=null;
