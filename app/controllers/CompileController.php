@@ -33,7 +33,7 @@ class CompileController extends BaseController {
 				if($pass!=1) break;
 			}
 			$totalTime/=100;
-			$totalTime = (60-$totalTime)/10+1
+			$totalTime = (60-$totalTime)/10+1;
 			if($pass==1) self::recordSpeed($LogID,$totalTime);
 			else if($pass==-1) self::recordSpeed($LogID,0);
 		}
