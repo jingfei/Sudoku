@@ -26,17 +26,16 @@ class CompileController extends BaseController {
 		if($result) self::Record($LogID,0,2,0);
 		self::reRank();
 		/* speed test */
-		$totalTime=0;
+		$totalTimes=0;
 		if($result){
 			$pass = true; $passNum=100;
 			for($r=9500; $r<9600; $r++){ 
-				$pass = self::speedTest($LogID,$r,$totalTime);
-				if($pass!=1){ $passNum=$r-9500; break; }
+				$pass = self::speedTest($LogID,$r);
+				if($pass==-1) break;
+				else if($pass==0) ++$totalTimes;
 			}
-			$totalTime/=$passNum;
-			$totalTime = (int)(60-$totalTime)/5-10;
-			if($pass==1) self::recordSpeed($LogID,$totalTime);
-			else if($pass==0) self::recordSpeed($LogID,$totalTime-1);
+			$level = 6-ceil($totalTimes/5);
+			if($pass!=-1) self::recordSpeed($LogID,$level);
 		}
 	}
 
@@ -286,7 +285,7 @@ class CompileController extends BaseController {
 					->update( array('speed'=>$level) );
 	}
 
-	private function speedTest($LogID,$r,&$totalTime){
+	private function speedTest($LogID,$r){
 		$ID=Session::get('id');
 		/* change $r to string and add 0 to 4 digits */
 		$r = (string)$r;
@@ -316,11 +315,7 @@ class CompileController extends BaseController {
 		fclose($file);
 		$Problem.="\n";
 		/*check timelimit*/
-		$start = microtime(true);
-		$isTimeout = self::exec_timeout($cmd,$timeout,$stdout,$errout);
-	  $timeuse = microtime(true) - $start;
-		$totalTime+=$timeuse;
-		if($isTimeout){ 
+		if(self::exec_timeout($cmd,$timeout,$stdout,$errout)){ 
 			$Result=0;
 		}
 		/*****************/
