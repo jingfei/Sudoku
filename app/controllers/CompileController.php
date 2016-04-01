@@ -35,6 +35,7 @@ class CompileController extends BaseController {
 				else if($pass==0) ++$totalTimes;
 			}
 			$level = 6-ceil($totalTimes/5);
+			if($level<=0) $level=1;
 			if($pass!=-1) self::recordSpeed($LogID,$level);
 		}
 	}
