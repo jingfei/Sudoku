@@ -13,12 +13,13 @@ class CompileController extends BaseController {
 			if(!in_array($sn,$Array)) $Array[$a++]=$sn;
 		}
 		if($result){
-			foreach($Array as $base)
-				for($r=0; $r<9500; $r+=500)
-					if(!self::check_ans($LogID,$r+$base)){
-						$result = false;
-						break;
-					}
+			foreach($Array as $base){
+				for($r=0; $r<9500; $r+=500){
+					$result = self::check_ans($LogID,$r+$base);
+					if(!$result) break;
+				}
+				if(!$result) break;
+			}
 		}
 		if($result) $result = self::check_trans($LogID);
 		if($result) $result = self::check_give($LogID);
@@ -27,15 +28,15 @@ class CompileController extends BaseController {
 		/* speed test */
 		$totalTime=0;
 		if($result){
-			$pass = true;
+			$pass = true; $passNum=100;
 			for($r=9500; $r<9600; $r++){ 
 				$pass = self::speedTest($LogID,$r,$totalTime);
-				if($pass!=1) break;
+				if($pass!=1){ $passNum=$r-9500; break; }
 			}
-			$totalTime/=100;
-			$totalTime = (60-$totalTime)/10+1;
+			$totalTime/=$passNum;
+			$totalTime = (int)(60-$totalTime)/5-10;
 			if($pass==1) self::recordSpeed($LogID,$totalTime);
-			else if($pass==-1) self::recordSpeed($LogID,0);
+			else if($pass==0) self::recordSpeed($LogID,$totalTime-1);
 		}
 	}
 
@@ -319,7 +320,9 @@ class CompileController extends BaseController {
 		$isTimeout = self::exec_timeout($cmd,$timeout,$stdout,$errout);
 	  $timeuse = microtime(true) - $start;
 		$totalTime+=$timeuse;
-		if($isTimeout) $Result=0;
+		if($isTimeout){ 
+			$Result=0;
+		}
 		/*****************/
 		/*check answer*/
 		else if(!file_exists(self::$CodePath.'/tmpCode/'.$ID.'/Speed')){
