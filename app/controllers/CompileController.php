@@ -7,7 +7,7 @@ class CompileController extends BaseController {
 		$result = true;
 		$result = self::Compile($LogID);
 		$Array=array();
-		$a=0; $arNum=50;
+		$a=0; $arNum=100;
 		while( $a<$arNum ){
 			$sn = mt_rand(0,499); 
 			if(!in_array($sn,$Array)) $Array[$a++]=$sn;
@@ -429,7 +429,7 @@ class CompileController extends BaseController {
 		}
 		$stdout = "";
 		$errout = "";
-		$timeout = 30;
+		$timeout = 60;
 		$timeuse = 0;
 		/* give question time out */
 		if(self::exec_timeout($bGIVE,$timeout,$stdout,$errout))
