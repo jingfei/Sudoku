@@ -242,7 +242,7 @@ class CompileController extends BaseController {
 		/*****************/
 		/*check answer*/
 		else if(!file_exists(self::$CodePath.'/tmpCode/'.$ID.'/Correct')){
-			$Wrong="solve() function ternimates unexpectedly.\n\n".$Problem;
+			$Wrong="solve() or transformation (flip, rotate, changeXXX) functions ternimate unexpectedly.\n\n".$Problem;
 			self::UpdateScore(-5,4);
 			self::Record($LogID,4,2,0,$Wrong);
 			$Result = false;
@@ -322,7 +322,7 @@ class CompileController extends BaseController {
 		/*****************/
 		/*check answer*/
 		else if(!file_exists(self::$CodePath.'/tmpCode/'.$ID.'/Speed')){
-			$Wrong="solve() function ternimates unexpectedly.\n\n".$Problem;
+			$Wrong="solve() or transformation (flip, rotate, changeXXX) functions ternimate unexpectedly.\n\n".$Problem;
 			self::UpdateScore(-5,4);
 			self::Record($LogID,4,2,0,$Wrong);
 			$Result = -1;
@@ -368,7 +368,7 @@ class CompileController extends BaseController {
 		$stdout=null; $errout=null;
 		/*check timelimit*/
 		if(self::exec_timeout($cmd, $timeout, $stdout, $errout)){
-			$Wrong='GiveQuestion(): time limited exceed';
+			$Wrong='giveQuestion(): time limited exceed';
 			self::UpdateScore(-5,2);
 			self::Record($LogID,2,2,-5,$Wrong);
 			$Result = false;
@@ -378,7 +378,7 @@ class CompileController extends BaseController {
 		else{
 			$outputPath=self::$CodePath.'/tmpCode/'.$ID.'/giveOutput';
 			if(!file_exists($outputPath)){
-				$Wrong = "GiveQuestion(): no output";
+				$Wrong = "giveQuestion(): no output";
 				$Result = false;
 				self::UpdateScore(-5,3);
 				self::Record($LogID,3,2,-5,$Wrong);
@@ -396,7 +396,7 @@ class CompileController extends BaseController {
 				fclose($outputFile);
 				if($i!=81) $Result = false;
 				if(!$Result){
-					$Wrong = "Presentation error:\n1. You should have exactly 81 digits.\n2. They're in the range of 0 to 9.\n\nYour GiveQuestion() output:\n";
+					$Wrong = "Presentation error:\n1. You should have exactly 81 digits.\n2. They're in the range of 0 to 9.\n\nYour giveQuestion() output:\n";
 					$Wrong .= $content;
 					self::UpdateScore(-5,5);
 					self::Record($LogID,5,2,-5,$Wrong);
