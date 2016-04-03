@@ -385,18 +385,19 @@ class CompileController extends BaseController {
 			} else {
 				$outputFile = fopen($outputPath, "r");
 				$content = "";
-				$i = 0;
+				$i = 0; $j = 0;
 				while(!feof($outputFile)) {
 					$c = fgetc($outputFile);
 					if(!strlen($c)) continue;
 					else if(ctype_digit($c)) ++$i;
+					else if(ctype_space($c)) ++$j;
 					else if(!ctype_space($c)) $Result = false;
 					$content .= $c;
 				}
 				fclose($outputFile);
-				if($i!=81) $Result = false;
+				if($i!=81 || $j<81) $Result = false;
 				if(!$Result){
-					$Wrong = "Presentation error:\n1. You should have exactly 81 digits.\n2. They're in the range of 0 to 9.\n\nYour giveQuestion() output:\n";
+					$Wrong = "Presentation error:\n1. You should have exactly 81 digits.\n2. They're in the range of 0 to 9.\n3. They should all separated by at least a space or a new line.\n\nYour giveQuestion() output:\n";
 					$Wrong .= $content;
 					self::UpdateScore(-5,5);
 					self::Record($LogID,5,2,-5,$Wrong);
