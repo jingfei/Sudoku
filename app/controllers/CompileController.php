@@ -134,17 +134,17 @@ class CompileController extends BaseController {
 		$CheckTrans = self::$CodePath."/tmpCode/".$ID."/CheckTrans";
 		$CheckTransCPP = self::$CodePath."/tmpCode/".$ID."/CheckTrans.cpp";
 		/*compile*/
-		exec('g++ -std=c++0x -c '.$SudokuCPP.' -o '.$SudokuO.' 2>&1',$ce);
+		exec('g++ -std=c++0x -static -pthread -mavx -c '.$SudokuCPP.' -o '.$SudokuO.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
 		/*make execution file*/
 		shell_exec('cp '.$CodeDIR.' '.$tmpCodeDIR);
-		exec('g++ -std=c++0x -o '.$Solve.' '.$SolveCPP.' '.$SudokuO.' 2>&1',$ce);
+		exec('g++ -std=c++0x -static -pthread -mavx -o '.$Solve.' '.$SolveCPP.' '.$SudokuO.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
-		exec('g++ -std=c++0x -o '.$Give.' '.$SudokuO.' '.$GiveCPP.' 2>&1',$ce);
+		exec('g++ -std=c++0x -static -pthread -mavx -o '.$Give.' '.$SudokuO.' '.$GiveCPP.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
-		exec('g++ -std=c++0x -o '.$Trans.' '.$SudokuO.' '.$TransCPP.' 2>&1',$ce);
+		exec('g++ -std=c++0x -static -pthread -mavx -o '.$Trans.' '.$SudokuO.' '.$TransCPP.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
-		exec('g++ -std=c++0x -o '.$CheckTrans.' '.$SudokuO.' '.$CheckTransCPP.' 2>&1',$ce);
+		exec('g++ -std=c++0x -static -pthread -mavx -o '.$CheckTrans.' '.$SudokuO.' '.$CheckTransCPP.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
 		/*********************/
 		return true;
