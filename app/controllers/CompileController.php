@@ -23,7 +23,6 @@ class CompileController extends BaseController {
 		}
 		if($result) $result = self::check_trans($LogID);
 		if($result) $result = self::check_give($LogID);
-		if($result) self::Record($LogID,0,2,0);
 		self::reRank();
 		/* speed test */
 		$totalTimes=0;
@@ -36,7 +35,10 @@ class CompileController extends BaseController {
 			}
 			$level = 6-ceil($totalTimes/5);
 			if($level<=0) $level=1;
-			if($pass!=-1) self::recordSpeed($LogID,$level);
+			if($pass!=-1){ 
+				self::recordSpeed($LogID,$level);
+				self::Record($LogID,0,2,0);
+			}
 		}
 	}
 
