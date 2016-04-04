@@ -3,9 +3,9 @@
 
 <div class="main">
 	<div class="sub-menu">
-		<button class="topClick top2 sub-button"><a href="{{URL::to('status')}}">Status</a></button>
-		<button class="top2 sub-button"><a href="{{URL::to('rank/1')}}">Basic</a></button>
-		<button class="top2 sub-button"><a href="{{URL::to('rank/2')}}">Advanced</a></button>
+		<span><a class="topClick top2 sub-button" href="{{URL::to('status')}}">Status</a></span>
+		<span><a class="top2 sub-button" href="{{URL::to('rank/1')}}">Basic</a></span>
+		<span><a class="top2 sub-button" href="{{URL::to('rank/2')}}">Advanced</a></span>
 	</div>
 	<h1 class="title">Status</h1>
 	<table class="rank">

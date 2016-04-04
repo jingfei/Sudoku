@@ -158,18 +158,16 @@ textarea, pre { -moz-tab-size:4; -o-tab-size:4; tab-size:4; }
 	border-bottom: 1px solid gray;
 }
 
-.sub-button {
+.sub-button { 
+	text-decoration: none; 
+	color: #24c0eb; 
 	font-size: 1.2em;
 }
 
-.sub-button a { 
-	text-decoration: none; 
-	color: #24c0eb; 
-}
-
-.topClick.sub-button a:link, 
-.topClick.sub-button a:visited,
-.sub-button a:hover { color: #fff; }
+.topClick,
+a.topClick.sub-button:link, 
+a.topClick.sub-button:visited,
+a.sub-button:hover { color: #fff; }
 
 #foot{
 	width: 80%;

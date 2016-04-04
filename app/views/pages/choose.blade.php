@@ -3,8 +3,8 @@
 
 <div class="main">
 	<div class="sub-menu">
-		<button class="top2 sub-button"><a href="{{URL::to('upload')}}">Checker</a></button>
-		<button class="topClick top2 sub-button"><a href="{{URL::to('rank')}}">Challenge</a></button>
+		<span><a class="top2 sub-button" href="{{URL::to('upload')}}">Checker</a></span>
+		<span><a class="topClick top2 sub-button" href="{{URL::to('rank')}}">Challenge</a></span>
 	</div>
 	<div style="width:80%;margin:auto">
 		<h2 style='color:#0060bf'>Please select one platform:</h2>

@@ -3,8 +3,8 @@
 
 <div class="main">
 	<div class="sub-menu">
-		<button class="topClick top2 sub-button"><a href="{{URL::to('upload')}}">Checker</a></button>
-		<button class="top2 sub-button"><a href="{{URL::to('platform')}}">Challenge</a></button>
+		<span><a class="topClick top2 sub-button" href="{{URL::to('upload')}}">Checker</a></span>
+		<span><a class="top2 sub-button" href="{{URL::to('platform')}}">Challenge</a></span>
 	</div>
 	{{Form::open(array('url'=>'checker', 'id'=>'uploadForm'))}}
 	<div id="step1" style="text-align:center;width:100%;">

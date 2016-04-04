@@ -4,16 +4,12 @@
 <div class="main">
 	<div class="sub-menu">
 		@if ($isAttack)
-		<button class="top2 sub-button"><a href="{{URL::to('upload')}}">Checker</a></button>
-		<button class="topClick top2 sub-button"><a href="{{URL::to('platform')}}">Challenge</a></button>
+		<span><a class="top2 sub-button" href="{{URL::to('upload')}}">Checker</a></span>
+		<span><a class="topClick top2 sub-button" href="{{URL::to('platform')}}">Challenge</a></span>
 		@else
-		<button class="top2 sub-button"><a href="{{URL::to('status')}}">Status</a></button>
-		<button class="@if($platform==1) topClick @endif top2 sub-button">
-			<a href="{{URL::to('rank/1')}}">Basic</a>
-		</button>
-		<button class="@if($platform==2) topClick @endif top2 sub-button">
-			<a href="{{URL::to('rank/2')}}">Advanced</a>
-		</button>
+		<span><a class="top2 sub-button" href="{{URL::to('status')}}">Status</a></span>
+		<span><a class="@if($platform==1) topClick @endif top2 sub-button" href="{{URL::to('rank/1')}}">Basic</a></span>
+		<span><a class="@if($platform==2) topClick @endif top2 sub-button" href="{{URL::to('rank/2')}}">Advanced</a></span>
 		@endif
 	</div>
 	<h1 class="title">
