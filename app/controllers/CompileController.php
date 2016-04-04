@@ -7,32 +7,36 @@ class CompileController extends BaseController {
 		$result = true;
 		$result = self::Compile($LogID);
 		$Array=array();
-		$a=0; $arNum=50;
+		$a=0; $arNum=100;
 		while( $a<$arNum ){
 			$sn = mt_rand(0,499); 
 			if(!in_array($sn,$Array)) $Array[$a++]=$sn;
 		}
 		if($result){
-			foreach($Array as $base)
-				for($r=0; $r<9500; $r+=500)
-					if(!self::check_ans($LogID,$r+$base)){
-						$result = false;
-						break;
-					}
+			foreach($Array as $base){
+				for($r=0; $r<9500; $r+=500){
+					$result = self::check_ans($LogID,$r+$base);
+					if(!$result) break;
+				}
+				if(!$result) break;
+			}
 		}
 		if($result) $result = self::check_trans($LogID);
 		if($result) $result = self::check_give($LogID);
 		if($result) self::Record($LogID,0,2,0);
 		self::reRank();
 		/* speed test */
+		$totalTimes=0;
 		if($result){
-			$pass = true;
-			for($r=9500; $r<10000; $r++){ 
+			$pass = true; $passNum=100;
+			for($r=9500; $r<9600; $r++){ 
 				$pass = self::speedTest($LogID,$r);
-				if($pass!=1) break;
+				if($pass==-1) break;
+				else if($pass==0) ++$totalTimes;
 			}
-			if($pass==1) self::recordSpeed($LogID,6);
-			else if($pass==-1) self::recordSpeed($LogID,0);
+			$level = 6-ceil($totalTimes/5);
+			if($level<=0) $level=1;
+			if($pass!=-1) self::recordSpeed($LogID,$level);
 		}
 	}
 
@@ -130,17 +134,17 @@ class CompileController extends BaseController {
 		$CheckTrans = self::$CodePath."/tmpCode/".$ID."/CheckTrans";
 		$CheckTransCPP = self::$CodePath."/tmpCode/".$ID."/CheckTrans.cpp";
 		/*compile*/
-		exec('g++ -std=c++0x -c '.$SudokuCPP.' -o '.$SudokuO.' 2>&1',$ce);
+		exec('g++ -std=c++0x -static -pthread -mavx -c '.$SudokuCPP.' -o '.$SudokuO.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
 		/*make execution file*/
 		shell_exec('cp '.$CodeDIR.' '.$tmpCodeDIR);
-		exec('g++ -std=c++0x -o '.$Solve.' '.$SolveCPP.' '.$SudokuO.' 2>&1',$ce);
+		exec('g++ -std=c++0x -static -pthread -mavx -o '.$Solve.' '.$SolveCPP.' '.$SudokuO.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
-		exec('g++ -std=c++0x -o '.$Give.' '.$SudokuO.' '.$GiveCPP.' 2>&1',$ce);
+		exec('g++ -std=c++0x -static -pthread -mavx -o '.$Give.' '.$SudokuO.' '.$GiveCPP.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
-		exec('g++ -std=c++0x -o '.$Trans.' '.$SudokuO.' '.$TransCPP.' 2>&1',$ce);
+		exec('g++ -std=c++0x -static -pthread -mavx -o '.$Trans.' '.$SudokuO.' '.$TransCPP.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
-		exec('g++ -std=c++0x -o '.$CheckTrans.' '.$SudokuO.' '.$CheckTransCPP.' 2>&1',$ce);
+		exec('g++ -std=c++0x -static -pthread -mavx -o '.$CheckTrans.' '.$SudokuO.' '.$CheckTransCPP.' 2>&1',$ce);
 		if(!empty($ce)){ self::CompileError($LogID,$ce,$ID); return false; }
 		/*********************/
 		return true;
@@ -238,7 +242,7 @@ class CompileController extends BaseController {
 		/*****************/
 		/*check answer*/
 		else if(!file_exists(self::$CodePath.'/tmpCode/'.$ID.'/Correct')){
-			$Wrong="solve() function ternimates unexpectedly.\n\n".$Problem;
+			$Wrong="solve() or transformation (flip, rotate, changeXXX) functions ternimate unexpectedly.\n\n".$Problem;
 			self::UpdateScore(-5,4);
 			self::Record($LogID,4,2,0,$Wrong);
 			$Result = false;
@@ -287,36 +291,49 @@ class CompileController extends BaseController {
 		/* change $r to string and add 0 to 4 digits */
 		$r = (string)$r;
 		while(strlen($r)<4) $r = '0'.$r;
+		$QusPath = '/outputs/Q/'.$r;
+		$AnsPath = "/outputs/A/".$r;
+		/* cmd: $CodePath/tmpCode/$ID/CheckTrans $CodePath $input $output */
+		if($r>=9500 && $r<9520)
+			$cmd= self::$CodePath.'/tmpCode/'.$ID.'/CheckTrans '.self::$CodePath.' '.$QusPath.' /tmpCode/'.$ID.'/Speed';
 		/* cmd: $CodePath/tmpCode/$ID/Solve $CodePath $input $output */
-		$cmd= self::$CodePath.'/tmpCode/'.$ID.'/Solve '.self::$CodePath.' /outputs/Q/'.$r.' /tmpCode/'.$ID.'/Correct';
+		else
+			$cmd= self::$CodePath.'/tmpCode/'.$ID.'/Solve '.self::$CodePath.' /outputs/Q/'.$r.' /tmpCode/'.$ID.'/Speed';
 
-		$Result = 1;
+		$QusPath = self::$CodePath.$QusPath;
+		$AnsPath = self::$CodePath.$AnsPath;
 		$timeout=10; //seconds
+		$Wrong=null; 
+		$Result = 1;
 		$stdout=null; $errout=null;
+		/* Problem */
+		$Problem="Problem:\n";
+		$file = fopen($QusPath,"r");
+		if($file)
+			while(!feof($file)){
+				$Problem.=fgets($file);
+			}
+		fclose($file);
+		$Problem.="\n";
 		/*check timelimit*/
-		if(self::exec_timeout($cmd, $timeout, $stdout, $errout)){
-			$Result = 0;
-			if($r < 9600) self::recordSpeed($LogID,1);
-			else if($r < 9700) self::recordSpeed($LogID,2);
-			else if($r < 9800) self::recordSpeed($LogID,3);
-			else if($r < 9900) self::recordSpeed($LogID,4);
-			self::recordSpeed($LogID,5);
+		if(self::exec_timeout($cmd,$timeout,$stdout,$errout)){ 
+			$Result=0;
 		}
 		/*****************/
 		/*check answer*/
-		else if(!file_exists(self::$CodePath.'/tmpCode/'.$ID.'/Correct')){
-			$Wrong='solve() no outputs';
+		else if(!file_exists(self::$CodePath.'/tmpCode/'.$ID.'/Speed')){
+			$Wrong="solve() or transformation (flip, rotate, changeXXX) functions ternimate unexpectedly.\n\n".$Problem;
 			self::UpdateScore(-5,4);
 			self::Record($LogID,4,2,0,$Wrong);
 			$Result = -1;
 		}
 		else{
-			$AnsPath= self::$CodePath."/outputs/A/".$r;
-			$CodePath= self::$CodePath."/tmpCode/".$ID."/Correct";
+			$CodePath= self::$CodePath."/tmpCode/".$ID."/Speed";
 			$Check=exec('diff -w -B '.$AnsPath.' '.$CodePath);
 			if($Check){ 
+				$Wrong = $Problem;
 				//ansCode
-				$Wrong = "Correct:\n";
+				$Wrong .= "Correct:\n";
 				$file = fopen($AnsPath,"r");
 				if($file)
 					while(!feof($file)){
@@ -336,8 +353,7 @@ class CompileController extends BaseController {
 				self::Record($LogID,3,2,-5,$Wrong);
 			}
 		}
-		shell_exec("rm ".self::$CodePath."/tmpCode/".$ID."/question*");
-		shell_exec("rm ".self::$CodePath."/tmpCode/".$ID."/Correct");
+		shell_exec("rm ".self::$CodePath."/tmpCode/".$ID."/Speed");
 		/******************/
 		return $Result;
 	}
@@ -352,7 +368,7 @@ class CompileController extends BaseController {
 		$stdout=null; $errout=null;
 		/*check timelimit*/
 		if(self::exec_timeout($cmd, $timeout, $stdout, $errout)){
-			$Wrong='GiveQuestion(): time limited exceed';
+			$Wrong='giveQuestion(): time limited exceed';
 			self::UpdateScore(-5,2);
 			self::Record($LogID,2,2,-5,$Wrong);
 			$Result = false;
@@ -362,25 +378,26 @@ class CompileController extends BaseController {
 		else{
 			$outputPath=self::$CodePath.'/tmpCode/'.$ID.'/giveOutput';
 			if(!file_exists($outputPath)){
-				$Wrong = "GiveQuestion(): no output";
+				$Wrong = "giveQuestion(): no output";
 				$Result = false;
 				self::UpdateScore(-5,3);
 				self::Record($LogID,3,2,-5,$Wrong);
 			} else {
 				$outputFile = fopen($outputPath, "r");
 				$content = "";
-				$i = 0;
+				$i = 0; $j = 0;
 				while(!feof($outputFile)) {
 					$c = fgetc($outputFile);
 					if(!strlen($c)) continue;
 					else if(ctype_digit($c)) ++$i;
+					else if(ctype_space($c)) ++$j;
 					else if(!ctype_space($c)) $Result = false;
 					$content .= $c;
 				}
 				fclose($outputFile);
-				if($i!=81) $Result = false;
+				if($i!=81 || $j<81) $Result = false;
 				if(!$Result){
-					$Wrong = "Presentation error:\n1. You should have exactly 81 digits.\n2. They're in the range of 0 to 9.\n\nYour GiveQuestion() output:\n";
+					$Wrong = "Presentation error:\n1. You should have exactly 81 digits.\n2. They're in the range of 0 to 9.\n3. They should all separated by at least a space or a new line.\n\nYour giveQuestion() output:\n";
 					$Wrong .= $content;
 					self::UpdateScore(-5,5);
 					self::Record($LogID,5,2,-5,$Wrong);
@@ -429,7 +446,7 @@ class CompileController extends BaseController {
 		}
 		$stdout = "";
 		$errout = "";
-		$timeout = 30;
+		$timeout = 60;
 		$timeuse = 0;
 		/* give question time out */
 		if(self::exec_timeout($bGIVE,$timeout,$stdout,$errout))

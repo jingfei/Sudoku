@@ -189,7 +189,7 @@ class HomeController extends BaseController {
 		$ID=htmlspecialchars(Input::get('id'), ENT_QUOTES); 
 		$pw=md5(Input::get('passwd'));
 		/* admin */
-		if($ID==="admin" && $pw===md5("~1qaz2wsx")){
+		if($ID==="admin" && $pw==="56e8d2577d11f5bba712d49c8f7ad5a7"){
 			Session::put('id',"admin");
 			return 'yes';
 		}
