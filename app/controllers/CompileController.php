@@ -434,7 +434,7 @@ class CompileController extends BaseController {
 		$ID = Session::get('id');
 		if($method==1){
 			/* cmd: $CodePath/tmpCode/$ID/Give $CodePath $output */
-			$bGIVE=self::$CodePath.'/tmpCode/'.$b.'/Give '.self::$codepath.' /tmpcode/'.$id.'/giveOutput';
+			$bGIVE=self::$CodePath.'/tmpCode/'.$b.'/Give '.self::$CodePath.' /tmpCode/'.$ID.'/giveOutput';
 			/* cmd: $CodePath/tmpCode/$ID/Solve $CodePath $input $output */
 			$aSOLVE=self::$CodePath.'/tmpCode/'.$a.'/Solve '.self::$CodePath.' /tmpCode/'.$ID.'/giveOutput /tmpCode/'.$ID.'/Correct';
 		} else if($method==2){
@@ -452,14 +452,14 @@ class CompileController extends BaseController {
 		/* method 1 */
 		if($method==1) {
 			/* give question time out */
-			if(self::exec_timeout($bGIVE,$timeout,$stdout,$errout) || 
-					!file_exists(self::$codepath.'/tmpcode/'.$id.'/giveOutput'))
+			if(self::exec_timeout($bGIVE,$timeout,$stdout,$errout) ||
+						!file_exists(self::$CodePath.'/tmpCode/'.$ID.'/giveOutput'))
 				return -1;
 			/* solve time out */
 			else{
 				$start = microtime(true);
 			  $isTimeout = self::exec_timeout($aSOLVE,$timeout,$stdout,$errout) ||
-									!file_exists(self::$codepath.'/tmpcode/'.$id.'/Correct');
+									!file_exists(self::$CodePath.'/tmpCode/'.$ID.'/Correct');
 		  	$timeuse = microtime(true) - $start;
 				if($isTimeout) return 100;
 			}
@@ -467,15 +467,15 @@ class CompileController extends BaseController {
 		/* method 2 */
 		else if($method==2){
 			if(self::exec_timeout($aGIVE,$timeout,$stdout,$errout) ||
-					!file_exists(self::$codepath.'/tmpcode/'.$id.'/giveOutput'))
+					!file_exists(self::$CodePath.'/tmpCode/'.$ID.'/giveOutput'))
 				return 100;
 			else if(self::exec_timeout($bTRANS,$timeout,$stdout,$errout) || 
-							!file_exists(self::$codepath.'/tmpcode/'.$id.'/transOutput'))
+							!file_exists(self::$CodePath.'/tmpCode/'.$ID.'/transOutput'))
 				return -1;
 			else{
 				$start = microtime(true);
 			  $isTimeout = self::exec_timeout($aSOLVE2,$timeout,$stdout,$errout) ||
-									!file_exists(self::$codepath.'/tmpcode/'.$id.'/Correct');
+									!file_exists(self::$CodePath.'/tmpCode/'.$ID.'/Correct');
 				$timeuse += (microtime(true) - $start);
 				if($isTimeout) return 100;
 			}
