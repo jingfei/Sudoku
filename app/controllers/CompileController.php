@@ -432,11 +432,12 @@ class CompileController extends BaseController {
 	// Race function return seconds, $timeout+10 for TLE
 	private function Race($LogID, $a, $b, $method){  // a solve
 		$ID = Session::get('id');
-		/* cmd: $CodePath/tmpCode/$ID/Give $CodePath $output */
-		$bGIVE=self::$CodePath.'/tmpCode/'.$b.'/Give '.self::$CodePath.' /tmpCode/'.$ID.'/giveOutput';
-		/* cmd: $CodePath/tmpCode/$ID/Solve $CodePath $input $output */
-		$aSOLVE=self::$CodePath.'/tmpCode/'.$a.'/Solve '.self::$CodePath.' /tmpCode/'.$ID.'/giveOutput /tmpCode/'.$ID.'/Correct';
-		if($method==2){
+		if($method==1){
+			/* cmd: $CodePath/tmpCode/$ID/Give $CodePath $output */
+			$bGIVE=self::$CodePath.'/tmpCode/'.$b.'/Give '.self::$codepath.' /tmpcode/'.$id.'/giveOutput';
+			/* cmd: $CodePath/tmpCode/$ID/Solve $CodePath $input $output */
+			$aSOLVE=self::$CodePath.'/tmpCode/'.$a.'/Solve '.self::$CodePath.' /tmpCode/'.$ID.'/giveOutput /tmpCode/'.$ID.'/Correct';
+		} else if($method==2){
 			/* cmd: $CodePath/tmpCode/$ID/Give $CodePath $output */
 			$aGIVE=self::$CodePath.'/tmpCode/'.$a.'/Give '.self::$CodePath.' /tmpCode/'.$ID.'/giveOutput';
 			/* cmd: $CodePath/tmpCode/$ID/Solve $CodePath $input $output */
@@ -448,26 +449,33 @@ class CompileController extends BaseController {
 		$errout = "";
 		$timeout = 60;
 		$timeuse = 0;
-		/* give question time out */
-		if(self::exec_timeout($bGIVE,$timeout,$stdout,$errout))
-			return -1;
-		/* solve time out */
-		else{
-			$start = microtime(true);
-		  $isTimeout = self::exec_timeout($aSOLVE,$timeout,$stdout,$errout);
-	  	$timeuse = microtime(true) - $start;
-			if($isTimeout) return 100;
+		/* method 1 */
+		if($method==1) {
+			/* give question time out */
+			if(self::exec_timeout($bGIVE,$timeout,$stdout,$errout) || 
+					!file_exists(self::$codepath.'/tmpcode/'.$id.'/giveOutput'))
+				return -1;
+			/* solve time out */
+			else{
+				$start = microtime(true);
+			  $isTimeout = self::exec_timeout($aSOLVE,$timeout,$stdout,$errout) ||
+									!file_exists(self::$codepath.'/tmpcode/'.$id.'/Correct');
+		  	$timeuse = microtime(true) - $start;
+				if($isTimeout) return 100;
+			}
 		}
-
 		/* method 2 */
-		if($method==2){
-			if(self::exec_timeout($aGIVE,$timeout,$stdout,$errout))
+		else if($method==2){
+			if(self::exec_timeout($aGIVE,$timeout,$stdout,$errout) ||
+					!file_exists(self::$codepath.'/tmpcode/'.$id.'/giveOutput'))
 				return 100;
-			else if(self::exec_timeout($bTRANS,$timeout,$stdout,$errout))
+			else if(self::exec_timeout($bTRANS,$timeout,$stdout,$errout) || 
+							!file_exists(self::$codepath.'/tmpcode/'.$id.'/transOutput'))
 				return -1;
 			else{
 				$start = microtime(true);
-				$isTimeout = self::exec_timeout($aSOLVE2,$timeout,$stdout,$errout);
+			  $isTimeout = self::exec_timeout($aSOLVE2,$timeout,$stdout,$errout) ||
+									!file_exists(self::$codepath.'/tmpcode/'.$id.'/Correct');
 				$timeuse += (microtime(true) - $start);
 				if($isTimeout) return 100;
 			}
