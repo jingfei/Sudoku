@@ -15,6 +15,7 @@
 				<th>status</th>
 				<th>platform</th>
 				<th>rank</th>
+				<th>score</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -40,7 +41,8 @@
 				@endif
 				</td>
 				<td> {{$rows->platform}} </td>
-				<td> {{$rows->rank}} </td></tr>
+				<td> {{$rows->rank}} </td>
+				<td> {{$rows->score}} </td></tr>
 			@endforeach
 		</tbody>
 	</table>

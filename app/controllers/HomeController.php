@@ -13,7 +13,7 @@ class HomeController extends BaseController {
 			if($rows->id=="admin"){ unset($users[$key]); continue; }
 			if($rows->platform==1) $rows->platform='Basic';
 			else if($rows->platform==2)$rows->platform='Advanced';
-			else $rows->platform='-';
+			else $rows->platform = $rows->score = $rows->rank = '-';
 			$Log = DB::table('Log')->where('studentID', $rows->id)->where('op', NULL)->orderBy('date', 'desc')->first();
 			if($Log) {
 				$rows->correct=$Log->check;
