@@ -134,7 +134,7 @@ class AttackController extends BaseController {
 		if($selection==1 || $selection==2){
 			$result = DB::table('Users')
 						->where('id', $ID)
-						->update(array('platform'=>$selection));
+						->update(array('platform'=>$selection,'score'=>100));
 			return Redirect::to('platform');
 		}
 		/* to make selection */
